@@ -56,7 +56,7 @@ export default function New() {
         if(!user?.id) return
 
         if (carImages.length === 0) {
-            alert("Envie no mínimo 1 imagem de carro!")
+            toast.error("Envie no mínimo 1 imagem de carro!")
             return
         }
 
@@ -148,6 +148,7 @@ export default function New() {
 
             if (error) {
                 console.log("Erro no upload: ", error)
+                toast.error("Erro ao fazer upload")
                 return
             }
 
