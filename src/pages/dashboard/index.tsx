@@ -25,10 +25,6 @@ export default function Dashboard() {
                 .eq("user_id", user.id)
                 .order("created_at", { ascending: false })
 
-            // TIRAR DEPOIS
-            console.log(data)
-
-
             if (error) {
                 console.error("Erro ao buscar carros: ", error)
                 return
@@ -44,7 +40,6 @@ export default function Dashboard() {
         if (!window.confirm("Deseja realmente excluir este carro e todas as suas imagens?")) return
 
         try {
-            // 1. Busca as imagens para saber o que deletar
             const { data: car, error: fetchError } = await supabase
                 .from("cars")
                 .select("images")
@@ -56,7 +51,6 @@ export default function Dashboard() {
                 return
             }
 
-            // 2. Deleta as imagens do Storage
             if (car?.images && car.images.length > 0) {
                 const pathsToDelete = car.images.map((img: any) => img.path)
 
@@ -70,7 +64,6 @@ export default function Dashboard() {
                 }
             }
 
-            // 3. Deleta o carro do Banco de Dados
             const { error: deleteError } = await supabase
                 .from("cars")
                 .delete()
@@ -113,7 +106,7 @@ export default function Dashboard() {
                             style={{display: loadImages.includes(car.id) ? "none" : "block"}}
                             className=" w-full rounded-lg mb-2 max-h-70 bg-slate-200"></div>
                             <img
-                                className="w-full rounded-lg mb-2 max-h-70 object-cover"
+                                className="w-full rounded-lg mb-2 max-h-70 h-70 object-cover"
                                 src={car.images[0].url}
                                 alt="Imagem do carro"
                                 onLoad={() => handleImageLoad(car.id)}
