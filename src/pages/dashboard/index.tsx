@@ -4,7 +4,7 @@ import DashboardHeader from "../../components/panelheader"
 
 import { FiTrash2 } from "react-icons/fi"
 import { supabase } from "../../services/supabaseClient"
-import type { CarProps } from "../home"
+import { type CarProps } from "../../types/car"
 import { UserAuth } from "../../contexts/AuthContext"
 
 

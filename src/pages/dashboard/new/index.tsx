@@ -2,8 +2,9 @@ import Container from "../../../components/container";
 import DashboardHeader from "../../../components/panelheader";
 import { FiTrash, FiUpload } from "react-icons/fi";
 
+import { UF_OPTIONS } from "../../../constants/ufList";
+
 import { useForm } from "react-hook-form";
-import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Input from "../../../components/input";
 import { useState, type ChangeEvent } from "react";
@@ -14,40 +15,21 @@ import { v4 as uuidV4 } from "uuid"
 import { supabase } from "../../../services/supabaseClient";
 import toast from "react-hot-toast";
 
-const schema = z.object({
-    name: z.string().nonempty("O campo nome é obrigatório"),
-    model: z.string().nonempty("O modelo é obrigatório"),
-    year: z.string().nonempty("O ano do carro é obrigatório"),
-    km: z.string().nonempty("O KM do carro é obrigatório"),
-    price: z.string().nonempty("O preço é obrigatório"),
-    city: z.string().nonempty("A cidade é obrigatório"),
-    whatsapp: z.string().min(1, "O telefone é obrigatório").refine((value) => /^(\d{11,12})$/.test(value), {
-        message: "Número de telefone inválido"
-    }),
-    description: z.string().nonempty("A descrição é obrigatória")
-})
+import { type FormData, CarSchema, type CarImagesProps, type CarProps } from "../../../types/car";
 
-type FormData = z.infer<typeof schema>
-
-interface carImagesProps {
-    name: string,
-    uid: string,
-    path: string,
-    url: string,
-    previewUrl: string
-}
+type CarInsertPayload = Omit<CarProps, 'id' | 'created_at'>;
 
 
 export default function New() {
 
     const { user } = UserAuth()
 
-    const [carImages, setCarImages] = useState<carImagesProps[]>([])
+    const [carImages, setCarImages] = useState<CarImagesProps[]>([])
 
     const [loading, setLoading] = useState(false)
 
     const { register, handleSubmit, formState: { errors }, reset } = useForm<FormData>({
-        resolver: zodResolver(schema),
+        resolver: zodResolver(CarSchema),
         mode: "onChange"
     })
 
@@ -69,13 +51,14 @@ export default function New() {
             path: image.path
         }))
 
-        const carData = {
+        const carData: CarInsertPayload = {
             name: data.name,
             model: data.model,
             year: data.year,
             km: data.km,
             price: data.price,
             city: data.city,
+            uf: data.uf,
             whatsapp: data.whatsapp,
             description: data.description,
             user_id: user?.id,
@@ -159,7 +142,7 @@ export default function New() {
 
             if (publicUrlData.publicUrl) {
 
-                const imageItem: carImagesProps = {
+                const imageItem: CarImagesProps = {
                     name: fileNameWithExt,
                     uid: currentId,
                     path: uploadPath,
@@ -184,7 +167,7 @@ export default function New() {
 
     }
 
-    async function handleDeleteImage(item: carImagesProps){
+    async function handleDeleteImage(item: CarImagesProps){
         if(!user?.id) return
 
         setLoading(true)
@@ -340,6 +323,24 @@ export default function New() {
                                 register={register}
                                 error={errors.city?.message}
                             />
+                        </div>
+
+                        <div className="w-full">
+                            <p className=" mb-2 font-medium">UF</p>
+                            <select 
+                            className=" border-2 border-[#878787]  w-full rounded-md h-10 px-2" 
+                            id="uf"
+                            {...register("uf")}
+                            >
+                                <option value="" disabled>Selecione</option>
+                                {UF_OPTIONS.map(uf => (
+                                    <option key={uf} value={uf}>{uf}</option>
+                                ))}
+                            </select>
+
+                            {errors.uf && (
+                                <p className=" mb-1 text-red-500">{errors.uf?.message}</p>
+                            )}
                         </div>
                     </div>
 

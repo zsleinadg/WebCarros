@@ -3,28 +3,7 @@ import Container from "../../components/container";
 import { supabase } from "../../services/supabaseClient";
 import { Link } from "react-router";
 
-export interface CarProps {
-    id: string,
-    name: string,
-    year: string,
-    uid: string,
-    price: string | number,
-    city: string,
-    km: string,
-    images: CarImagesProps[],
-    owner: string,
-    description: string,
-    created_at: string,
-    model: string,
-    whatsapp: string,
-}
-
-export interface CarImagesProps {
-    name: string,
-    uid: string,
-    url: string,
-    path: string
-}
+import { type CarProps } from "../../types/car";
 
 
 export default function Home() {
@@ -119,7 +98,7 @@ export default function Home() {
                             <div className=" w-full h-px bg-slate-200 my-2"></div>
 
                             <div className=" px-2 pb-2">
-                                <span>{car.city}</span>
+                                <span>{car.city} - {car.uf}</span>
                             </div>
 
                         </section>

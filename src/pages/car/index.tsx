@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import Container from "../../components/container"
-import type { CarProps } from "../home"
+import { type CarProps } from "../../types/car"
 import { useNavigate, useParams } from "react-router"
 import { FaWhatsapp } from "react-icons/fa"
 import { supabase } from "../../services/supabaseClient"
@@ -109,24 +109,29 @@ export default function CarDetail() {
                     </div>
                     <p>{car.model}</p>
 
-                    <div className=" flex w-full gap-6 my-4">
-                        <div className=" flex flex-col gap-4">
+                    <div className=" flex flex-col w-full gap-6 my-4">
+                        <div className=" flex flex-row gap-5">
                             <div>
                                 <p>Cidade</p>
                                 <strong>{car.city}</strong>
                             </div>
                             <div>
+                                <p>UF</p>
+                                <strong>{car.uf}</strong>
+                            </div>
+                        </div>
+                        <div className=" flex flex-row gap-10">
+                            <div>
                                 <p>Ano</p>
                                 <strong>{car.year}</strong>
                             </div>
-                        </div>
-
-                        <div className=" flex flex-col gap-4">
                             <div>
                                 <p>KM</p>
                                 <strong>{car.km}</strong>
                             </div>
                         </div>
+
+                        
                     </div>
 
                     <strong>Descrição: </strong>
