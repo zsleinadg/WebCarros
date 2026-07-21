@@ -72,6 +72,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         }
         catch (error) {
             console.error("DEU ERRO: ", error)
+            return { success: false, error: "Erro inesperado ao fazer login" }
         }
 
     }

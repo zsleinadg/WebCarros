@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router"
-import { FiGrid, FiPlusCircle, FiLogOut } from "react-icons/fi"
+import { FiGrid, FiPlusCircle, FiList, FiLogOut } from "react-icons/fi"
 import { UserAuth } from "../../contexts/AuthContext"
 import toast from "react-hot-toast"
 
@@ -37,6 +37,7 @@ export default function DashboardHeader() {
 
     const isDashboard = pathname === "/dashboard"
     const isNew = pathname === "/dashboard/new"
+    const isVendas = pathname === "/dashboard/vendas"
 
     return (
         <div className="w-full bg-red-500 rounded-lg mb-4 shadow-sm">
@@ -63,6 +64,17 @@ export default function DashboardHeader() {
                     >
                         <FiPlusCircle size={16} />
                         <span className="hidden sm:inline">Cadastrar carro</span>
+                    </Link>
+                    <Link
+                        to="/dashboard/vendas"
+                        className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                            isVendas
+                                ? "bg-white/40 text-white"
+                                : "text-white/70 hover:text-white hover:bg-white/5"
+                        }`}
+                    >
+                        <FiList size={16} />
+                        <span className="hidden sm:inline">Pedidos de Venda</span>
                     </Link>
                 </div>
 

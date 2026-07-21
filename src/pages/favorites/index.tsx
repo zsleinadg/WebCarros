@@ -2,11 +2,13 @@ import { useEffect, useState } from "react"
 import { Link } from "react-router"
 import { supabase } from "../../services/supabaseClient"
 import type { CarProps } from "../../types/car"
-import logoImg from "../../assets/logo.svg"
+import { formatPrice } from "../../utils"
+import { useFavorites } from "../../contexts/FavoritesContext"
+import { FaHeart, FaRegHeart } from "react-icons/fa"
 
 export default function Favorites() {
   const [allCars, setAllCars] = useState<CarProps[]>([])
-  const [favorites, setFavorites] = useState<string[]>([])
+  const { favorites, toggleFavorite } = useFavorites()
 
   useEffect(() => {
     async function loadCars() {
@@ -21,33 +23,15 @@ export default function Favorites() {
     loadCars()
   }, [])
 
-  function toggleFavorite(id: string) {
-    setFavorites(prev =>
-      prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]
-    )
-  }
-
-  function formatPrice(price: string | number) {
-    return Number(price).toLocaleString("pt-BR", { style: "currency", currency: "BRL" })
-  }
-
-  const favoriteCars = allCars.filter(car => favorites.includes(car.id))
+  const favoriteCars = allCars.filter(car => favorites.has(car.id))
 
   return (
     <>
-
-
       <main className="flex-grow w-full px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto py-margin-desktop">
         <section className="mb-stack-large flex flex-col md:flex-row md:items-end justify-between border-b border-border-subtle pb-stack-medium">
           <div>
             <h1 className="text-[28px] md:text-headline-large font-[700] md:font-headline-large text-on-background mb-base">Meus Favoritos</h1>
-            <p className="text-body-medium font-body-medium text-on-surface-variant">{favorites.length} veículos salvos</p>
-          </div>
-          <div className="mt-stack-medium md:mt-0">
-            <button onClick={() => setFavorites([])} className="flex items-center text-sm font-semibold text-secondary hover:text-primary transition-colors group">
-              <span className="material-symbols-outlined mr-2 text-secondary group-hover:text-primary transition-colors" style={{ fontSize: 18 }}>delete_sweep</span>
-              Limpar favoritos
-            </button>
+            <p className="text-body-medium font-body-medium text-on-surface-variant">{favorites.size} veículos salvos</p>
           </div>
         </section>
 
@@ -60,7 +44,7 @@ export default function Favorites() {
                   onClick={() => toggleFavorite(car.id)}
                   className="absolute top-4 right-4 z-10 w-10 h-10 bg-surface-container-lowest/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm text-primary hover:scale-110 transition-transform"
                 >
-                  <span className="material-symbols-outlined text-primary" style={{ fontSize: 24, fontVariationSettings: favorites.includes(car.id) ? "'FILL' 1" : "'FILL' 0" }}>favorite</span>
+                  {favorites.has(car.id) ? <FaHeart size={24} color="#ef4444" /> : <FaRegHeart size={24} color="var(--color-secondary)" />}
                 </button>
                 <div className="relative h-56 bg-surface-variant w-full">
                   <img alt={car.name} className="w-full h-full object-cover" src={imgUrl} />
@@ -88,26 +72,6 @@ export default function Favorites() {
         </section>
       </main>
 
-      <footer className="bg-on-secondary-fixed text-primary-fixed">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-stack-medium px-margin-mobile md:px-margin-desktop py-margin-desktop max-w-container-max mx-auto">
-          <div className="col-span-1 md:col-span-1 flex flex-col justify-between h-full">
-            <Link to="/" className="block mb-stack-medium">
-              <img src={logoImg} alt="WebCarros" className="h-8 w-auto" />
-            </Link>
-            <p className="text-secondary/70 mt-auto">© 2024 WebCarros. Todos os direitos reservados.</p>
-          </div>
-          <div className="col-span-1 flex flex-col gap-stack-small">
-            <a className="text-secondary/70 hover:text-secondary hover:text-primary-fixed-dim transition-colors inline-block w-fit" href="#">Sobre Nós</a>
-            <a className="text-secondary/70 hover:text-secondary hover:text-primary-fixed-dim transition-colors inline-block w-fit" href="#">Termos de Uso</a>
-            <a className="text-secondary/70 hover:text-secondary hover:text-primary-fixed-dim transition-colors inline-block w-fit" href="#">Política de Privacidade</a>
-          </div>
-          <div className="col-span-1 flex flex-col gap-stack-small">
-            <a className="text-secondary/70 hover:text-secondary hover:text-primary-fixed-dim transition-colors inline-block w-fit" href="#">Ajuda</a>
-            <a className="text-secondary/70 hover:text-secondary hover:text-primary-fixed-dim transition-colors inline-block w-fit" href="#">Trabalhe Conosco</a>
-            <a className="text-secondary/70 hover:text-secondary hover:text-primary-fixed-dim transition-colors inline-block w-fit" href="#">Blog</a>
-          </div>
-        </div>
-      </footer>
     </>
   )
 }

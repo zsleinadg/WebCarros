@@ -6,7 +6,7 @@ import toast from "react-hot-toast"
 import { Link, useSearchParams } from "react-router"
 import { supabase } from "../../services/supabaseClient"
 import type { CarProps } from "../../types/car"
-import logoImg from "../../assets/logo.svg"
+
 
 const TestDriveSchema = z.object({
   name: z.string().nonempty("Nome é obrigatório"),
@@ -77,34 +77,6 @@ export default function TestDrive() {
             Ver estoque
           </Link>
         </main>
-        <footer className="bg-on-tertiary-fixed text-primary mt-auto">
-          <div className="w-full py-stack-large px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto grid grid-cols-1 md:grid-cols-4 gap-gutter">
-            <div className="flex flex-col gap-4">
-              <Link to="/" className="block mb-2">
-                <img src={logoImg} alt="WebCarros" className="h-8 w-auto" />
-              </Link>
-              <p className="font-body-small text-body-small text-tertiary-fixed-dim">O seu marketplace automotivo premium.</p>
-            </div>
-            <div className="flex flex-col gap-2">
-              <h5 className="font-label-medium text-label-medium font-bold text-on-primary">Empresa</h5>
-              <a className="font-body-small text-body-small text-tertiary-fixed-dim hover:text-primary-fixed-dim transition-colors" href="#">Sobre Nós</a>
-              <a className="font-body-small text-body-small text-tertiary-fixed-dim hover:text-primary-fixed-dim transition-colors" href="#">Carreiras</a>
-              <a className="font-body-small text-body-small text-tertiary-fixed-dim hover:text-primary-fixed-dim transition-colors" href="#">Blog</a>
-            </div>
-            <div className="flex flex-col gap-2">
-              <h5 className="font-label-medium text-label-medium font-bold text-on-primary">Legal</h5>
-              <a className="font-body-small text-body-small text-tertiary-fixed-dim hover:text-primary-fixed-dim transition-colors" href="#">Termos de Uso</a>
-              <a className="font-body-small text-body-small text-tertiary-fixed-dim hover:text-primary-fixed-dim transition-colors" href="#">Privacidade</a>
-            </div>
-            <div className="flex flex-col gap-2">
-              <h5 className="font-label-medium text-label-medium font-bold text-on-primary">Contato</h5>
-              <a className="font-body-small text-body-small text-tertiary-fixed-dim hover:text-primary-fixed-dim transition-colors" href="#">Fale Conosco</a>
-            </div>
-            <div className="md:col-span-4 mt-8 pt-8 border-t border-secondary-fixed text-center">
-              <p className="font-body-small text-body-small text-tertiary-fixed-dim">© 2024 WebCarros. Todos os direitos reservados.</p>
-            </div>
-          </div>
-        </footer>
       </>
     )
   }
@@ -223,34 +195,6 @@ export default function TestDrive() {
         </div>
       </main>
 
-      <footer className="bg-on-tertiary-fixed text-primary mt-auto">
-        <div className="w-full py-stack-large px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto grid grid-cols-1 md:grid-cols-4 gap-gutter">
-          <div className="flex flex-col gap-4">
-            <Link to="/" className="block mb-2">
-              <img src={logoImg} alt="WebCarros" className="h-8 w-auto" />
-            </Link>
-            <p className="font-body-small text-body-small text-tertiary-fixed-dim">O seu marketplace automotivo premium.</p>
-          </div>
-          <div className="flex flex-col gap-2">
-            <h5 className="font-label-medium text-label-medium font-bold text-on-primary">Empresa</h5>
-            <a className="font-body-small text-body-small text-tertiary-fixed-dim hover:text-primary-fixed-dim transition-colors" href="#">Sobre Nós</a>
-            <a className="font-body-small text-body-small text-tertiary-fixed-dim hover:text-primary-fixed-dim transition-colors" href="#">Carreiras</a>
-            <a className="font-body-small text-body-small text-tertiary-fixed-dim hover:text-primary-fixed-dim transition-colors" href="#">Blog</a>
-          </div>
-          <div className="flex flex-col gap-2">
-            <h5 className="font-label-medium text-label-medium font-bold text-on-primary">Legal</h5>
-            <a className="font-body-small text-body-small text-tertiary-fixed-dim hover:text-primary-fixed-dim transition-colors" href="#">Termos de Uso</a>
-            <a className="font-body-small text-body-small text-tertiary-fixed-dim hover:text-primary-fixed-dim transition-colors" href="#">Privacidade</a>
-          </div>
-          <div className="flex flex-col gap-2">
-            <h5 className="font-label-medium text-label-medium font-bold text-on-primary">Contato</h5>
-            <a className="font-body-small text-body-small text-tertiary-fixed-dim hover:text-primary-fixed-dim transition-colors" href="#">Fale Conosco</a>
-          </div>
-          <div className="md:col-span-4 mt-8 pt-8 border-t border-secondary-fixed text-center">
-            <p className="font-body-small text-body-small text-tertiary-fixed-dim">© 2024 WebCarros. Todos os direitos reservados.</p>
-          </div>
-        </div>
-      </footer>
     </>
   )
 }

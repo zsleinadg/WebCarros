@@ -9,6 +9,7 @@ import Sell from "./pages/sell";
 import Dashboard from "./pages/dashboard";
 import New from "./pages/dashboard/new";
 import Edit from "./pages/dashboard/edit";
+import Vendas from "./pages/dashboard/vendas";
 import Login from "./pages/login";
 import Register from "./pages/register";
 import Private from "./routes/Private";
@@ -55,6 +56,10 @@ export const router = createBrowserRouter([
       {
         element: <Private><Edit/></Private>,
         path: "/dashboard/edit/:id"
+      },
+      {
+        element: <Private><Vendas/></Private>,
+        path: "/dashboard/vendas"
       }
     ]
   },

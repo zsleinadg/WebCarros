@@ -2,8 +2,7 @@ import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import toast from "react-hot-toast"
-import { Link } from "react-router"
-import logoImg from "../../assets/logo.svg"
+import { supabase } from "../../services/supabaseClient"
 import { WHATSAPP_NUMBER } from "../../constants/whatsapp"
 
 const SellSchema = z.object({
@@ -51,8 +50,25 @@ export default function Sell() {
     mode: "onChange",
   })
 
-  function onSubmit(data: SellForm) {
-    console.log("Venda solicitada:", data)
+  async function onSubmit(data: SellForm) {
+    const { error } = await supabase.from("sell_requests").insert({
+      nome: data.nome,
+      telefone: data.telefone,
+      email: data.email,
+      marca: data.marca,
+      modelo: data.modelo,
+      ano: data.ano,
+      km: data.km,
+      preco: data.preco,
+      mensagem: data.mensagem || null,
+    })
+
+    if (error) {
+      console.error("Erro ao salvar pedido de venda:", error)
+      toast.error("Erro ao enviar solicitação. Tente novamente.")
+      return
+    }
+
     toast.success("Solicitação enviada com sucesso! Entraremos em contato.")
     reset()
   }
@@ -208,29 +224,6 @@ export default function Sell() {
         </div>
       </section>
 
-      <footer className="bg-inverse-surface w-full py-stack-large px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto grid grid-cols-1 md:grid-cols-4 gap-gutter">
-        <div>
-          <Link to="/" className="block mb-stack-small">
-            <img src={logoImg} alt="WebCarros" className="h-8 w-auto" />
-          </Link>
-          <p className="font-body-small text-body-small text-on-tertiary-container">© 2024 WebCarros. Todos os direitos reservados.</p>
-        </div>
-        <div className="flex flex-col gap-stack-small">
-          <h4 className="font-title-large text-title-large text-on-primary-container mb-2">Plataforma</h4>
-          <a className="font-label-medium text-label-medium text-on-tertiary-container hover:text-on-primary transition-colors" href="#">Carros Novos</a>
-          <a className="font-label-medium text-label-medium text-on-tertiary-container hover:text-on-primary transition-colors" href="#">Carros Usados</a>
-        </div>
-        <div className="flex flex-col gap-stack-small">
-          <h4 className="font-title-large text-title-large text-on-primary-container mb-2">Institucional</h4>
-          <a className="font-label-medium text-label-medium text-on-tertiary-container hover:text-on-primary transition-colors" href="#">Sobre Nós</a>
-          <a className="font-label-medium text-label-medium text-on-tertiary-container hover:text-on-primary transition-colors" href="#">Ajuda</a>
-        </div>
-        <div className="flex flex-col gap-stack-small">
-          <h4 className="font-title-large text-title-large text-on-primary-container mb-2">Legal</h4>
-          <a className="font-label-medium text-label-medium text-on-tertiary-container hover:text-on-primary transition-colors" href="#">Termos de Uso</a>
-          <a className="font-label-medium text-label-medium text-on-tertiary-container hover:text-on-primary transition-colors" href="#">Política de Privacidade</a>
-        </div>
-      </footer>
     </>
   )
 }

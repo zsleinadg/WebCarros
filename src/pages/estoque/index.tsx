@@ -2,16 +2,18 @@ import { useEffect, useState, useMemo } from "react"
 import { Link, useSearchParams } from "react-router"
 import { supabase } from "../../services/supabaseClient"
 import type { CarProps } from "../../types/car"
-import logoImg from "../../assets/logo.svg"
 import { WHATSAPP_NUMBER } from "../../constants/whatsapp"
 import { FUEL_OPTIONS } from "../../constants/fuelList"
+import { formatPrice } from "../../utils"
+import { useFavorites } from "../../contexts/FavoritesContext"
+import { FaHeart, FaRegHeart } from "react-icons/fa"
 
 export default function Estoque() {
   const [searchParams] = useSearchParams()
   const initialSearch = searchParams.get("search") || ""
   const initialAno = searchParams.get("ano") || ""
   const initialPrecoMax = searchParams.get("precoMax") || ""
-  const initialFuel = searchParams.get("fuel") || "Flex"
+  const initialFuel = searchParams.get("fuel") || ""
 
   const [allCars, setAllCars] = useState<CarProps[]>([])
   const [loading, setLoading] = useState(true)
@@ -22,7 +24,8 @@ export default function Estoque() {
   const [anoAte, setAnoAte] = useState(initialAno || "")
   const [selectedFuel, setSelectedFuel] = useState(initialFuel)
   const [searchTerm, setSearchTerm] = useState(initialSearch)
-  const [favorites, setFavorites] = useState<Set<string>>(new Set())
+  const { favorites, toggleFavorite } = useFavorites()
+  const [sortOrder, setSortOrder] = useState("Mais recentes")
 
   useEffect(() => {
     async function loadCars() {
@@ -64,7 +67,7 @@ export default function Estoque() {
   }, [allCars])
 
   const filteredCars = useMemo(() => {
-    return allCars.filter(car => {
+    let result = allCars.filter(car => {
       if (searchTerm) {
         const term = searchTerm.toLowerCase()
         const matches = car.name.toLowerCase().includes(term) ||
@@ -88,7 +91,17 @@ export default function Estoque() {
       if (selectedFuel && car.fuel && car.fuel !== selectedFuel) return false
       return true
     })
-  }, [allCars, selectedBrands, precoDe, precoAte, anoDe, anoAte, selectedFuel, searchTerm])
+
+    if (sortOrder === "Menor preço") {
+      result = [...result].sort((a, b) => Number(a.price) - Number(b.price))
+    } else if (sortOrder === "Maior preço") {
+      result = [...result].sort((a, b) => Number(b.price) - Number(a.price))
+    } else if (sortOrder === "Menor KM") {
+      result = [...result].sort((a, b) => Number(a.km.replace(/\D/g, "")) - Number(b.km.replace(/\D/g, "")))
+    }
+
+    return result
+  }, [allCars, selectedBrands, precoDe, precoAte, anoDe, anoAte, selectedFuel, searchTerm, sortOrder])
 
   function toggleBrand(brand: string) {
     setSelectedBrands(prev =>
@@ -102,21 +115,8 @@ export default function Estoque() {
     setPrecoAte("")
     setAnoDe("")
     setAnoAte("")
-    setSelectedFuel("Flex")
+    setSelectedFuel("")
     setSearchTerm("")
-  }
-
-  function toggleFavorite(id: string) {
-    setFavorites(prev => {
-      const next = new Set(prev)
-      if (next.has(id)) next.delete(id)
-      else next.add(id)
-      return next
-    })
-  }
-
-  function formatPrice(price: string | number) {
-    return Number(price).toLocaleString("pt-BR", { style: "currency", currency: "BRL" })
   }
 
   return (
@@ -128,7 +128,7 @@ export default function Estoque() {
           <h1 className="text-title-large font-title-large text-on-background">{filteredCars.length} carros encontrados</h1>
           <div className="flex items-center gap-2 w-full md:w-auto">
             <label className="text-body-small font-body-small text-secondary whitespace-nowrap" htmlFor="sort">Ordenar por:</label>
-            <select className="border border-border-subtle rounded-lg bg-surface-container-lowest text-body-small font-body-small focus:border-primary focus:ring-primary w-full md:w-auto py-2 pl-3 pr-10" id="sort">
+            <select className="border border-border-subtle rounded-lg bg-surface-container-lowest text-body-small font-body-small focus:border-primary focus:ring-primary w-full md:w-auto py-2 pl-3 pr-10" id="sort" value={sortOrder} onChange={e => setSortOrder(e.target.value)}>
               <option>Mais recentes</option>
               <option>Menor preço</option>
               <option>Maior preço</option>
@@ -210,7 +210,7 @@ export default function Estoque() {
                   {FUEL_OPTIONS.map((comb) => (
                     <button
                       key={comb}
-                      onClick={() => setSelectedFuel(comb)}
+                      onClick={() => setSelectedFuel(selectedFuel === comb ? "" : comb)}
                       className={`px-3 py-1.5 border rounded-full text-body-small font-body-small transition-colors ${selectedFuel === comb ? "border-primary bg-inverse-on-surface text-primary" : "border-border-subtle hover:border-primary hover:text-primary bg-surface"}`}
                     >
                       {comb}
@@ -219,9 +219,6 @@ export default function Estoque() {
                 </div>
               </div>
 
-              <button className="w-full bg-primary text-on-primary py-3 rounded-lg font-body-medium text-body-medium hover:bg-primary-container transition-colors shadow-sm">
-                Aplicar Filtros
-              </button>
             </div>
           </aside>
 
@@ -255,7 +252,7 @@ export default function Estoque() {
                           onClick={(e) => { e.preventDefault(); toggleFavorite(car.id) }}
                           className="absolute top-3 right-3 flex items-center justify-center w-9 h-9 rounded-full bg-surface-container-lowest/80 hover:bg-surface-container-lowest transition-colors z-10 shadow-sm backdrop-blur-sm"
                         >
-                          <span className="material-symbols-outlined" style={{ fontSize: 20, fontVariationSettings: isFav ? "'FILL' 1" : "'FILL' 0", color: isFav ? "var(--color-primary)" : "var(--color-secondary)" }}>favorite</span>
+                          {isFav ? <FaHeart size={20} color="#ef4444" /> : <FaRegHeart size={20} color="var(--color-secondary)" />}
                         </button>
                       </div>
                       <div className="p-4 flex flex-col flex-1">
@@ -277,42 +274,9 @@ export default function Estoque() {
           </div>
         </div>
 
-        <div className="mt-stack-large flex justify-center items-center gap-2">
-          <button className="px-4 py-2 border border-border-subtle rounded-lg text-secondary hover:text-primary hover:border-primary transition-colors font-body-small bg-surface-container-lowest disabled:opacity-50" disabled>Anterior</button>
-          <button className="w-10 h-10 flex items-center justify-center rounded-lg bg-primary text-on-primary font-bold font-body-small shadow-sm">1</button>
-          {[2, 3].map((p) => (
-            <button key={p} className="w-10 h-10 flex items-center justify-center rounded-lg border border-border-subtle text-secondary hover:border-primary hover:text-primary transition-colors font-body-small bg-surface-container-lowest">{p}</button>
-          ))}
-          <span className="text-secondary">...</span>
-          <button className="w-10 h-10 flex items-center justify-center rounded-lg border border-border-subtle text-secondary hover:border-primary hover:text-primary transition-colors font-body-small bg-surface-container-lowest">12</button>
-          <button className="px-4 py-2 border border-border-subtle rounded-lg text-secondary hover:text-primary hover:border-primary transition-colors font-body-small bg-surface-container-lowest">Próximo</button>
-        </div>
       </main>
 
-      <footer className="bg-inverse-surface w-full mt-stack-large">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-gutter py-stack-large px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
-          <div className="col-span-1 md:col-span-4 mb-4 md:mb-0">
-            <Link to="/">
-              <img src={logoImg} alt="WebCarros" className="h-8 w-auto" />
-            </Link>
-          </div>
-          <div className="flex flex-col gap-2">
-            <a className="text-surface-variant font-body-small text-body-small hover:text-white transition-colors" href="#">Sobre Nós</a>
-            <a className="text-surface-variant font-body-small text-body-small hover:text-white transition-colors" href="#">Carreira</a>
-          </div>
-          <div className="flex flex-col gap-2">
-            <a className="text-surface-variant font-body-small text-body-small hover:text-white transition-colors" href="#">Privacidade</a>
-            <a className="text-surface-variant font-body-small text-body-small hover:text-white transition-colors" href="#">Termos de Uso</a>
-          </div>
-          <div className="flex flex-col gap-2">
-            <a className="text-surface-variant font-body-small text-body-small hover:text-white transition-colors" href="#">Blog</a>
-            <a className="text-surface-variant font-body-small text-body-small hover:text-white transition-colors" href="#">Parceiros</a>
-          </div>
-          <div className="col-span-1 md:col-span-4 mt-8 pt-4 border-t border-secondary/30 text-on-tertiary font-body-small text-body-small opacity-80">
-            © 2024 WebCarros. Todos os direitos reservados.
-          </div>
-        </div>
-      </footer>
+
 
       <a className="fixed bottom-6 right-6 bg-whatsapp-green text-white p-4 rounded-full shadow-lg hover:-translate-y-1 transition-transform z-50 flex items-center justify-center" href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noopener noreferrer">
         <svg fill="currentColor" height="24" viewBox="0 0 16 16" width="24" xmlns="http://www.w3.org/2000/svg">

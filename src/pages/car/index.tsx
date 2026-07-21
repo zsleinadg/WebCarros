@@ -2,25 +2,18 @@ import { useEffect, useState } from "react"
 import { useParams, useNavigate, Link } from "react-router"
 import { supabase } from "../../services/supabaseClient"
 import type { CarProps } from "../../types/car"
-import logoImg from "../../assets/logo.svg"
 import { WHATSAPP_NUMBER } from "../../constants/whatsapp"
+import { formatPrice } from "../../utils"
+import { useFavorites } from "../../contexts/FavoritesContext"
+import { FaHeart, FaRegHeart } from "react-icons/fa"
 
 export default function CarDetail() {
   const [car, setCar] = useState<CarProps | null>(null)
   const [relatedCars, setRelatedCars] = useState<CarProps[]>([])
   const [loading, setLoading] = useState(true)
-  const [favorites, setFavorites] = useState<Set<string>>(new Set())
+  const { favorites, toggleFavorite } = useFavorites()
   const { id } = useParams()
   const navigate = useNavigate()
-
-  function toggleFavorite(carId: string) {
-    setFavorites(prev => {
-      const next = new Set(prev)
-      if (next.has(carId)) next.delete(carId)
-      else next.add(carId)
-      return next
-    })
-  }
 
   useEffect(() => {
     async function loadCar() {
@@ -81,7 +74,7 @@ export default function CarDetail() {
 
   if (!car) return null
 
-  const priceFormatted = Number(car.price).toLocaleString("pt-BR", { style: "currency", currency: "BRL" })
+  const priceFormatted = formatPrice(car.price)
   const mainImage = car.images?.[0]?.url || "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=800&q=80"
   const secondImage = car.images?.[1]?.url || car.images?.[0]?.url || mainImage
   const thirdImage = car.images?.[2]?.url || car.images?.[1]?.url || mainImage
@@ -130,11 +123,6 @@ export default function CarDetail() {
                   <span className="text-[28px] md:text-headline-large text-primary font-headline-large block">{priceFormatted}</span>
                 </div>
               </div>
-              <div className="flex flex-wrap gap-2 mt-2">
-                <span className="bg-secondary-fixed text-on-secondary-fixed-variant px-3 py-1 rounded-lg text-label-medium font-label-medium">Super Preço</span>
-                <span className="bg-surface-variant text-on-surface-variant px-3 py-1 rounded-lg text-label-medium font-label-medium">Único Dono</span>
-                <span className="bg-surface-variant text-on-surface-variant px-3 py-1 rounded-lg text-label-medium font-label-medium">Revisões na Concessionária</span>
-              </div>
             </div>
 
             <div className="bg-surface-container-lowest rounded-[12px] p-stack-medium shadow-sm border border-border-subtle">
@@ -144,8 +132,6 @@ export default function CarDetail() {
                   { icon: "calendar_today", label: "Ano", value: car.year },
                   { icon: "speed", label: "Quilometragem", value: `${car.km} km` },
                   { icon: "local_gas_station", label: "Combustível", value: car.fuel || "Flex" },
-                  { icon: "settings", label: "Câmbio", value: "Automático" },
-                  { icon: "palette", label: "Cor", value: "Branco" },
                   { icon: "location_on", label: "Cidade", value: `${car.city}, ${car.uf}` },
                 ].map((spec) => (
                   <div key={spec.label} className="flex flex-col gap-1 items-start bg-surface p-3 rounded-xl border border-surface-container">
@@ -171,7 +157,7 @@ export default function CarDetail() {
                   onClick={() => toggleFavorite(car.id)}
                   className="flex items-center justify-center w-9 h-9 rounded-full hover:bg-surface-variant transition-colors text-secondary hover:text-primary"
                 >
-                  <span className="material-symbols-outlined" style={{ fontVariationSettings: favorites.has(car.id) ? "'FILL' 1" : "'FILL' 0", color: favorites.has(car.id) ? "var(--color-primary)" : "var(--color-secondary)" }}>favorite</span>
+                  {favorites.has(car.id) ? <FaHeart size={20} color="#ef4444" /> : <FaRegHeart size={20} color="var(--color-secondary)" />}
                 </button>
               </div>
               <div className="flex flex-col gap-stack-small mt-2">
@@ -223,7 +209,7 @@ export default function CarDetail() {
                   <div className="p-4 flex flex-col gap-2">
                     <h3 className="font-title-large text-title-large truncate">{rCar.name}</h3>
                     <p className="font-body-small text-body-small text-secondary">{rCar.year} • {rCar.km} km</p>
-                    <span className="font-headline-medium text-headline-medium text-primary mt-2">{Number(rCar.price).toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}</span>
+                            <span className="font-headline-medium text-headline-medium text-primary mt-2">{formatPrice(rCar.price)}</span>
                   </div>
                 </Link>
               )
@@ -232,29 +218,6 @@ export default function CarDetail() {
         </section>
       </main>
 
-      <footer className="bg-inverse-surface w-full mt-stack-large">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-gutter py-stack-large px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
-          <div className="flex flex-col gap-4">
-            <Link to="/" className="block mb-2">
-              <img src={logoImg} alt="WebCarros" className="h-8 w-auto" />
-            </Link>
-            <p className="font-body-small text-body-small text-surface-variant">A melhor plataforma para encontrar seu próximo carro.</p>
-          </div>
-          <div className="flex flex-col gap-2">
-            <a className="font-body-small text-body-small text-surface-variant hover:text-white transition-colors" href="#">Sobre Nós</a>
-            <a className="font-body-small text-body-small text-surface-variant hover:text-white transition-colors" href="#">Carreira</a>
-            <a className="font-body-small text-body-small text-surface-variant hover:text-white transition-colors" href="#">Privacidade</a>
-          </div>
-          <div className="flex flex-col gap-2">
-            <a className="font-body-small text-body-small text-surface-variant hover:text-white transition-colors" href="#">Termos de Uso</a>
-            <a className="font-body-small text-body-small text-surface-variant hover:text-white transition-colors" href="#">Blog</a>
-            <a className="font-body-small text-body-small text-surface-variant hover:text-white transition-colors" href="#">Parceiros</a>
-          </div>
-          <div className="flex flex-col gap-4 md:col-start-1 md:col-end-5 mt-stack-medium pt-stack-small border-t border-secondary/30">
-            <p className="font-body-small text-body-small text-surface-variant text-center">© 2024 WebCarros. Todos os direitos reservados.</p>
-          </div>
-        </div>
-      </footer>
     </>
   )
 }

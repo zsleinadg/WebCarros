@@ -295,7 +295,7 @@ export default function Edit() {
                         className="flex justify-center items-center relative">
                         <button
                             onClick={() => handleDeleteImage(item)}
-                            className="absolute bg-white p-2 rounded-2xl opacity-45 cursor-pointer hover:scale-103 hover:opacity-65"
+                            className="absolute bg-white p-2 rounded-2xl opacity-45 cursor-pointer hover:scale-105 hover:opacity-65"
                         >
                             <FiTrash size={24} color="#000" />
                         </button>
