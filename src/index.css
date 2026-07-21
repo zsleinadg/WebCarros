@@ -4,6 +4,178 @@
 @import 'swiper/css/pagination';
 @import 'swiper/css/scrollbar';
 
-body{
-    background-color: #f1f5f9;
+@theme {
+  --color-surface-gray: #F8FAFC;
+  --color-outline-variant: #e6bdbb;
+  --color-on-surface-variant: #5d3f3f;
+  --color-on-error: #ffffff;
+  --color-tertiary-container: #657389;
+  --color-surface-container-highest: #d3e4fe;
+  --color-surface-container-lowest: #ffffff;
+  --color-tertiary: #4c5a6f;
+  --color-on-tertiary: #ffffff;
+  --color-error: #ba1a1a;
+  --color-surface-tint: #bf002c;
+  --color-surface: #f8f9ff;
+  --color-secondary: #565e74;
+  --color-success-green: #10B981;
+  --color-on-tertiary-fixed-variant: #3a485c;
+  --color-primary-fixed-dim: #ffb3b2;
+  --color-surface-dim: #cbdbf5;
+  --color-primary-container: #e11138;
+  --color-surface-container-low: #eff4ff;
+  --color-surface-container: #e5eeff;
+  --color-on-primary-fixed-variant: #92001f;
+  --color-on-secondary-fixed: #131b2e;
+  --color-on-secondary-fixed-variant: #3f465c;
+  --color-on-primary-fixed: #410008;
+  --color-on-background: #0b1c30;
+  --color-on-tertiary-fixed: #0d1c2f;
+  --color-secondary-container: #dae2fd;
+  --color-background: #f8f9ff;
+  --color-on-primary: #ffffff;
+  --color-on-tertiary-container: #f7f8ff;
+  --color-on-secondary-container: #5c647a;
+  --color-secondary-fixed: #dae2fd;
+  --color-on-error-container: #93000a;
+  --color-primary: #b50029;
+  --color-tertiary-fixed: #d5e3fd;
+  --color-tertiary-fixed-dim: #b9c7e0;
+  --color-inverse-surface: #213145;
+  --color-surface-container-high: #dce9ff;
+  --color-inverse-on-surface: #eaf1ff;
+  --color-border-subtle: #E2E8F0;
+  --color-surface-bright: #f8f9ff;
+  --color-on-surface: #0b1c30;
+  --color-error-container: #ffdad6;
+  --color-webmotors-red-dark: #B90E2E;
+  --color-on-secondary: #ffffff;
+  --color-primary-fixed: #ffdad9;
+  --color-inverse-primary: #ffb3b2;
+  --color-secondary-fixed-dim: #bec6e0;
+  --color-surface-variant: #d3e4fe;
+  --color-on-primary-container: #fff6f5;
+  --color-outline: #926e6e;
+  --color-whatsapp-green: #25D366;
+
+  --font-display-large: "Hanken Grotesk", sans-serif;
+  --font-headline-medium: "Hanken Grotesk", sans-serif;
+  --font-headline-large: "Hanken Grotesk", sans-serif;
+  --font-title-large: "Inter", sans-serif;
+  --font-body-large: "Inter", sans-serif;
+  --font-body-medium: "Inter", sans-serif;
+  --font-body-small: "Inter", sans-serif;
+  --font-label-medium: "Inter", sans-serif;
+
+  --spacing-stack-large: 32px;
+  --spacing-base: 4px;
+  --spacing-margin-mobile: 16px;
+  --spacing-stack-medium: 16px;
+  --spacing-container-max: 1280px;
+  --spacing-stack-small: 8px;
+  --spacing-gutter: 24px;
+  --spacing-margin-desktop: 40px;
+  --spacing-whatsapp-bottom: 24px;
+  --spacing-whatsapp-right: 24px;
+
+  --radius-xl: 0.5rem;
+
+  --animate-pulse-whatsapp: pulse-whatsapp 2s infinite;
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-on-background);
+  font-family: var(--font-body-medium);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  padding-top: 64px;
+}
+
+@utility shadow-ambient {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+}
+
+@utility shadow-floating {
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05), 0 16px 32px -4px rgba(0, 0, 0, 0.1);
+}
+
+@utility text-display-large {
+  font-size: 48px;
+  line-height: 56px;
+  letter-spacing: -0.02em;
+}
+
+@utility text-headline-large {
+  font-size: 32px;
+  line-height: 40px;
+}
+
+@utility text-headline-medium {
+  font-size: 24px;
+  line-height: 32px;
+}
+
+@utility text-title-large {
+  font-size: 20px;
+  line-height: 28px;
+}
+
+@utility text-body-large {
+  font-size: 18px;
+  line-height: 28px;
+}
+
+@utility text-body-medium {
+  font-size: 16px;
+  line-height: 24px;
+}
+
+@utility text-body-small {
+  font-size: 14px;
+  line-height: 20px;
+}
+
+@utility text-label-medium {
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0.05em;
+}
+
+@keyframes pulse-whatsapp {
+  0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.6); }
+  70% { box-shadow: 0 0 0 16px rgba(37, 211, 102, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
+}
+
+.whatsapp-float {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 100;
+}
+
+.step-line::after {
+  content: '';
+  position: absolute;
+  top: 32px;
+  left: 50%;
+  width: 100%;
+  height: 2px;
+  background: #E2E8F0;
+  z-index: 0;
+}
+
+.step-line:last-child::after {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .step-line::after {
+    display: none;
+  }
+}
+
+.badge-destaque {
+  background: linear-gradient(135deg, #b50029, #e11138);
 }

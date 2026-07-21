@@ -2,6 +2,10 @@ import { createBrowserRouter } from "react-router";
 import Layout from "./components/layout";
 import Home from "./pages/home";
 import CarDetail from "./pages/car";
+import Estoque from "./pages/estoque";
+import TestDrive from "./pages/test-drive";
+import Favorites from "./pages/favorites";
+import Sell from "./pages/sell";
 import Dashboard from "./pages/dashboard";
 import New from "./pages/dashboard/new";
 import Login from "./pages/login";
@@ -22,6 +26,22 @@ export const router = createBrowserRouter([
       {
         element: <CarDetail/>,
         path: "/car/:id"
+      },
+      {
+        element: <Estoque/>,
+        path: "/estoque"
+      },
+      {
+        element: <TestDrive/>,
+        path: "/agendar-test-drive"
+      },
+      {
+        element: <Favorites/>,
+        path: "/favoritos"
+      },
+      {
+        element: <Sell/>,
+        path: "/vender"
       },
       {
         element: <Private><Dashboard/></Private>,
