@@ -7,6 +7,7 @@ import { UserAuth } from "../../contexts/AuthContext"
 const navLinks = [
   { label: "Comprar", to: "/estoque" },
   { label: "Vender", to: "/vender" },
+  { label: "Favoritos", to: "/favoritos" },
   { label: "Serviços", to: "#" },
   { label: "Ajuda", to: "#" },
 ]
@@ -17,7 +18,6 @@ export default function Header() {
   const { signed, loadingAuth, signOut } = UserAuth()
 
   const isEstoque = pathname === "/estoque"
-  const isFavoritos = pathname === "/favoritos"
   const isVender = pathname === "/vender"
 
   async function handleSignOut() {
@@ -57,12 +57,6 @@ export default function Header() {
               <span className="material-symbols-outlined absolute left-3 text-secondary" style={{ fontSize: 20 }}>search</span>
               <input className="pl-10 pr-4 py-2 rounded-lg border border-border-subtle bg-surface-container-lowest focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all w-64 font-body-small text-body-small" placeholder="Buscar..." type="text" />
             </div>
-          )}
-
-          {isFavoritos && (
-            <button aria-label="Favoritos" className="relative p-2 text-primary">
-              <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>favorite</span>
-            </button>
           )}
 
           {!loadingAuth && signed && (
@@ -109,6 +103,12 @@ export default function Header() {
               </Link>
             )
           })}
+          {!loadingAuth && signed && (
+            <div className="pt-2 border-t border-border-subtle flex flex-col gap-2">
+              <Link to="/dashboard" className="font-body-medium text-secondary" onClick={() => setMobileMenuOpen(false)}>Dashboard</Link>
+              <button className="text-red-800 font-medium cursor-pointer text-left" onClick={handleSignOut}>Sair</button>
+            </div>
+          )}
           {!loadingAuth && !signed && (
             <Link to="/login" className="text-primary font-body-medium pt-2 border-t border-border-subtle" onClick={() => setMobileMenuOpen(false)}>Entrar</Link>
           )}

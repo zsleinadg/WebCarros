@@ -12,7 +12,8 @@ export const CarSchema = z.object({
     whatsapp: z.string().min(1, "O telefone é obrigatório").refine((value) => /^(\d{11,12})$/.test(value), {
         message: "Número de telefone inválido"
     }),
-    description: z.string().nonempty("A descrição é obrigatória")
+    description: z.string().nonempty("A descrição é obrigatória"),
+    fuel: z.string().nonempty("O combustível é obrigatório")
 })
 
 export type FormData = z.infer<typeof CarSchema>
@@ -32,6 +33,7 @@ export interface CarProps {
     user_id?: string,
     model: string,
     whatsapp: string,
+    fuel: string,
 }
 
 

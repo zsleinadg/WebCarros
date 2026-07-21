@@ -1,58 +1,114 @@
-import Container from "../../../components/container";
-import DashboardHeader from "../../../components/panelheader";
-import { FiTrash, FiUpload } from "react-icons/fi";
+import { useEffect, useState, type ChangeEvent } from "react"
+import { useParams, useNavigate } from "react-router"
+import Container from "../../../components/container"
+import DashboardHeader from "../../../components/panelheader"
+import { FiTrash, FiUpload } from "react-icons/fi"
 
-import { UF_OPTIONS } from "../../../constants/ufList";
-import { FUEL_OPTIONS } from "../../../constants/fuelList";
+import { UF_OPTIONS } from "../../../constants/ufList"
+import { FUEL_OPTIONS } from "../../../constants/fuelList"
 
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import Input from "../../../components/input";
-import { useState, type ChangeEvent } from "react";
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import Input from "../../../components/input"
 
-import { UserAuth } from "../../../contexts/AuthContext";
+import { UserAuth } from "../../../contexts/AuthContext"
 
 import { v4 as uuidV4 } from "uuid"
-import { supabase } from "../../../services/supabaseClient";
-import toast from "react-hot-toast";
+import { supabase } from "../../../services/supabaseClient"
+import toast from "react-hot-toast"
 
-import { type FormData, CarSchema, type CarImagesProps, type CarProps } from "../../../types/car";
+import { type FormData, CarSchema, type CarImagesProps, type CarProps } from "../../../types/car"
 
-type CarInsertPayload = Omit<CarProps, 'id' | 'created_at'>;
+type CarUpdatePayload = Omit<CarProps, 'id' | 'created_at'>;
 
-
-export default function New() {
-
+export default function Edit() {
+    const { id } = useParams()
+    const navigate = useNavigate()
     const { user } = UserAuth()
 
     const [carImages, setCarImages] = useState<CarImagesProps[]>([])
-
+    const [existingImages, setExistingImages] = useState<CarImagesProps[]>([])
     const [loading, setLoading] = useState(false)
+    const [fetching, setFetching] = useState(true)
 
     const { register, handleSubmit, formState: { errors }, reset } = useForm<FormData>({
         resolver: zodResolver(CarSchema),
         mode: "onChange"
     })
 
+    useEffect(() => {
+        async function loadCar() {
+            if (!id || !user?.id) return
+
+            const { data, error } = await supabase
+                .from("cars")
+                .select("*")
+                .eq("id", id)
+                .single()
+
+            if (error || !data) {
+                console.error("Erro ao buscar carro:", error)
+                toast.error("Carro não encontrado")
+                navigate("/dashboard")
+                return
+            }
+
+            const car = data as CarProps
+
+            if (car.user_id !== user.id) {
+                toast.error("Você não tem permissão para editar este carro")
+                navigate("/dashboard")
+                return
+            }
+
+            reset({
+                name: car.name,
+                model: car.model,
+                year: car.year,
+                km: car.km,
+                price: String(car.price),
+                city: car.city,
+                uf: car.uf,
+                whatsapp: car.whatsapp,
+                description: car.description,
+                fuel: car.fuel,
+            })
+
+            const loadedImages: CarImagesProps[] = (car.images || []).map((img: any) => ({
+                name: img.name,
+                uid: img.uid,
+                path: img.path,
+                url: img.url,
+                previewUrl: img.url,
+            }))
+
+            setExistingImages(loadedImages)
+            setFetching(false)
+        }
+
+        loadCar()
+    }, [id, user?.id, reset, navigate])
 
     async function onSubmit(data: FormData) {
-        if(!user?.id) return
+        if (!user?.id || !id) return
 
-        if (carImages.length === 0) {
+        const allImages = [...existingImages, ...carImages]
+
+        if (allImages.length === 0) {
             toast.error("Envie no mínimo 1 imagem de carro!")
             return
         }
 
         setLoading(true)
 
-        const carImageList = carImages.map(image => ({
+        const carImageList = allImages.map(image => ({
             url: image.url,
             name: image.name,
             uid: image.uid,
             path: image.path
         }))
 
-        const carData: CarInsertPayload = {
+        const carData: CarUpdatePayload = {
             name: data.name,
             model: data.model,
             year: data.year,
@@ -69,25 +125,23 @@ export default function New() {
         }
 
         try {
-            const {error} = await supabase
-            .from("cars")
-            .insert(carData)
+            const { error } = await supabase
+                .from("cars")
+                .update(carData)
+                .eq("id", id)
 
-            if(error) {
-                console.error("Erro ao cadastrar carro no servidor: ", error)
-                toast.error("Erro ao cadastrar carro no servidor")
+            if (error) {
+                console.error("Erro ao atualizar carro: ", error)
+                toast.error("Erro ao atualizar carro no servidor")
                 return
             }
-            
-            reset()
-            setCarImages([])
-            toast.success("Carro cadastrado com sucesso!")
-        }
-        catch(error) {
-            console.log("Erro ao cadastrar carro: ", error)
-            toast.error("Não foi possivel cadastrar o carro")
-        }
-        finally{
+
+            toast.success("Carro atualizado com sucesso!")
+            navigate("/dashboard")
+        } catch (error) {
+            console.log("Erro ao atualizar carro: ", error)
+            toast.error("Não foi possível atualizar o carro")
+        } finally {
             setLoading(false)
         }
     }
@@ -104,8 +158,7 @@ export default function New() {
                     return
                 }
                 handleUpload(image)
-            }
-            else {
+            } else {
                 toast.error("Envie uma imagem JPEG ou PNG!")
                 return
             }
@@ -114,7 +167,7 @@ export default function New() {
 
     async function handleUpload(image: File) {
         if (!user?.id) return
-        
+
         setLoading(true)
 
         const currentId = user?.id
@@ -143,7 +196,6 @@ export default function New() {
                 .getPublicUrl(uploadPath)
 
             if (publicUrlData.publicUrl) {
-
                 const imageItem: CarImagesProps = {
                     name: fileNameWithExt,
                     uid: currentId,
@@ -155,91 +207,94 @@ export default function New() {
                 setCarImages((prevImages) =>
                     [...prevImages, imageItem])
 
-                console.log("Upload concluído: ", publicUrlData.publicUrl)
                 toast.success("Imagem cadastrada com sucesso")
             }
-
         } catch (error) {
             console.log("Erro inesperado: ", error)
             toast.error("Erro inesperado ao cadastrar imagem")
+        } finally {
+            setLoading(false)
         }
-        finally{
-         setLoading(false)   
-        }
-
     }
 
-    async function handleDeleteImage(item: CarImagesProps){
-        if(!user?.id) return
+    async function handleDeleteImage(item: CarImagesProps) {
+        if (!user?.id) return
 
         setLoading(true)
 
         const deletePath = item.path
 
-        try{
+        try {
             const { data, error } = await supabase
-            .storage
-            .from("images")
-            .remove([deletePath])
+                .storage
+                .from("images")
+                .remove([deletePath])
 
-            if(data && data.length === 0) {
+            if (data && data.length === 0) {
                 console.warn("AVISO: Arquivo não encontrado no Supabase")
             }
 
-            if(error) {
+            if (error) {
                 console.log("Houve um erro ao deletar a imagem no servidor: ", error)
                 alert("Erro ao deletar imagem no servidor.")
                 return
             }
 
             setCarImages(prevImages => prevImages.filter(car => car.path !== item.path))
+            setExistingImages(prevImages => prevImages.filter(car => car.path !== item.path))
 
             URL.revokeObjectURL(item.previewUrl)
-            
-            toast.success("imagem deletada com sucesso!")
 
-        }
-        catch(error){
+            toast.success("Imagem deletada com sucesso!")
+        } catch (error) {
             console.log("Erro ao deletar imagem no servidor.")
             toast.error("Erro ao deletar imagem no servidor")
-        }
-        finally{
+        } finally {
             setLoading(false)
         }
     }
 
+    if (fetching) {
+        return (
+            <Container>
+                <DashboardHeader />
+                <div className="w-full flex justify-center my-4">
+                    <div className="animate-spin h-8 w-8 border-4 border-zinc-800 border-t-transparent rounded-full"></div>
+                </div>
+            </Container>
+        )
+    }
 
     return (
         <Container>
             <DashboardHeader />
 
             {loading && (
-                <div className=" w-full flex justify-center my-4">
-                    <div className=" animate-spin h-8 w-8 border-4 border-zinc-800 border-t-transparent rounded-full"></div>
+                <div className="w-full flex justify-center my-4">
+                    <div className="animate-spin h-8 w-8 border-4 border-zinc-800 border-t-transparent rounded-full"></div>
                 </div>
             )}
 
             <div className="w-full bg-white p-3 rounded-lg flex flex-col sm:flex-row items-center gap-2">
-
-                <button className=" border-2 w-48 rounded-lg flex items-center justify-center cursor-pointer border-gray-600 h-32 md:w-48">
-                    <div className=" absolute cursor-pointer">
+                <button className="border-2 w-48 rounded-lg flex items-center justify-center cursor-pointer border-gray-600 h-32 md:w-48">
+                    <div className="absolute cursor-pointer">
                         <FiUpload size={30} color="#000" />
                     </div>
-                    <div className=" cursor-pointer">
+                    <div className="cursor-pointer">
                         <input
                             type="file"
                             accept="image/*"
-                            className=" opacity-0 cursor-pointer"
+                            className="opacity-0 cursor-pointer"
                             onChange={handleFile}
                         />
                     </div>
                 </button>
 
-                {carImages.map(item => (
+                {[...existingImages, ...carImages].map(item => (
                     <div key={item.path}
-                        className=" flex justify-center items-center">
+                        className="flex justify-center items-center relative">
                         <button
-                            onClick={ () => handleDeleteImage(item)}
+                            onClick={() => handleDeleteImage(item)}
                             className="absolute bg-white p-2 rounded-2xl opacity-45 cursor-pointer hover:scale-103 hover:opacity-65"
                         >
                             <FiTrash size={24} color="#000" />
@@ -247,19 +302,19 @@ export default function New() {
                         <img
                             src={item.previewUrl}
                             alt="Foto do carro"
-                            className=" rounded-lg w-full h-32 object-cover"
+                            className="rounded-lg w-full h-32 object-cover"
                         />
                     </div>
                 ))}
             </div>
 
-            <div className=" w-full bg-white p-3 rounded-lg flex flex-col sm:flex-row items-center gap-2 mt-2">
+            <div className="w-full bg-white p-3 rounded-lg flex flex-col sm:flex-row items-center gap-2 mt-2">
                 <form
-                    className=" w-full"
+                    className="w-full"
                     onSubmit={handleSubmit(onSubmit)}>
 
                     <div className="mb-3">
-                        <p className=" mb-2 font-medium">Nome do carro</p>
+                        <p className="mb-2 font-medium">Nome do carro</p>
                         <Input
                             type="text"
                             name="name"
@@ -270,7 +325,7 @@ export default function New() {
                     </div>
 
                     <div className="mb-3">
-                        <p className=" mb-2 font-medium">Modelo do carro</p>
+                        <p className="mb-2 font-medium">Modelo do carro</p>
                         <Input
                             type="text"
                             name="model"
@@ -280,9 +335,9 @@ export default function New() {
                         />
                     </div>
 
-                    <div className=" flex flex-row w-full mb-3 items-center gap-4 ">
+                    <div className="flex flex-row w-full mb-3 items-center gap-4">
                         <div className="w-full">
-                            <p className=" mb-2 font-medium">Ano do carro</p>
+                            <p className="mb-2 font-medium">Ano do carro</p>
                             <Input
                                 type="text"
                                 name="year"
@@ -293,7 +348,7 @@ export default function New() {
                         </div>
 
                         <div className="w-full">
-                            <p className=" mb-2 font-medium">KM rodados</p>
+                            <p className="mb-2 font-medium">KM rodados</p>
                             <Input
                                 type="text"
                                 name="km"
@@ -304,7 +359,7 @@ export default function New() {
                         </div>
 
                         <div className="w-full">
-                            <p className=" mb-2 font-medium">Combustível</p>
+                            <p className="mb-2 font-medium">Combustível</p>
                             <select
                                 className="border-2 border-[#878787] w-full rounded-md h-10 px-2"
                                 id="fuel"
@@ -316,14 +371,14 @@ export default function New() {
                                 ))}
                             </select>
                             {errors.fuel && (
-                                <p className=" mb-1 text-red-500">{errors.fuel?.message}</p>
+                                <p className="mb-1 text-red-500">{errors.fuel?.message}</p>
                             )}
                         </div>
                     </div>
 
-                    <div className=" flex flex-row w-full mb-3 items-center gap-4 ">
+                    <div className="flex flex-row w-full mb-3 items-center gap-4">
                         <div className="w-full">
-                            <p className=" mb-2 font-medium">Telefone / Whatsapp</p>
+                            <p className="mb-2 font-medium">Telefone / Whatsapp</p>
                             <Input
                                 type="text"
                                 name="whatsapp"
@@ -334,7 +389,7 @@ export default function New() {
                         </div>
 
                         <div className="w-full">
-                            <p className=" mb-2 font-medium">Cidade</p>
+                            <p className="mb-2 font-medium">Cidade</p>
                             <Input
                                 type="text"
                                 name="city"
@@ -345,26 +400,25 @@ export default function New() {
                         </div>
 
                         <div className="w-full">
-                            <p className=" mb-2 font-medium">UF</p>
-                            <select 
-                            className=" border-2 border-[#878787]  w-full rounded-md h-10 px-2" 
-                            id="uf"
-                            {...register("uf")}
+                            <p className="mb-2 font-medium">UF</p>
+                            <select
+                                className="border-2 border-[#878787] w-full rounded-md h-10 px-2"
+                                id="uf"
+                                {...register("uf")}
                             >
                                 <option value="" disabled>Selecione</option>
                                 {UF_OPTIONS.map(uf => (
                                     <option key={uf} value={uf}>{uf}</option>
                                 ))}
                             </select>
-
                             {errors.uf && (
-                                <p className=" mb-1 text-red-500">{errors.uf?.message}</p>
+                                <p className="mb-1 text-red-500">{errors.uf?.message}</p>
                             )}
                         </div>
                     </div>
 
                     <div className="mb-3">
-                        <p className=" mb-2 font-medium">Preço</p>
+                        <p className="mb-2 font-medium">Preço</p>
                         <Input
                             type="text"
                             name="price"
@@ -375,7 +429,7 @@ export default function New() {
                     </div>
 
                     <div className="mb-3">
-                        <p className=" mb-2 font-medium">Descrição</p>
+                        <p className="mb-2 font-medium">Descrição</p>
                         <textarea
                             className="border-2 border-[#878787] w-full rounded-md h-24 px-2"
                             placeholder="Digite a descrição completa sobre o carro..."
@@ -383,19 +437,15 @@ export default function New() {
                             id="description"
                         />
                         {errors.description && (
-                            <p className=" mb-1 text-red-500">{errors.description?.message}</p>
+                            <p className="mb-1 text-red-500">{errors.description?.message}</p>
                         )}
                     </div>
 
-                    <button type="submit" className=" rounded-md w-full h-10 bg-zinc-900 text-white font-medium cursor-pointer">
-                        Cadastrar carro
+                    <button type="submit" className="rounded-md w-full h-10 bg-zinc-900 text-white font-medium cursor-pointer">
+                        Salvar alterações
                     </button>
-
-
-
                 </form>
             </div>
-
         </Container>
     )
 }

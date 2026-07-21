@@ -7,9 +7,20 @@ import { WHATSAPP_NUMBER } from "../../constants/whatsapp"
 
 export default function CarDetail() {
   const [car, setCar] = useState<CarProps | null>(null)
+  const [relatedCars, setRelatedCars] = useState<CarProps[]>([])
   const [loading, setLoading] = useState(true)
+  const [favorites, setFavorites] = useState<Set<string>>(new Set())
   const { id } = useParams()
   const navigate = useNavigate()
+
+  function toggleFavorite(carId: string) {
+    setFavorites(prev => {
+      const next = new Set(prev)
+      if (next.has(carId)) next.delete(carId)
+      else next.add(carId)
+      return next
+    })
+  }
 
   useEffect(() => {
     async function loadCar() {
@@ -43,6 +54,23 @@ export default function CarDetail() {
     loadCar()
   }, [id, navigate])
 
+  useEffect(() => {
+    const currentCarId = car?.id
+    if (!currentCarId) return
+    async function loadRelated() {
+      const { data } = await supabase
+        .from("cars")
+        .select("*")
+        .neq("id", currentCarId)
+        .limit(4)
+
+      if (data) {
+        setRelatedCars(data as CarProps[])
+      }
+    }
+    loadRelated()
+  }, [car?.id])
+
   if (loading) {
     return (
       <div className="w-full flex justify-center my-10 pt-16">
@@ -74,9 +102,6 @@ export default function CarDetail() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-stack-small h-auto md:h-[500px] rounded-[12px] overflow-hidden shadow-sm">
           <div className="md:col-span-2 relative h-64 md:h-full">
             <img alt={car.name} className="w-full h-full object-cover" src={mainImage} />
-            <div className="absolute bottom-4 left-4 bg-surface/90 backdrop-blur-sm px-3 py-1 rounded-full text-label-medium font-label-medium flex items-center gap-1 shadow-sm">
-              <span className="material-symbols-outlined text-sm text-success-green" style={{ fontVariationSettings: "'FILL' 1" }}>verified</span> Verificado
-            </div>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-1 md:grid-rows-2 gap-stack-small h-32 md:h-full">
             <div className="relative w-full h-full">
@@ -118,7 +143,7 @@ export default function CarDetail() {
                 {[
                   { icon: "calendar_today", label: "Ano", value: car.year },
                   { icon: "speed", label: "Quilometragem", value: `${car.km} km` },
-                  { icon: "local_gas_station", label: "Combustível", value: "Flex" },
+                  { icon: "local_gas_station", label: "Combustível", value: car.fuel || "Flex" },
                   { icon: "settings", label: "Câmbio", value: "Automático" },
                   { icon: "palette", label: "Cor", value: "Branco" },
                   { icon: "location_on", label: "Cidade", value: `${car.city}, ${car.uf}` },
@@ -142,13 +167,16 @@ export default function CarDetail() {
             <div className="sticky top-24 bg-surface-container-lowest rounded-[12px] p-stack-medium shadow-sm border border-border-subtle flex flex-col gap-stack-medium">
               <div className="flex justify-between items-center border-b border-border-subtle pb-stack-medium">
                 <span className="font-headline-medium text-headline-medium text-primary">{priceFormatted}</span>
-                <button className="p-2 rounded-full hover:bg-surface-variant transition-colors text-secondary hover:text-primary">
-                  <span className="material-symbols-outlined">favorite_border</span>
+                <button
+                  onClick={() => toggleFavorite(car.id)}
+                  className="flex items-center justify-center w-9 h-9 rounded-full hover:bg-surface-variant transition-colors text-secondary hover:text-primary"
+                >
+                  <span className="material-symbols-outlined" style={{ fontVariationSettings: favorites.has(car.id) ? "'FILL' 1" : "'FILL' 0", color: favorites.has(car.id) ? "var(--color-primary)" : "var(--color-secondary)" }}>favorite</span>
                 </button>
               </div>
               <div className="flex flex-col gap-stack-small mt-2">
                 <a
-                  href={`https://api.whatsapp.com/send?phone=${WHATSAPP_NUMBER}&text=Olá, vi esse ${car.name} no site WebCarros e fiquei interessado!`}
+                  href={`https://api.whatsapp.com/send?phone=${car.whatsapp || WHATSAPP_NUMBER}&text=Olá, vi esse ${car.name} no site WebCarros e fiquei interessado!`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-full bg-success-green text-on-primary py-3 rounded-xl font-label-medium text-label-medium flex items-center justify-center gap-2 hover:bg-opacity-90 transition-all shadow-sm"
@@ -185,23 +213,21 @@ export default function CarDetail() {
         <section className="mt-stack-large">
           <h2 className="font-headline-medium text-headline-medium mb-stack-medium">Você também pode gostar</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter">
-            {[
-              { img: "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=400&q=80", title: "Audi A4 Prestige", desc: "2.0 TFSI • 2022", price: "R$ 255.000" },
-              { img: "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=400&q=80", title: "Mercedes-Benz C300", desc: "2.0 AMG Line • 2023", price: "R$ 310.000" },
-              { img: "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=400&q=80", title: "Volvo S60 Recharge", desc: "2.0 T8 Inscription • 2022", price: "R$ 275.500" },
-              { img: "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=400&q=80", title: "BMW 320i Sport GP", desc: "2.0 Turbo • 2021", price: "R$ 240.000" },
-            ].map((related, i) => (
-              <div key={i} className="bg-surface-container-lowest rounded-[12px] overflow-hidden shadow-sm border border-border-subtle hover:shadow-md transition-shadow cursor-pointer group">
-                <div className="relative h-48 overflow-hidden">
-                  <img className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" src={related.img} alt="" />
-                </div>
-                <div className="p-4 flex flex-col gap-2">
-                  <h3 className="font-title-large text-title-large truncate">{related.title}</h3>
-                  <p className="font-body-small text-body-small text-secondary">{related.desc}</p>
-                  <span className="font-headline-medium text-headline-medium text-primary mt-2">{related.price}</span>
-                </div>
-              </div>
-            ))}
+            {relatedCars.map((rCar) => {
+              const rImg = rCar.images?.[0]?.url || "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=400&q=80"
+              return (
+                <Link key={rCar.id} to={`/car/${rCar.id}`} className="bg-surface-container-lowest rounded-[12px] overflow-hidden shadow-sm border border-border-subtle hover:shadow-md transition-shadow cursor-pointer group block">
+                  <div className="relative h-48 overflow-hidden">
+                    <img className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" src={rImg} alt="" />
+                  </div>
+                  <div className="p-4 flex flex-col gap-2">
+                    <h3 className="font-title-large text-title-large truncate">{rCar.name}</h3>
+                    <p className="font-body-small text-body-small text-secondary">{rCar.year} • {rCar.km} km</p>
+                    <span className="font-headline-medium text-headline-medium text-primary mt-2">{Number(rCar.price).toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}</span>
+                  </div>
+                </Link>
+              )
+            })}
           </div>
         </section>
       </main>

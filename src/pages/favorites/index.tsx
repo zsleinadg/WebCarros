@@ -1,45 +1,37 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Link } from "react-router"
+import { supabase } from "../../services/supabaseClient"
+import type { CarProps } from "../../types/car"
 import logoImg from "../../assets/logo.svg"
 
-const favoriteCars = [
-  {
-    img: "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=600&q=80",
-    title: "Land Rover Range Rover",
-    model: "Vogue 3.0 V6 Td6 Diesel",
-    year: "2018/2019",
-    km: "54.000 km",
-    fuel: "Diesel",
-    price: "R$ 489.900",
-  },
-  {
-    img: "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=600&q=80",
-    title: "Hyundai i30",
-    model: "1.8 MPI 16V Gasolina 4P Aut.",
-    year: "2015/2016",
-    km: "89.500 km",
-    fuel: "Gasolina",
-    price: "R$ 72.900",
-  },
-  {
-    img: "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=600&q=80",
-    title: "Ford F-150",
-    model: "Raptor 3.5 V6 EcoBoost",
-    year: "2022/2023",
-    km: "12.000 km",
-    fuel: "Gasolina",
-    price: "R$ 890.000",
-  },
-]
-
 export default function Favorites() {
-  const [favorites, setFavorites] = useState<number[]>([0, 1, 2])
+  const [allCars, setAllCars] = useState<CarProps[]>([])
+  const [favorites, setFavorites] = useState<string[]>([])
 
-  function toggleFavorite(index: number) {
+  useEffect(() => {
+    async function loadCars() {
+      const { data } = await supabase
+        .from("cars")
+        .select("*")
+
+      if (data) {
+        setAllCars(data as CarProps[])
+      }
+    }
+    loadCars()
+  }, [])
+
+  function toggleFavorite(id: string) {
     setFavorites(prev =>
-      prev.includes(index) ? prev.filter(i => i !== index) : [...prev, index]
+      prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]
     )
   }
+
+  function formatPrice(price: string | number) {
+    return Number(price).toLocaleString("pt-BR", { style: "currency", currency: "BRL" })
+  }
+
+  const favoriteCars = allCars.filter(car => favorites.includes(car.id))
 
   return (
     <>
@@ -60,37 +52,39 @@ export default function Favorites() {
         </section>
 
         <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-stack-large">
-          {favoriteCars.filter((_, i) => favorites.includes(i)).map((car, i) => (
-            <article key={i} className="bg-surface-container-lowest rounded-xl shadow-sm border border-border-subtle overflow-hidden flex flex-col hover:shadow-md transition-shadow duration-300 relative group">
-              <button
-                onClick={() => toggleFavorite(i)}
-                className="absolute top-4 right-4 z-10 w-10 h-10 bg-surface-container-lowest/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm text-primary hover:scale-110 transition-transform"
-              >
-                <span className="material-symbols-outlined text-primary" style={{ fontSize: 24, fontVariationSettings: favorites.includes(i) ? "'FILL' 1" : "'FILL' 0" }}>favorite</span>
-              </button>
-              <div className="relative h-56 bg-surface-variant w-full">
-                <img alt={car.title} className="w-full h-full object-cover" src={car.img} />
-              </div>
-              <div className="p-stack-medium flex flex-col flex-grow">
-                <div className="flex justify-between items-start mb-base">
-                  <h2 className="text-headline-medium font-headline-medium text-on-background line-clamp-1">{car.title}</h2>
+          {favoriteCars.map((car) => {
+            const imgUrl = car.images?.[0]?.url || "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=600&q=80"
+            return (
+              <article key={car.id} className="bg-surface-container-lowest rounded-xl shadow-sm border border-border-subtle overflow-hidden flex flex-col hover:shadow-md transition-shadow duration-300 relative group">
+                <button
+                  onClick={() => toggleFavorite(car.id)}
+                  className="absolute top-4 right-4 z-10 w-10 h-10 bg-surface-container-lowest/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm text-primary hover:scale-110 transition-transform"
+                >
+                  <span className="material-symbols-outlined text-primary" style={{ fontSize: 24, fontVariationSettings: favorites.includes(car.id) ? "'FILL' 1" : "'FILL' 0" }}>favorite</span>
+                </button>
+                <div className="relative h-56 bg-surface-variant w-full">
+                  <img alt={car.name} className="w-full h-full object-cover" src={imgUrl} />
                 </div>
-                <p className="text-label-medium font-label-medium text-secondary mb-stack-medium uppercase tracking-wider">{car.model}</p>
-                <div className="flex flex-wrap gap-2 mb-stack-large">
-                  <span className="bg-surface-container-low text-secondary px-2 py-1 rounded text-xs font-semibold">{car.year}</span>
-                  <span className="bg-surface-container-low text-secondary px-2 py-1 rounded text-xs font-semibold">{car.km}</span>
-                  <span className="bg-surface-container-low text-secondary px-2 py-1 rounded text-xs font-semibold">{car.fuel}</span>
+                <div className="p-stack-medium flex flex-col flex-grow">
+                  <div className="flex justify-between items-start mb-base">
+                    <h2 className="text-headline-medium font-headline-medium text-on-background line-clamp-1">{car.name}</h2>
+                  </div>
+                  <p className="text-label-medium font-label-medium text-secondary mb-stack-medium uppercase tracking-wider">{car.model}</p>
+                  <div className="flex flex-wrap gap-2 mb-stack-large">
+                    <span className="bg-surface-container-low text-secondary px-2 py-1 rounded text-xs font-semibold">{car.year}</span>
+                    <span className="bg-surface-container-low text-secondary px-2 py-1 rounded text-xs font-semibold">{car.km} km</span>
+                  </div>
+                  <div className="mt-auto pt-stack-medium border-t border-border-subtle flex items-center justify-between">
+                    <p className="text-headline-medium font-headline-medium text-primary font-bold">{formatPrice(car.price)}</p>
+                    <Link to={`/car/${car.id}`} className="text-primary font-semibold text-sm hover:underline flex items-center">
+                      Ver detalhes
+                      <span className="material-symbols-outlined ml-1" style={{ fontSize: 16 }}>arrow_forward</span>
+                    </Link>
+                  </div>
                 </div>
-                <div className="mt-auto pt-stack-medium border-t border-border-subtle flex items-center justify-between">
-                  <p className="text-headline-medium font-headline-medium text-primary font-bold">{car.price}</p>
-                  <Link to="/car/1" className="text-primary font-semibold text-sm hover:underline flex items-center">
-                    Ver detalhes
-                    <span className="material-symbols-outlined ml-1" style={{ fontSize: 16 }}>arrow_forward</span>
-                  </Link>
-                </div>
-              </div>
-            </article>
-          ))}
+              </article>
+            )
+          })}
         </section>
       </main>
 

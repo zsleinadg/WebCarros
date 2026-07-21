@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react"
+import { Link } from "react-router"
 import Container from "../../components/container"
 import DashboardHeader from "../../components/panelheader"
 
-import { FiTrash2 } from "react-icons/fi"
+import { FiTrash2, FiEdit2 } from "react-icons/fi"
 import { supabase } from "../../services/supabaseClient"
 import { type CarProps } from "../../types/car"
 import { UserAuth } from "../../contexts/AuthContext"
@@ -96,6 +97,12 @@ export default function Dashboard() {
                     <section key={car.id} className="w-full bg-white rounded-lg relative">
                         <div>
 
+                            <Link
+                                to={`/dashboard/edit/${car.id}`}
+                                className="absolute bg-white p-2 rounded-2xl opacity-45 cursor-pointer hover:scale-103 hover:opacity-65 left-2 top-2"
+                            >
+                                <FiEdit2 size={24} color="#000" />
+                            </Link>
                             <button
                                 onClick={() => handleDeleteCar(car.id)}
                                 className="absolute bg-white p-2 rounded-2xl opacity-45 cursor-pointer hover:scale-103 hover:opacity-65 right-2 top-2"

@@ -1,43 +1,46 @@
-import { useState, useEffect, useRef } from "react"
-import { Link } from "react-router"
+import { useState, useEffect } from "react"
+import { Link, useNavigate } from "react-router"
+import { supabase } from "../../services/supabaseClient"
+import type { CarProps } from "../../types/car"
+import { FUEL_OPTIONS } from "../../constants/fuelList"
 import logoImg from "../../assets/logo.svg"
 import { WHATSAPP_NUMBER } from "../../constants/whatsapp"
 
 export default function Home() {
   const [showAdvanced, setShowAdvanced] = useState(false)
-  const [displayCount, setDisplayCount] = useState(0)
-  const btnRef = useRef<HTMLAnchorElement>(null)
+  const [carCount, setCarCount] = useState(0)
+  const [featuredCars, setFeaturedCars] = useState<CarProps[]>([])
+  const [searchTerm, setSearchTerm] = useState("")
+  const [selectedYear, setSelectedYear] = useState("")
+  const [selectedPrice, setSelectedPrice] = useState("")
+  const [selectedFuel, setSelectedFuel] = useState("")
+  const navigate = useNavigate()
+
+  const currentYear = new Date().getFullYear()
+  const yearOptions = Array.from({ length: currentYear - 1999 }, (_, i) => String(currentYear - i))
 
   useEffect(() => {
-    const btn = btnRef.current
-    if (!btn) return
-
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          animateCounter()
-          observer.unobserve(entry.target)
-        }
-      })
-    })
-
-    observer.observe(btn)
-
-    return () => observer.disconnect()
+    async function loadCount() {
+      const { count } = await supabase
+        .from("cars")
+        .select("*", { count: "exact", head: true })
+      if (count !== null) setCarCount(count)
+    }
+    loadCount()
   }, [])
 
-  function animateCounter() {
-    const target = 12435
-    let current = 0
-    const step = Math.ceil(target / 60)
-    const interval = setInterval(() => {
-      current += step
-      if (current >= target) {
-        current = target
-        clearInterval(interval)
-      }
-      setDisplayCount(current)
-    }, 20)
+  function handleSearch(e: React.FormEvent) {
+    e.preventDefault()
+    const params = new URLSearchParams()
+    if (searchTerm) params.set("search", searchTerm)
+    if (selectedYear) params.set("ano", selectedYear)
+    if (selectedPrice) params.set("precoMax", selectedPrice)
+    if (selectedFuel) params.set("fuel", selectedFuel)
+    navigate(`/estoque?${params.toString()}`)
+  }
+
+  function handleCategoryClick(category: string) {
+    navigate(`/estoque?search=${encodeURIComponent(category)}`)
   }
 
   const categories = [
@@ -54,60 +57,24 @@ export default function Home() {
     { icon: "celebration", title: "3. Compre", desc: "Realize a compra com segurança. Todo o suporte necessário para você sair com o carro novo e sem preocupações." },
   ]
 
-  const featuredCars = [
-    {
-      img: "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=600&q=80",
-      badge: "★ Destaque",
-      badgeStyle: "badge-destaque",
-      badge2: "Verificado",
-      badge2Style: "bg-white/90 text-on-surface",
-      title: "BMW 320i M Sport",
-      model: "2.0 16V TURBO GASOLINA 4P AUTOMÁTICO",
-      price: "R$ 289.900",
-      year: "2022/2023",
-      km: "15.000",
-      location: "São Paulo, SP"
-    },
-    {
-      img: "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=600&q=80",
-      badge: "Vistoriado",
-      badgeStyle: "bg-secondary text-white",
-      badge2: "Pronto pra retirar",
-      badge2Style: "bg-success-green text-white",
-      title: "Ford Ranger Limited",
-      model: "3.2 20V DIESEL CABINE DUPLA 4X4 AUTOMÁTICO",
-      price: "R$ 215.000",
-      year: "2021/2021",
-      km: "42.500",
-      location: "Curitiba, PR"
-    },
-    {
-      img: "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=600&q=80",
-      badge: "★ Destaque",
-      badgeStyle: "badge-destaque",
-      badge2: "",
-      badge2Style: "",
-      title: "Volkswagen Polo Highline",
-      model: "1.0 200 TSI FLEX AUTOMÁTICO",
-      price: "R$ 105.900",
-      year: "2023/2023",
-      km: "8.000",
-      location: "Belo Horizonte, MG"
-    },
-    {
-      img: "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=600&q=80",
-      badge: "Blindado",
-      badgeStyle: "bg-secondary text-white",
-      badge2: "",
-      badge2Style: "",
-      title: "Jeep Compass Trailhawk",
-      model: "2.0 16V TURBO DIESEL 4X4 AUTOMÁTICO",
-      price: "R$ 198.500",
-      year: "2022/2022",
-      km: "22.100",
-      location: "Rio de Janeiro, RJ"
-    },
-  ]
+  useEffect(() => {
+    async function loadFeatured() {
+      const { data } = await supabase
+        .from("cars")
+        .select("*")
+        .limit(4)
+        .order("created_at", { ascending: false })
+
+      if (data) {
+        setFeaturedCars(data as CarProps[])
+      }
+    }
+    loadFeatured()
+  }, [])
+
+  function formatPrice(price: string | number) {
+    return Number(price).toLocaleString("pt-BR", { style: "currency", currency: "BRL" })
+  }
 
   return (
     <>
@@ -123,12 +90,10 @@ export default function Home() {
         </svg>
       </a>
 
-
-
       <section className="relative bg-inverse-surface w-full overflow-hidden">
         <div className="absolute inset-0 z-0 opacity-40">
           <img alt="" className="w-full h-full object-cover" src="https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=1600&q=80" />
-          <div className="absolute inset-0 bg-gradient-to-t from-inverse-surface via-inverse-surface/80 to-transparent"></div>
+          <div className="absolute inset-0 bg-linear-to-t from-inverse-surface via-inverse-surface/80 to-transparent"></div>
         </div>
         <div className="relative z-10 max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-stack-large md:py-[80px]">
           <div className="max-w-3xl">
@@ -143,72 +108,97 @@ export default function Home() {
                 <Link to="/estoque" className="pb-3 border-b-2 border-primary text-primary font-title-large font-bold">Comprar Carros</Link>
                 <Link to="/vender" className="pb-3 text-secondary font-title-large font-semibold hover:text-primary transition-colors">Vender meu carro</Link>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
-                <div className="md:col-span-2 relative">
-                  <label className="absolute -top-2 left-3 bg-surface px-1 text-[10px] font-bold text-secondary uppercase tracking-wider">
-                    Marca, Modelo ou Versão
-                  </label>
-                  <div className="flex items-center border border-border-subtle rounded px-3 py-3 focus-within:border-primary focus-within:ring-1 focus-within:ring-primary transition-all">
-                    <span className="material-symbols-outlined text-secondary mr-2">search</span>
-                    <input
-                      className="w-full bg-transparent border-none p-0 focus:ring-0 text-body-medium placeholder:text-secondary-fixed-dim outline-none"
-                      placeholder="Ex: Honda Civic" type="text" />
+              <form onSubmit={handleSearch}>
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                  <div className="md:col-span-2 relative">
+                    <label className="absolute -top-2 left-3 bg-surface px-1 text-[10px] font-bold text-secondary uppercase tracking-wider">
+                      Marca, Modelo ou Versão
+                    </label>
+                    <div className="flex items-center border border-border-subtle rounded px-3 py-3 focus-within:border-primary focus-within:ring-1 focus-within:ring-primary transition-all">
+                      <span className="material-symbols-outlined text-secondary mr-2">search</span>
+                      <input
+                        className="w-full bg-transparent border-none p-0 focus:ring-0 text-body-medium placeholder:text-secondary-fixed-dim outline-none"
+                        placeholder="Ex: Honda Civic"
+                        type="text"
+                        value={searchTerm}
+                        onChange={e => setSearchTerm(e.target.value)}
+                      />
+                    </div>
                   </div>
-                </div>
-                <div className="relative">
-                  <label className="absolute -top-2 left-3 bg-surface px-1 text-[10px] font-bold text-secondary uppercase tracking-wider">Ano</label>
-                  <select className="w-full border border-border-subtle rounded px-3 py-3 focus:border-primary focus:ring-1 focus:ring-primary text-body-medium text-on-surface bg-transparent appearance-none">
-                    <option value="">Todos</option>
-                    <option>2025</option>
-                    <option>2024</option>
-                    <option>2023</option>
-                    <option>2022</option>
-                    <option>2021</option>
-                    <option>2020</option>
-                  </select>
-                  <span className="material-symbols-outlined absolute right-3 top-3 text-secondary pointer-events-none">expand_more</span>
-                </div>
-                <div className="relative">
-                  <label className="absolute -top-2 left-3 bg-surface px-1 text-[10px] font-bold text-secondary uppercase tracking-wider">Preço Máx</label>
-                  <select className="w-full border border-border-subtle rounded px-3 py-3 focus:border-primary focus:ring-1 focus:ring-primary text-body-medium text-on-surface bg-transparent appearance-none">
-                    <option value="">Sem limite</option>
-                    <option value="30000">Até R$ 30.000</option>
-                    <option value="50000">Até R$ 50.000</option>
-                    <option value="80000">Até R$ 80.000</option>
-                    <option value="100000">Até R$ 100.000</option>
-                    <option value="150000">Até R$ 150.000</option>
-                    <option value="200000">Até R$ 200.000</option>
-                  </select>
-                  <span className="material-symbols-outlined absolute right-3 top-3 text-secondary pointer-events-none">expand_more</span>
-                </div>
-              </div>
-              <div className={`grid grid-cols-1 md:grid-cols-3 gap-4 mb-4 ${showAdvanced ? "" : "hidden"}`}>
-                {["Combustível", "Câmbio", "KM"].map((label) => (
-                  <div key={label} className="relative">
-                    <label className="absolute -top-2 left-3 bg-surface px-1 text-[10px] font-bold text-secondary uppercase tracking-wider">{label}</label>
-                    <select className="w-full border border-border-subtle rounded px-3 py-3 focus:border-primary focus:ring-1 focus:ring-primary text-body-medium text-on-surface bg-transparent appearance-none">
+                  <div className="relative">
+                    <label className="absolute -top-2 left-3 bg-surface px-1 text-[10px] font-bold text-secondary uppercase tracking-wider">Ano</label>
+                    <select className="w-full border border-border-subtle rounded px-3 py-3 focus:border-primary focus:ring-1 focus:ring-primary text-body-medium text-on-surface bg-transparent appearance-none" value={selectedYear} onChange={e => setSelectedYear(e.target.value)}>
                       <option value="">Todos</option>
+                      {yearOptions.map(y => (
+                        <option key={y} value={y}>{y}</option>
+                      ))}
                     </select>
                     <span className="material-symbols-outlined absolute right-3 top-3 text-secondary pointer-events-none">expand_more</span>
                   </div>
-                ))}
-              </div>
-              <div className="flex justify-between items-center">
-                <button
-                  onClick={() => setShowAdvanced(!showAdvanced)}
-                  className="text-primary font-label-medium flex items-center gap-1 hover:underline"
-                >
-                  <span className="material-symbols-outlined text-[16px]">{showAdvanced ? "remove" : "add"}</span>
-                  Busca Avançada
-                </button>
-                <Link
-                  to="/estoque"
-                  ref={btnRef}
-                  className="bg-primary text-white font-label-medium px-8 py-3 rounded hover:bg-webmotors-red-dark transition-colors shadow-sm active:shadow-inner inline-block"
-                >
-                  Ver Ofertas ({displayCount.toLocaleString("pt-BR")})
-                </Link>
-              </div>
+                  <div className="relative">
+                    <label className="absolute -top-2 left-3 bg-surface px-1 text-[10px] font-bold text-secondary uppercase tracking-wider">Preço Máx</label>
+                    <select className="w-full border border-border-subtle rounded px-3 py-3 focus:border-primary focus:ring-1 focus:ring-primary text-body-medium text-on-surface bg-transparent appearance-none" value={selectedPrice} onChange={e => setSelectedPrice(e.target.value)}>
+                      <option value="">Sem limite</option>
+                      <option value="30000">Até R$ 30.000</option>
+                      <option value="50000">Até R$ 50.000</option>
+                      <option value="80000">Até R$ 80.000</option>
+                      <option value="100000">Até R$ 100.000</option>
+                      <option value="150000">Até R$ 150.000</option>
+                      <option value="200000">Até R$ 200.000</option>
+                    </select>
+                    <span className="material-symbols-outlined absolute right-3 top-3 text-secondary pointer-events-none">expand_more</span>
+                  </div>
+                </div>
+                <div className={`grid grid-cols-1 md:grid-cols-3 gap-4 mb-4 ${showAdvanced ? "" : "hidden"}`}>
+                  <div className="relative">
+                    <label className="absolute -top-2 left-3 bg-surface px-1 text-[10px] font-bold text-secondary uppercase tracking-wider">Combustível</label>
+                    <select className="w-full border border-border-subtle rounded px-3 py-3 focus:border-primary focus:ring-1 focus:ring-primary text-body-medium text-on-surface bg-transparent appearance-none" value={selectedFuel} onChange={e => setSelectedFuel(e.target.value)}>
+                      <option value="">Todos</option>
+                      {FUEL_OPTIONS.map(f => (
+                        <option key={f} value={f}>{f}</option>
+                      ))}
+                    </select>
+                    <span className="material-symbols-outlined absolute right-3 top-3 text-secondary pointer-events-none">expand_more</span>
+                  </div>
+                  <div className="relative">
+                    <label className="absolute -top-2 left-3 bg-surface px-1 text-[10px] font-bold text-secondary uppercase tracking-wider">Câmbio</label>
+                    <select className="w-full border border-border-subtle rounded px-3 py-3 focus:border-primary focus:ring-1 focus:ring-primary text-body-medium text-on-surface bg-transparent appearance-none">
+                      <option value="">Todos</option>
+                      <option>Manual</option>
+                      <option>Automático</option>
+                      <option>Semi-Automático</option>
+                    </select>
+                    <span className="material-symbols-outlined absolute right-3 top-3 text-secondary pointer-events-none">expand_more</span>
+                  </div>
+                  <div className="relative">
+                    <label className="absolute -top-2 left-3 bg-surface px-1 text-[10px] font-bold text-secondary uppercase tracking-wider">KM</label>
+                    <select className="w-full border border-border-subtle rounded px-3 py-3 focus:border-primary focus:ring-1 focus:ring-primary text-body-medium text-on-surface bg-transparent appearance-none">
+                      <option value="">Todos</option>
+                      <option>Até 10.000 km</option>
+                      <option>10.000 - 30.000 km</option>
+                      <option>30.000 - 50.000 km</option>
+                      <option>50.000 - 100.000 km</option>
+                    </select>
+                    <span className="material-symbols-outlined absolute right-3 top-3 text-secondary pointer-events-none">expand_more</span>
+                  </div>
+                </div>
+                <div className="flex justify-between items-center">
+                  <button
+                    type="button"
+                    onClick={() => setShowAdvanced(!showAdvanced)}
+                    className="text-primary font-label-medium flex items-center gap-1 hover:underline cursor-pointer"
+                  >
+                    <span className="material-symbols-outlined text-[16px]">{showAdvanced ? "remove" : "add"}</span>
+                    Busca Avançada
+                  </button>
+                  <button
+                    type="submit"
+                    className="bg-primary text-white font-label-medium px-8 py-3 rounded hover:bg-webmotors-red-dark transition-colors shadow-sm active:shadow-inner inline-block cursor-pointer"
+                  >
+                    Ver Ofertas ({carCount.toLocaleString("pt-BR")})
+                  </button>
+                </div>
+              </form>
             </div>
           </div>
         </div>
@@ -219,11 +209,11 @@ export default function Home() {
           <h2 className="text-headline-medium font-headline-medium text-on-background mb-stack-medium">Busque por categoria</h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
             {categories.map((cat) => (
-              <Link key={cat.name} to="/estoque"
-                className="flex flex-col items-center justify-center p-4 bg-surface-gray rounded-lg border border-border-subtle hover:border-primary hover:bg-surface-container-low transition-colors group">
+              <button key={cat.name} onClick={() => handleCategoryClick(cat.name)}
+                className="flex flex-col items-center justify-center p-4 bg-surface-gray rounded-lg border border-border-subtle hover:border-primary hover:bg-surface-container-low transition-colors group cursor-pointer">
                 <span className="material-symbols-outlined text-secondary group-hover:text-primary mb-2" style={{ fontSize: 38}}>{cat.icon}</span>
                 <span className="font-label-medium text-on-surface group-hover:text-primary">{cat.name}</span>
-              </Link>
+              </button>
             ))}
           </div>
         </section>
@@ -252,37 +242,37 @@ export default function Home() {
             <Link to="/estoque" className="text-primary font-label-medium hover:underline flex items-center gap-1">Ver todos <span className="material-symbols-outlined text-sm">chevron_right</span></Link>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter">
-            {featuredCars.map((car, i) => (
-              <Link key={i} to="/car/1"
-                className="bg-surface rounded-xl border border-border-subtle overflow-hidden hover:shadow-ambient transition-shadow group cursor-pointer flex flex-col h-full">
-                <div className="relative aspect-[1.5] overflow-hidden">
-                  <img alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src={car.img} />
-                  <div className={`absolute top-2 left-2 text-white text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wide shadow-sm ${car.badgeStyle}`}>{car.badge}</div>
-                  {car.badge2 && (
-                    <div className={`absolute top-2 right-2 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wide shadow-sm ${car.badge2Style}`}>{car.badge2}</div>
-                  )}
-                </div>
-                <div className="p-4 flex flex-col flex-grow">
-                  <h3 className="font-title-large text-on-background line-clamp-1">{car.title}</h3>
-                  <p className="font-body-small text-secondary mb-3">{car.model}</p>
-                  <div className="text-headline-medium font-headline-medium text-primary font-bold mb-4 mt-auto">{car.price}</div>
-                  <div className="grid grid-cols-2 gap-2 mb-4">
-                    <div className="bg-surface-gray rounded px-2 py-1 text-center border border-border-subtle">
-                      <span className="block text-[10px] text-secondary uppercase">Ano</span>
-                      <span className="font-label-medium text-on-surface">{car.year}</span>
+            {featuredCars.map((car) => {
+              const imgUrl = car.images?.[0]?.url || "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=600&q=80"
+              return (
+                <Link key={car.id} to={`/car/${car.id}`}
+                  className="bg-surface rounded-xl border border-border-subtle overflow-hidden hover:shadow-ambient transition-shadow group cursor-pointer flex flex-col h-full">
+                  <div className="relative aspect-[1.5] overflow-hidden">
+                    <img alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src={imgUrl} />
+                    <div className="absolute top-2 left-2 text-white text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wide shadow-sm bg-primary">Destaque</div>
+                  </div>
+                  <div className="p-4 flex flex-col flex-grow">
+                    <h3 className="font-title-large text-on-background line-clamp-1">{car.name}</h3>
+                    <p className="font-body-small text-secondary mb-3">{car.model}</p>
+                    <div className="text-headline-medium font-headline-medium text-primary font-bold mb-4 mt-auto">{formatPrice(car.price)}</div>
+                    <div className="grid grid-cols-2 gap-2 mb-4">
+                      <div className="bg-surface-gray rounded px-2 py-1 text-center border border-border-subtle">
+                        <span className="block text-[10px] text-secondary uppercase">Ano</span>
+                        <span className="font-label-medium text-on-surface">{car.year}</span>
+                      </div>
+                      <div className="bg-surface-gray rounded px-2 py-1 text-center border border-border-subtle">
+                        <span className="block text-[10px] text-secondary uppercase">KM</span>
+                        <span className="font-label-medium text-on-surface">{car.km}</span>
+                      </div>
                     </div>
-                    <div className="bg-surface-gray rounded px-2 py-1 text-center border border-border-subtle">
-                      <span className="block text-[10px] text-secondary uppercase">KM</span>
-                      <span className="font-label-medium text-on-surface">{car.km}</span>
+                    <div className="flex items-center text-secondary font-body-small pt-3 border-t border-border-subtle">
+                      <span className="material-symbols-outlined text-[16px] mr-1">location_on</span>
+                      {car.city}, {car.uf}
                     </div>
                   </div>
-                  <div className="flex items-center text-secondary font-body-small pt-3 border-t border-border-subtle">
-                    <span className="material-symbols-outlined text-[16px] mr-1">location_on</span>
-                    {car.location}
-                  </div>
-                </div>
-              </Link>
-            ))}
+                </Link>
+              )
+            })}
           </div>
         </section>
 

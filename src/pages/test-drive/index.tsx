@@ -1,8 +1,11 @@
+import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import toast from "react-hot-toast"
-import { Link } from "react-router"
+import { Link, useSearchParams } from "react-router"
+import { supabase } from "../../services/supabaseClient"
+import type { CarProps } from "../../types/car"
 import logoImg from "../../assets/logo.svg"
 
 const TestDriveSchema = z.object({
@@ -23,21 +26,99 @@ const timeOptions = [
 ]
 
 export default function TestDrive() {
+  const [testCar, setTestCar] = useState<CarProps | null>(null)
+  const [searchParams] = useSearchParams()
+  const [loadingCar, setLoadingCar] = useState(true)
+  const carId = searchParams.get("car")
+
+  useEffect(() => {
+    if (!carId) {
+      setLoadingCar(false)
+      return
+    }
+    async function loadCar() {
+      const { data } = await supabase
+        .from("cars")
+        .select("*")
+        .eq("id", carId)
+        .single()
+
+      if (data) {
+        setTestCar(data as CarProps)
+      }
+      setLoadingCar(false)
+    }
+    loadCar()
+  }, [carId])
+
   const { register, handleSubmit, formState: { errors }, reset } = useForm<TestDriveForm>({
     resolver: zodResolver(TestDriveSchema),
     mode: "onChange",
   })
 
-  function onSubmit(data: TestDriveForm) {
-    console.log("Test drive agendado:", data)
+  function onSubmit(_data: TestDriveForm) {
+    if (!testCar?.id) {
+      toast.error("Selecione um carro para agendar o test drive")
+      return
+    }
+
     toast.success("Test drive agendado com sucesso!")
     reset()
   }
 
+  if (!carId && !loadingCar) {
+    return (
+      <>
+        <main className="flex-grow w-full max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-stack-large flex flex-col items-center justify-center gap-6 min-h-[60vh]">
+          <span className="material-symbols-outlined text-secondary" style={{ fontSize: 64 }}>directions_car</span>
+          <h1 className="text-headline-medium font-headline-medium text-on-surface text-center">Nenhum carro selecionado</h1>
+          <p className="text-body-medium text-body-medium text-secondary text-center max-w-md">Navegue pelo nosso estoque e escolha um carro para agendar um test drive.</p>
+          <Link to="/estoque" className="bg-primary text-white px-8 py-3 rounded-lg font-label-medium hover:opacity-90 transition-opacity">
+            Ver estoque
+          </Link>
+        </main>
+        <footer className="bg-on-tertiary-fixed text-primary mt-auto">
+          <div className="w-full py-stack-large px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto grid grid-cols-1 md:grid-cols-4 gap-gutter">
+            <div className="flex flex-col gap-4">
+              <Link to="/" className="block mb-2">
+                <img src={logoImg} alt="WebCarros" className="h-8 w-auto" />
+              </Link>
+              <p className="font-body-small text-body-small text-tertiary-fixed-dim">O seu marketplace automotivo premium.</p>
+            </div>
+            <div className="flex flex-col gap-2">
+              <h5 className="font-label-medium text-label-medium font-bold text-on-primary">Empresa</h5>
+              <a className="font-body-small text-body-small text-tertiary-fixed-dim hover:text-primary-fixed-dim transition-colors" href="#">Sobre Nós</a>
+              <a className="font-body-small text-body-small text-tertiary-fixed-dim hover:text-primary-fixed-dim transition-colors" href="#">Carreiras</a>
+              <a className="font-body-small text-body-small text-tertiary-fixed-dim hover:text-primary-fixed-dim transition-colors" href="#">Blog</a>
+            </div>
+            <div className="flex flex-col gap-2">
+              <h5 className="font-label-medium text-label-medium font-bold text-on-primary">Legal</h5>
+              <a className="font-body-small text-body-small text-tertiary-fixed-dim hover:text-primary-fixed-dim transition-colors" href="#">Termos de Uso</a>
+              <a className="font-body-small text-body-small text-tertiary-fixed-dim hover:text-primary-fixed-dim transition-colors" href="#">Privacidade</a>
+            </div>
+            <div className="flex flex-col gap-2">
+              <h5 className="font-label-medium text-label-medium font-bold text-on-primary">Contato</h5>
+              <a className="font-body-small text-body-small text-tertiary-fixed-dim hover:text-primary-fixed-dim transition-colors" href="#">Fale Conosco</a>
+            </div>
+            <div className="md:col-span-4 mt-8 pt-8 border-t border-secondary-fixed text-center">
+              <p className="font-body-small text-body-small text-tertiary-fixed-dim">© 2024 WebCarros. Todos os direitos reservados.</p>
+            </div>
+          </div>
+        </footer>
+      </>
+    )
+  }
+
+  if (loadingCar) {
+    return (
+      <div className="w-full flex justify-center my-10 pt-16">
+        <div className="animate-spin h-8 w-8 border-4 border-zinc-800 border-t-transparent rounded-full"></div>
+      </div>
+    )
+  }
+
   return (
     <>
-
-
       <main className="flex-grow w-full max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-stack-large flex flex-col gap-stack-large">
         <nav aria-label="Breadcrumb" className="w-full">
           <ol className="flex items-center space-x-2 font-body-small text-body-small text-on-surface-variant">
@@ -45,7 +126,7 @@ export default function TestDrive() {
             <li><span className="material-symbols-outlined text-sm">chevron_right</span></li>
             <li><Link to="/estoque" className="hover:text-primary transition-colors">Estoque</Link></li>
             <li><span className="material-symbols-outlined text-sm">chevron_right</span></li>
-            <li><Link to="/car/1" className="hover:text-primary transition-colors">BMW 320i M Sport</Link></li>
+            <li><Link to={`/car/${carId}`} className="hover:text-primary transition-colors">{testCar?.name || "Carro"}</Link></li>
             <li><span className="material-symbols-outlined text-sm">chevron_right</span></li>
             <li aria-current="page" className="text-on-surface font-semibold">Agendar Test Drive</li>
           </ol>
@@ -59,11 +140,15 @@ export default function TestDrive() {
             </div>
 
             <div className="flex items-center gap-4 p-4 rounded-lg bg-surface-gray border border-border-subtle">
-              <img alt="BMW 320i M Sport" className="w-24 h-16 object-cover rounded shadow-sm" src="https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=200&q=80" />
-              <div>
-                <h3 className="font-title-large text-title-large text-on-surface">BMW 320i M Sport</h3>
-                <p className="font-body-small text-body-small text-on-surface-variant">Disponível na concessionária</p>
-              </div>
+              {testCar && (
+                <>
+                  <img alt={testCar.name} className="w-24 h-16 object-cover rounded shadow-sm" src={testCar.images?.[0]?.url || "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=200&q=80"} />
+                  <div>
+                    <h3 className="font-title-large text-title-large text-on-surface">{testCar.name}</h3>
+                    <p className="font-body-small text-body-small text-on-surface-variant">Disponível na concessionária</p>
+                  </div>
+                </>
+              )}
             </div>
 
             <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">

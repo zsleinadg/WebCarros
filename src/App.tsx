@@ -8,6 +8,7 @@ import Favorites from "./pages/favorites";
 import Sell from "./pages/sell";
 import Dashboard from "./pages/dashboard";
 import New from "./pages/dashboard/new";
+import Edit from "./pages/dashboard/edit";
 import Login from "./pages/login";
 import Register from "./pages/register";
 import Private from "./routes/Private";
@@ -50,6 +51,10 @@ export const router = createBrowserRouter([
       {
         element: <Private><New/></Private>,
         path: "/dashboard/new"
+      },
+      {
+        element: <Private><Edit/></Private>,
+        path: "/dashboard/edit/:id"
       }
     ]
   },
