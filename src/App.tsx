@@ -19,12 +19,12 @@ import NotFound from "./pages/notfound";
 
 export const router = createBrowserRouter([
   {
+    element: <Home/>,
+    path: "/"
+  },
+  {
     element: <Layout/>,
     children: [
-      {
-        element: <Home/>,
-        path: "/"
-      },
       {
         element: <CarDetail/>,
         path: "/car/:id"

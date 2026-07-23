@@ -4,6 +4,7 @@ import './index.css'
 import { router } from './App.tsx'
 import { RouterProvider } from 'react-router'
 import { AuthProvider } from './contexts/AuthContext.tsx'
+import { FavoritesProvider } from './contexts/FavoritesContext.tsx'
 
 import { Toaster } from 'react-hot-toast'
 import { register } from "swiper/element/bundle"
@@ -16,7 +17,9 @@ createRoot(document.getElementById('root')!).render(
       reverseOrder={false}
     />
     <AuthProvider>
-      <RouterProvider router={router} />
+      <FavoritesProvider>
+        <RouterProvider router={router} />
+      </FavoritesProvider>
     </AuthProvider>
   </StrictMode>,
 )
