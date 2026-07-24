@@ -378,47 +378,6 @@ export default function Edit() {
                                     <p className="mb-1 text-red-400">{errors.fuel?.message}</p>
                                 )}
                             </div>
-
-                            <div className="flex flex-row w-full mb-3 items-center gap-4">
-                                <div className="w-full">
-                                    <p className="mb-2 font-medium text-white">Telefone / Whatsapp</p>
-                                    <Input
-                                        type="text"
-                                        name="whatsapp"
-                                        placeholder="01140028922"
-                                        register={register}
-                                        error={errors.whatsapp?.message}
-                                    />
-                                </div>
-
-                                <div className="w-full">
-                                    <p className="mb-2 font-medium text-white">Cidade</p>
-                                    <Input
-                                        type="text"
-                                        name="city"
-                                        placeholder="Chique-Chique"
-                                        register={register}
-                                        error={errors.city?.message}
-                                    />
-                                </div>
-
-                                <div className="w-full">
-                                    <p className="mb-2 font-medium text-white">UF</p>
-                                    <Select value={watch("uf") || ""} onValueChange={(val) => setValue("uf", val, { shouldValidate: true })}>
-                                        <SelectTrigger>
-                                            <SelectValue placeholder="Selecione" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            {UF_OPTIONS.map(uf => (
-                                                <SelectItem key={uf} value={uf}>{uf}</SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
-                                    {errors.uf && (
-                                        <p className="mb-1 text-red-400">{errors.uf?.message}</p>
-                                    )}
-                                </div>
-                            </div>
                         </div>
 
                         <div className="flex flex-row w-full mb-3 items-center gap-4">
@@ -446,17 +405,16 @@ export default function Edit() {
 
                             <div className="w-full">
                                 <p className="mb-2 font-medium text-white">UF</p>
-                                <select
-                                    className="w-full rounded-md h-10 px-2 outline-none"
-                                    style={{ background: "var(--bg-secondary)", border: "1px solid var(--border-default)", color: "var(--text-primary)" }}
-                                    id="uf"
-                                    {...register("uf")}
-                                >
-                                    <option value="" disabled style={{ background: "var(--bg-main)", color: "var(--text-primary)" }}>Selecione</option>
-                                    {UF_OPTIONS.map(uf => (
-                                        <option key={uf} value={uf} style={{ background: "var(--bg-main)", color: "var(--text-primary)" }}>{uf}</option>
-                                    ))}
-                                </select>
+                                <Select value={watch("uf") || ""} onValueChange={(val) => setValue("uf", val, { shouldValidate: true })}>
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Selecione" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {UF_OPTIONS.map(uf => (
+                                            <SelectItem key={uf} value={uf}>{uf}</SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
                                 {errors.uf && (
                                     <p className="mb-1 text-red-400">{errors.uf?.message}</p>
                                 )}
