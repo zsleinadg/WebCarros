@@ -74,112 +74,241 @@ export default function Sell() {
   }
 
   return (
-    <div className="min-h-screen">
-      <header className="relative bg-inverse-surface text-on-tertiary-container overflow-hidden pt-stack-large pb-24 md:pt-24 md:pb-32 px-margin-mobile md:px-margin-desktop">
-        <div className="absolute inset-0 z-0 opacity-20">
-          <div className="bg-cover bg-center w-full h-full" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=1600&q=80')" }}></div>
+    <div className="min-h-screen" style={{ background: "var(--bg-main)" }}>
+      <header
+        className="relative overflow-hidden pt-12 pb-24 md:pt-20 md:pb-32 px-4 md:px-10"
+        style={{ background: "var(--bg-deepest)" }}
+      >
+        <div className="absolute inset-0 z-0 opacity-15">
+          <div
+            className="bg-cover bg-center w-full h-full"
+            style={{ backgroundImage: "url('https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=1600&q=80')" }}
+          />
         </div>
-        <div className="relative z-10 max-w-container-max mx-auto grid grid-cols-1 md:grid-cols-2 gap-stack-lg items-center">
+        <div className="relative z-10 max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           <div className="max-w-xl">
-            <h1 className="text-display-large font-display-large mb-stack-medium text-on-primary">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white leading-tight mb-4">
               Venda seu carro rápido e sem dor de cabeça
             </h1>
-            <p className="font-body-large text-body-large text-tertiary-fixed-dim mb-stack-lg">
+            <p className="text-base sm:text-lg mb-8" style={{ color: "var(--text-secondary)" }}>
               Anuncie grátis e receba proposta de compradores verificados em todo o Brasil.
             </p>
-            <a className="inline-block bg-primary-container text-on-primary px-8 py-4 rounded-xl font-title-large text-title-large hover:bg-webmotors-red-dark hover:scale-95 transition-all duration-200 shadow-sm border border-transparent" href="#form">
+            <a
+              href="#form"
+              className="inline-block px-8 py-4 rounded-xl text-lg font-bold text-white transition-all duration-200 shadow-sm hover:-translate-y-0.5"
+              style={{ background: "var(--accent)" }}
+              onMouseEnter={(e) => { e.currentTarget.style.background = "var(--accent-hover)" }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = "var(--accent)" }}
+            >
               Quero vender meu carro
             </a>
           </div>
           <div className="hidden md:block relative h-[400px]">
-            <img className="object-contain w-full h-full absolute inset-0 z-10" alt="" src="https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=800&q=80" />
+            <img
+              className="object-contain w-full h-full absolute inset-0 z-10"
+              alt=""
+              src="https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=800&q=80"
+            />
           </div>
         </div>
       </header>
 
-      <section className="py-stack-lg md:py-24 px-margin-mobile md:px-margin-desktop bg-surface-bright">
-        <div className="max-w-container-max mx-auto">
+      <section className="py-16 md:py-24 px-4 md:px-10" style={{ background: "var(--bg-main)" }}>
+        <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="font-headline-large text-headline-large mb-stack-small">Por que vender com a WebCarros?</h2>
-            <p className="font-body-medium text-body-medium text-secondary max-w-2xl mx-auto">Nós simplificamos o processo para você conseguir o melhor negócio, com segurança e agilidade.</p>
+            <h2 className="text-3xl sm:text-4xl font-bold text-white mb-3">
+              Por que vender com a WebCarros?
+            </h2>
+            <p className="text-base max-w-2xl mx-auto" style={{ color: "var(--text-secondary)" }}>
+              Nós simplificamos o processo para você conseguir o melhor negócio, com segurança e agilidade.
+            </p>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {benefits.map((b) => (
-              <div key={b.icon} className="bg-surface-container-lowest p-stack-medium rounded-xl border border-border-subtle hover:shadow-sm transition-shadow">
-                <div className="w-12 h-12 bg-surface-container rounded-full flex items-center justify-center text-primary-container mb-stack-small">
-                  <span className="material-symbols-outlined">{b.icon}</span>
+              <div
+                key={b.icon}
+                className="p-6 rounded-xl transition-all duration-300"
+                style={{
+                  background: "var(--bg-card)",
+                  border: "1px solid var(--border-default)",
+                }}
+                onMouseEnter={(e) => {
+                  const el = e.currentTarget;
+                  el.style.borderColor = "rgba(233,0,63,0.45)";
+                  el.style.transform = "translateY(-3px)";
+                  el.style.boxShadow = "0 12px 32px rgba(0,0,0,0.3)";
+                }}
+                onMouseLeave={(e) => {
+                  const el = e.currentTarget;
+                  el.style.borderColor = "var(--border-default)";
+                  el.style.transform = "translateY(0)";
+                  el.style.boxShadow = "none";
+                }}
+              >
+                <div
+                  className="w-12 h-12 rounded-full flex items-center justify-center mb-4"
+                  style={{
+                    background: "rgba(233,0,63,0.08)",
+                    border: "1px solid rgba(233,0,63,0.20)",
+                  }}
+                >
+                  <span className="material-symbols-outlined" style={{ color: "var(--accent)" }}>
+                    {b.icon}
+                  </span>
                 </div>
-                <h3 className="font-title-large text-title-large mb-stack-small text-on-surface">{b.title}</h3>
-                <p className="font-body-small text-body-small text-secondary">{b.desc}</p>
+                <h3 className="text-lg font-bold text-white mb-2">{b.title}</h3>
+                <p className="text-sm" style={{ color: "var(--text-secondary)" }}>{b.desc}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="py-stack-lg md:py-24 px-margin-mobile md:px-margin-desktop bg-surface-gray" id="form">
-        <div className="max-w-container-max mx-auto grid grid-cols-1 lg:grid-cols-12 gap-stack-lg items-start">
+      <section className="py-16 md:py-24 px-4 md:px-10" style={{ background: "var(--bg-secondary)" }} id="form">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
           <div className="lg:col-span-5">
-            <h2 className="font-headline-large text-headline-large mb-stack-medium">Inicie a venda do seu veículo</h2>
-            <p className="font-body-medium text-body-medium text-secondary mb-stack-lg">Preencha os dados básicos do seu carro e seus contatos. Um de nossos especialistas poderá entrar em contato para ajudar na avaliação.</p>
-            <div className="hidden lg:block relative h-64 rounded-xl overflow-hidden mt-stack-lg border border-border-subtle shadow-sm">
+            <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+              Inicie a venda do seu veículo
+            </h2>
+            <p className="text-base mb-8" style={{ color: "var(--text-secondary)" }}>
+              Preencha os dados básicos do seu carro e seus contatos. Um de nossos especialistas poderá entrar em contato para ajudar na avaliação.
+            </p>
+            <div
+              className="hidden lg:block relative h-64 rounded-xl overflow-hidden mt-8 shadow-sm"
+              style={{ border: "1px solid var(--border-default)" }}
+            >
               <img className="object-cover w-full h-full" alt="" src="https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=600&q=80" />
             </div>
           </div>
-          <div className="lg:col-span-7 bg-surface-container-lowest p-stack-medium md:p-stack-lg rounded-xl border border-border-subtle shadow-sm">
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-stack-medium">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-stack-medium">
+          <div
+            className="lg:col-span-7 p-6 md:p-8 rounded-xl shadow-sm"
+            style={{
+              background: "var(--bg-card)",
+              border: "1px solid var(--border-default)",
+            }}
+          >
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div>
-                  <label className="block font-label-medium text-label-medium text-on-surface mb-1 uppercase tracking-wider" htmlFor="nome">Nome</label>
-                  <input className="w-full rounded-xl border border-border-subtle bg-surface-bright focus:border-primary-container focus:ring-1 focus:ring-primary-container font-body-small text-body-small py-2 px-3" id="nome" placeholder="Seu nome completo" type="text" {...register("nome")} />
-                  {errors.nome && <p className="text-red-500 text-body-small mt-1">{errors.nome.message}</p>}
+                  <label className="block text-xs font-semibold text-white mb-1 uppercase tracking-wider" htmlFor="nome">Nome</label>
+                  <input
+                    className="w-full rounded-xl text-sm py-2 px-3 outline-none"
+                    style={{ background: "var(--bg-secondary)", border: "1px solid var(--border-default)", color: "var(--text-primary)" }}
+                    id="nome" placeholder="Seu nome completo" type="text"
+                    onFocusCapture={(e) => { e.currentTarget.style.borderColor = "var(--accent)"; e.currentTarget.style.boxShadow = "0 0 0 3px rgba(233,0,63,0.12)" }}
+                    onBlurCapture={(e) => { e.currentTarget.style.borderColor = "var(--border-default)"; e.currentTarget.style.boxShadow = "none" }}
+                    {...register("nome")}
+                  />
+                  {errors.nome && <p className="text-red-400 text-sm mt-1">{errors.nome.message}</p>}
                 </div>
                 <div>
-                  <label className="block font-label-medium text-label-medium text-on-surface mb-1 uppercase tracking-wider" htmlFor="telefone">Telefone / WhatsApp</label>
-                  <input className="w-full rounded-xl border border-border-subtle bg-surface-bright focus:border-primary-container focus:ring-1 focus:ring-primary-container font-body-small text-body-small py-2 px-3" id="telefone" placeholder="(00) 00000-0000" type="tel" {...register("telefone")} />
-                  {errors.telefone && <p className="text-red-500 text-body-small mt-1">{errors.telefone.message}</p>}
+                  <label className="block text-xs font-semibold text-white mb-1 uppercase tracking-wider" htmlFor="telefone">Telefone / WhatsApp</label>
+                  <input
+                    className="w-full rounded-xl text-sm py-2 px-3 outline-none"
+                    style={{ background: "var(--bg-secondary)", border: "1px solid var(--border-default)", color: "var(--text-primary)" }}
+                    id="telefone" placeholder="(00) 00000-0000" type="tel"
+                    onFocusCapture={(e) => { e.currentTarget.style.borderColor = "var(--accent)"; e.currentTarget.style.boxShadow = "0 0 0 3px rgba(233,0,63,0.12)" }}
+                    onBlurCapture={(e) => { e.currentTarget.style.borderColor = "var(--border-default)"; e.currentTarget.style.boxShadow = "none" }}
+                    {...register("telefone")}
+                  />
+                  {errors.telefone && <p className="text-red-400 text-sm mt-1">{errors.telefone.message}</p>}
                 </div>
               </div>
               <div>
-                <label className="block font-label-medium text-label-medium text-on-surface mb-1 uppercase tracking-wider" htmlFor="email">Email</label>
-                <input className="w-full rounded-xl border border-border-subtle bg-surface-bright focus:border-primary-container focus:ring-1 focus:ring-primary-container font-body-small text-body-small py-2 px-3" id="email" placeholder="seu.email@exemplo.com" type="email" {...register("email")} />
-                {errors.email && <p className="text-red-500 text-body-small mt-1">{errors.email.message}</p>}
+                <label className="block text-xs font-semibold text-white mb-1 uppercase tracking-wider" htmlFor="email">Email</label>
+                <input
+                  className="w-full rounded-xl text-sm py-2 px-3 outline-none"
+                  style={{ background: "var(--bg-secondary)", border: "1px solid var(--border-default)", color: "var(--text-primary)" }}
+                  id="email" placeholder="seu.email@exemplo.com" type="email"
+                  onFocusCapture={(e) => { e.currentTarget.style.borderColor = "var(--accent)"; e.currentTarget.style.boxShadow = "0 0 0 3px rgba(233,0,63,0.12)" }}
+                  onBlurCapture={(e) => { e.currentTarget.style.borderColor = "var(--border-default)"; e.currentTarget.style.boxShadow = "none" }}
+                  {...register("email")}
+                />
+                {errors.email && <p className="text-red-400 text-sm mt-1">{errors.email.message}</p>}
               </div>
-              <div className="border-t border-border-subtle pt-stack-medium mt-stack-medium">
-                <h4 className="font-title-large text-title-large mb-stack-medium">Dados do Veículo</h4>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-stack-medium">
+              <div className="border-t pt-6 mt-6" style={{ borderColor: "var(--border-default)" }}>
+                <h4 className="text-lg font-bold text-white mb-5">Dados do Veículo</h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div>
-                    <label className="block font-label-medium text-label-medium text-on-surface mb-1 uppercase tracking-wider" htmlFor="marca">Marca</label>
-                    <input className="w-full rounded-xl border border-border-subtle bg-surface-bright focus:border-primary-container focus:ring-1 focus:ring-primary-container font-body-small text-body-small py-2 px-3" id="marca" placeholder="Ex: Honda, Toyota" type="text" {...register("marca")} />
-                    {errors.marca && <p className="text-red-500 text-body-small mt-1">{errors.marca.message}</p>}
+                    <label className="block text-xs font-semibold text-white mb-1 uppercase tracking-wider" htmlFor="marca">Marca</label>
+                    <input
+                      className="w-full rounded-xl text-sm py-2 px-3 outline-none"
+                      style={{ background: "var(--bg-secondary)", border: "1px solid var(--border-default)", color: "var(--text-primary)" }}
+                      id="marca" placeholder="Ex: Honda, Toyota" type="text"
+                      onFocusCapture={(e) => { e.currentTarget.style.borderColor = "var(--accent)"; e.currentTarget.style.boxShadow = "0 0 0 3px rgba(233,0,63,0.12)" }}
+                      onBlurCapture={(e) => { e.currentTarget.style.borderColor = "var(--border-default)"; e.currentTarget.style.boxShadow = "none" }}
+                      {...register("marca")}
+                    />
+                    {errors.marca && <p className="text-red-400 text-sm mt-1">{errors.marca.message}</p>}
                   </div>
                   <div>
-                    <label className="block font-label-medium text-label-medium text-on-surface mb-1 uppercase tracking-wider" htmlFor="modelo">Modelo</label>
-                    <input className="w-full rounded-xl border border-border-subtle bg-surface-bright focus:border-primary-container focus:ring-1 focus:ring-primary-container font-body-small text-body-small py-2 px-3" id="modelo" placeholder="Ex: Civic EXL" type="text" {...register("modelo")} />
-                    {errors.modelo && <p className="text-red-500 text-body-small mt-1">{errors.modelo.message}</p>}
+                    <label className="block text-xs font-semibold text-white mb-1 uppercase tracking-wider" htmlFor="modelo">Modelo</label>
+                    <input
+                      className="w-full rounded-xl text-sm py-2 px-3 outline-none"
+                      style={{ background: "var(--bg-secondary)", border: "1px solid var(--border-default)", color: "var(--text-primary)" }}
+                      id="modelo" placeholder="Ex: Civic EXL" type="text"
+                      onFocusCapture={(e) => { e.currentTarget.style.borderColor = "var(--accent)"; e.currentTarget.style.boxShadow = "0 0 0 3px rgba(233,0,63,0.12)" }}
+                      onBlurCapture={(e) => { e.currentTarget.style.borderColor = "var(--border-default)"; e.currentTarget.style.boxShadow = "none" }}
+                      {...register("modelo")}
+                    />
+                    {errors.modelo && <p className="text-red-400 text-sm mt-1">{errors.modelo.message}</p>}
                   </div>
                   <div>
-                    <label className="block font-label-medium text-label-medium text-on-surface mb-1 uppercase tracking-wider" htmlFor="ano">Ano</label>
-                    <input className="w-full rounded-xl border border-border-subtle bg-surface-bright focus:border-primary-container focus:ring-1 focus:ring-primary-container font-body-small text-body-small py-2 px-3" id="ano" placeholder="Ex: 2020" type="number" {...register("ano")} />
-                    {errors.ano && <p className="text-red-500 text-body-small mt-1">{errors.ano.message}</p>}
+                    <label className="block text-xs font-semibold text-white mb-1 uppercase tracking-wider" htmlFor="ano">Ano</label>
+                    <input
+                      className="w-full rounded-xl text-sm py-2 px-3 outline-none"
+                      style={{ background: "var(--bg-secondary)", border: "1px solid var(--border-default)", color: "var(--text-primary)" }}
+                      id="ano" placeholder="Ex: 2020" type="number"
+                      onFocusCapture={(e) => { e.currentTarget.style.borderColor = "var(--accent)"; e.currentTarget.style.boxShadow = "0 0 0 3px rgba(233,0,63,0.12)" }}
+                      onBlurCapture={(e) => { e.currentTarget.style.borderColor = "var(--border-default)"; e.currentTarget.style.boxShadow = "none" }}
+                      {...register("ano")}
+                    />
+                    {errors.ano && <p className="text-red-400 text-sm mt-1">{errors.ano.message}</p>}
                   </div>
                   <div>
-                    <label className="block font-label-medium text-label-medium text-on-surface mb-1 uppercase tracking-wider" htmlFor="km">Quilometragem</label>
-                    <input className="w-full rounded-xl border border-border-subtle bg-surface-bright focus:border-primary-container focus:ring-1 focus:ring-primary-container font-body-small text-body-small py-2 px-3" id="km" placeholder="Ex: 45000" type="number" {...register("km")} />
-                    {errors.km && <p className="text-red-500 text-body-small mt-1">{errors.km.message}</p>}
+                    <label className="block text-xs font-semibold text-white mb-1 uppercase tracking-wider" htmlFor="km">Quilometragem</label>
+                    <input
+                      className="w-full rounded-xl text-sm py-2 px-3 outline-none"
+                      style={{ background: "var(--bg-secondary)", border: "1px solid var(--border-default)", color: "var(--text-primary)" }}
+                      id="km" placeholder="Ex: 45000" type="number"
+                      onFocusCapture={(e) => { e.currentTarget.style.borderColor = "var(--accent)"; e.currentTarget.style.boxShadow = "0 0 0 3px rgba(233,0,63,0.12)" }}
+                      onBlurCapture={(e) => { e.currentTarget.style.borderColor = "var(--border-default)"; e.currentTarget.style.boxShadow = "none" }}
+                      {...register("km")}
+                    />
+                    {errors.km && <p className="text-red-400 text-sm mt-1">{errors.km.message}</p>}
                   </div>
                 </div>
               </div>
               <div>
-                <label className="block font-label-medium text-label-medium text-on-surface mb-1 uppercase tracking-wider" htmlFor="preco">Preço pretendido (R$)</label>
-                <input className="w-full rounded-xl border border-border-subtle bg-surface-bright focus:border-primary-container focus:ring-1 focus:ring-primary-container font-body-small text-body-small py-2 px-3" id="preco" placeholder="R$ 0,00" type="text" {...register("preco")} />
-                {errors.preco && <p className="text-red-500 text-body-small mt-1">{errors.preco.message}</p>}
+                <label className="block text-xs font-semibold text-white mb-1 uppercase tracking-wider" htmlFor="preco">Preço pretendido (R$)</label>
+                <input
+                  className="w-full rounded-xl text-sm py-2 px-3 outline-none"
+                  style={{ background: "var(--bg-secondary)", border: "1px solid var(--border-default)", color: "var(--text-primary)" }}
+                  id="preco" placeholder="R$ 0,00" type="text"
+                  onFocusCapture={(e) => { e.currentTarget.style.borderColor = "var(--accent)"; e.currentTarget.style.boxShadow = "0 0 0 3px rgba(233,0,63,0.12)" }}
+                  onBlurCapture={(e) => { e.currentTarget.style.borderColor = "var(--border-default)"; e.currentTarget.style.boxShadow = "none" }}
+                  {...register("preco")}
+                />
+                {errors.preco && <p className="text-red-400 text-sm mt-1">{errors.preco.message}</p>}
               </div>
               <div>
-                <label className="block font-label-medium text-label-medium text-on-surface mb-1 uppercase tracking-wider" htmlFor="mensagem">Mensagem (Opcional)</label>
-                <textarea className="w-full rounded-xl border border-border-subtle bg-surface-bright focus:border-primary-container focus:ring-1 focus:ring-primary-container font-body-small text-body-small py-2 px-3" id="mensagem" placeholder="Detalhes adicionais sobre o veículo..." rows={3} {...register("mensagem")} />
+                <label className="block text-xs font-semibold text-white mb-1 uppercase tracking-wider" htmlFor="mensagem">Mensagem (Opcional)</label>
+                <textarea
+                  className="w-full rounded-xl text-sm py-2 px-3 outline-none resize-none"
+                  style={{ background: "var(--bg-secondary)", border: "1px solid var(--border-default)", color: "var(--text-primary)" }}
+                  id="mensagem" placeholder="Detalhes adicionais sobre o veículo..." rows={3}
+                  onFocusCapture={(e) => { e.currentTarget.style.borderColor = "var(--accent)"; e.currentTarget.style.boxShadow = "0 0 0 3px rgba(233,0,63,0.12)" }}
+                  onBlurCapture={(e) => { e.currentTarget.style.borderColor = "var(--border-default)"; e.currentTarget.style.boxShadow = "none" }}
+                  {...register("mensagem")}
+                />
               </div>
-              <button className="w-full bg-primary-container text-on-primary py-3 rounded-xl font-title-large text-title-large hover:bg-webmotors-red-dark transition-colors shadow-sm mt-stack-medium flex justify-center items-center gap-2" type="submit">
+              <button
+                type="submit"
+                className="w-full py-3 rounded-xl text-lg font-bold text-white transition-all duration-200 shadow-sm mt-2 flex justify-center items-center gap-2 cursor-pointer"
+                style={{ background: "var(--accent)" }}
+                onMouseEnter={(e) => { e.currentTarget.style.background = "var(--accent-hover)" }}
+                onMouseLeave={(e) => { e.currentTarget.style.background = "var(--accent)" }}
+              >
                 Quero vender meu carro <span className="material-symbols-outlined">arrow_forward</span>
               </button>
             </form>
@@ -187,23 +316,64 @@ export default function Sell() {
         </div>
       </section>
 
-      <section className="py-stack-lg md:py-24 px-margin-mobile md:px-margin-desktop bg-surface-bright">
-        <div className="max-w-container-max mx-auto">
-          <h2 className="font-headline-large text-headline-large mb-16 text-center">Quem vendeu com a gente, recomenda</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+      <section className="py-16 md:py-24 px-4 md:px-10" style={{ background: "var(--bg-main)" }}>
+        <div className="max-w-7xl mx-auto">
+          <h2 className="text-3xl sm:text-4xl font-bold text-white mb-16 text-center">
+            Quem vendeu com a gente, recomenda
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {testimonials.map((t, i) => (
-              <div key={i} className="bg-surface-container-lowest p-stack-medium rounded-xl border border-border-subtle shadow-sm flex flex-col h-full">
-                <div className="flex text-primary-container mb-stack-small">
+              <div
+                key={i}
+                className="p-6 rounded-xl transition-all duration-300 flex flex-col h-full"
+                style={{
+                  background: "var(--bg-card)",
+                  border: "1px solid var(--border-default)",
+                }}
+                onMouseEnter={(e) => {
+                  const el = e.currentTarget;
+                  el.style.borderColor = "rgba(233,0,63,0.45)";
+                  el.style.transform = "translateY(-3px)";
+                  el.style.boxShadow = "0 12px 32px rgba(0,0,0,0.3)";
+                }}
+                onMouseLeave={(e) => {
+                  const el = e.currentTarget;
+                  el.style.borderColor = "var(--border-default)";
+                  el.style.transform = "translateY(0)";
+                  el.style.boxShadow = "none";
+                }}
+              >
+                <div className="flex mb-4" style={{ color: "var(--accent)" }}>
                   {Array.from({ length: 5 }).map((_, j) => (
-                    <span key={j} className="material-symbols-outlined text-sm" style={{ fontVariationSettings: j < Math.floor(t.stars) ? "'FILL' 1" : t.stars % 1 && j === Math.floor(t.stars) ? "'FILL' 0.5" : "'FILL' 0" }}>star</span>
+                    <span
+                      key={j}
+                      className="material-symbols-outlined text-sm"
+                      style={{
+                        fontVariationSettings:
+                          j < Math.floor(t.stars) ? "'FILL' 1" :
+                          t.stars % 1 && j === Math.floor(t.stars) ? "'FILL' 0.5" : "'FILL' 0",
+                      }}
+                    >
+                      star
+                    </span>
                   ))}
                 </div>
-                <p className="font-body-medium text-body-medium text-on-surface flex-grow mb-stack-medium">"{t.text}"</p>
+                <p className="text-base text-white flex-grow mb-5">
+                  &ldquo;{t.text}&rdquo;
+                </p>
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-primary font-bold">{t.initials}</div>
+                  <div
+                    className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold"
+                    style={{
+                      background: "rgba(233,0,63,0.08)",
+                      color: "var(--accent)",
+                    }}
+                  >
+                    {t.initials}
+                  </div>
                   <div>
-                    <p className="font-title-large text-title-large text-sm text-on-surface">{t.name}</p>
-                    <p className="font-label-medium text-label-medium text-secondary">{t.sold}</p>
+                    <p className="text-sm font-bold text-white">{t.name}</p>
+                    <p className="text-xs" style={{ color: "var(--text-secondary)" }}>{t.sold}</p>
                   </div>
                 </div>
               </div>
@@ -212,16 +382,25 @@ export default function Sell() {
         </div>
       </section>
 
-      <section className="py-stack-lg md:py-24 px-margin-mobile md:px-margin-desktop bg-surface-container">
+      <section className="py-16 md:py-24 px-4 md:px-10" style={{ background: "var(--bg-secondary)" }}>
         <div className="max-w-3xl mx-auto text-center">
-          <h2 className="font-headline-medium text-headline-medium mb-stack-small text-on-surface">Pronto para vender? Fale conosco no WhatsApp</h2>
-          <p className="font-body-medium text-body-medium text-secondary mb-stack-lg">Nossa equipe está online agora para tirar suas dúvidas e ajudar você a fechar o melhor negócio.</p>
-          <a className="inline-flex items-center gap-2 bg-success-green text-white px-8 py-4 rounded-xl font-title-large text-title-large hover:bg-emerald-600 transition-colors shadow-sm" href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noopener noreferrer">
+          <h2 className="text-2xl sm:text-3xl font-bold text-white mb-3">
+            Pronto para vender? Fale conosco no WhatsApp
+          </h2>
+          <p className="text-base mb-8" style={{ color: "var(--text-secondary)" }}>
+            Nossa equipe está online agora para tirar suas dúvidas e ajudar você a fechar o melhor negócio.
+          </p>
+          <a
+            className="inline-flex items-center gap-2 text-white px-8 py-4 rounded-xl text-lg font-bold shadow-sm transition-all hover:-translate-y-0.5"
+            style={{ background: "#25D366" }}
+            href={`https://wa.me/${WHATSAPP_NUMBER}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             <span className="material-symbols-outlined">chat</span> Chamar no WhatsApp
           </a>
         </div>
       </section>
-
     </div>
   )
 }
