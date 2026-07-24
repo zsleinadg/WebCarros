@@ -6,6 +6,7 @@ import toast from "react-hot-toast"
 import { Link, useSearchParams } from "react-router"
 import { supabase } from "../../services/supabaseClient"
 import type { CarProps } from "../../types/car"
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "../../components/select"
 
 
 const TestDriveSchema = z.object({
@@ -67,7 +68,7 @@ export default function TestDrive() {
     loadCar()
   }, [carId])
 
-  const { register, handleSubmit, formState: { errors }, reset } = useForm<TestDriveForm>({
+  const { register, handleSubmit, formState: { errors }, reset, watch, setValue } = useForm<TestDriveForm>({
     resolver: zodResolver(TestDriveSchema),
     mode: "onChange",
   })
@@ -194,18 +195,16 @@ export default function TestDrive() {
               </div>
               <div className="md:col-span-1">
                 <label className="block text-xs font-semibold text-white mb-1" htmlFor="time">Horário</label>
-                <select
-                  className="w-full rounded-lg text-sm py-2 px-3 outline-none"
-                  style={inputStyle}
-                  id="time"
-                  onFocusCapture={focusIn} onBlurCapture={focusOut}
-                  {...register("time")}
-                >
-                  <option value="" style={{ background: "var(--bg-main)", color: "var(--text-primary)" }}>Selecione um horário</option>
-                  {timeOptions.map((t) => (
-                    <option key={t} value={t} style={{ background: "var(--bg-main)", color: "var(--text-primary)" }}>{t}</option>
-                  ))}
-                </select>
+                <Select value={watch("time") || ""} onValueChange={(val) => setValue("time", val, { shouldValidate: true })}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecione um horário" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {timeOptions.map((t) => (
+                      <SelectItem key={t} value={t}>{t}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
                 {errors.time && <p className="text-red-400 text-sm mt-1">{errors.time.message}</p>}
               </div>
               <div className="md:col-span-2">

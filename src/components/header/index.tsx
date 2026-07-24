@@ -23,7 +23,6 @@ export default function Header() {
   function isActive(link: { label: string; to: string }) {
     if (link.to === "#") return false
     if (pathname === link.to) return true
-    if (pathname === "/" && link.to === "/estoque") return true
     return false
   }
 
@@ -49,7 +48,7 @@ export default function Header() {
                   to={link.to}
                   className={`px-3 py-1 text-base font-medium transition-colors relative ${
                     active
-                      ? "text-[#E9003F] after:absolute after:bottom-[-2px] after:left-3 after:right-3 after:h-[2px] after:bg-[#E9003F] after:rounded-full"
+                      ? "text-[#E9003F] after:absolute after:-bottom-0.5 after:left-3 after:right-3 after:h-0.5 after:bg-[#E9003F] after:rounded-full"
                       : "text-[#A5ADBD] hover:text-white"
                   }`}
                 >
@@ -88,7 +87,7 @@ export default function Header() {
           {!loadingAuth && signed && (
             <div className="hidden md:flex items-center gap-2">
               <Link to="/dashboard">
-                <div className="border-2 rounded-full p-0.5 border-white/30 hover:border-white transition-colors">
+                <div className="border rounded-full p-1 border-white/30 hover:border-white transition-colors">
                   <FiUser size={20} color="white" />
                 </div>
               </Link>

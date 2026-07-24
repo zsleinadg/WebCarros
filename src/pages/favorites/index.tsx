@@ -76,7 +76,7 @@ export default function Favorites() {
                 <div className="relative h-56 w-full" style={{ background: "var(--bg-secondary)" }}>
                   <img alt={car.name} className="w-full h-full object-cover" src={imgUrl} />
                 </div>
-                <div className="p-5 flex flex-col flex-grow">
+                <div className="p-5 flex flex-col grow">
                   <div className="flex justify-between items-start mb-1">
                     <h2 className="text-xl font-bold text-white line-clamp-1">{car.name}</h2>
                   </div>

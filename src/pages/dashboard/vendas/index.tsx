@@ -3,6 +3,7 @@ import { supabase } from "../../../services/supabaseClient"
 import Container from "../../../components/container"
 import DashboardHeader from "../../../components/panelheader"
 import { FiMessageSquare } from "react-icons/fi"
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "../../../components/select"
 
 interface SellRequest {
   id: string
@@ -28,7 +29,7 @@ const statusLabels: Record<string, string> = {
 export default function Vendas() {
   const [requests, setRequests] = useState<SellRequest[]>([])
   const [loading, setLoading] = useState(true)
-  const [filterStatus, setFilterStatus] = useState("")
+  const [filterStatus, setFilterStatus] = useState("all")
 
   useEffect(() => {
     loadRequests()
@@ -40,7 +41,7 @@ export default function Vendas() {
       .select("*")
       .order("created_at", { ascending: false })
 
-    if (filterStatus) {
+    if (filterStatus && filterStatus !== "all") {
       query = query.eq("status", filterStatus)
     }
 
@@ -93,17 +94,17 @@ export default function Vendas() {
             <h1 className="text-lg font-bold text-white">Pedidos de Venda</h1>
             <div className="flex items-center gap-2">
               <label className="text-sm" style={{ color: "var(--text-secondary)" }}>Filtrar:</label>
-              <select
-                className="rounded-lg px-3 py-1.5 text-sm outline-none"
-                style={{ background: "var(--bg-secondary)", border: "1px solid var(--border-default)", color: "var(--text-primary)" }}
-                value={filterStatus}
-                onChange={e => setFilterStatus(e.target.value)}
-              >
-                <option value="" style={{ background: "var(--bg-main)", color: "var(--text-primary)" }}>Todos</option>
-                <option value="pending" style={{ background: "var(--bg-main)", color: "var(--text-primary)" }}>Pendente</option>
-                <option value="contacted" style={{ background: "var(--bg-main)", color: "var(--text-primary)" }}>Contatado</option>
-                <option value="completed" style={{ background: "var(--bg-main)", color: "var(--text-primary)" }}>Concluído</option>
-              </select>
+              <Select value={filterStatus} onValueChange={setFilterStatus}>
+                <SelectTrigger className="w-40">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Todos</SelectItem>
+                  <SelectItem value="pending">Pendente</SelectItem>
+                  <SelectItem value="contacted">Contatado</SelectItem>
+                  <SelectItem value="completed">Concluído</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
 
@@ -180,16 +181,16 @@ export default function Vendas() {
                         </span>
                       </td>
                       <td className="px-4 py-3">
-                        <select
-                          className="rounded px-2 py-1 text-xs outline-none"
-                          style={{ background: "var(--bg-secondary)", border: "1px solid var(--border-default)", color: "var(--text-primary)" }}
-                          value={req.status}
-                          onChange={e => handleStatusChange(req.id, e.target.value)}
-                        >
-                          <option value="pending" style={{ background: "var(--bg-main)", color: "var(--text-primary)" }}>Pendente</option>
-                          <option value="contacted" style={{ background: "var(--bg-main)", color: "var(--text-primary)" }}>Contatado</option>
-                          <option value="completed" style={{ background: "var(--bg-main)", color: "var(--text-primary)" }}>Concluído</option>
-                        </select>
+                        <Select value={req.status} onValueChange={(val) => handleStatusChange(req.id, val)}>
+                          <SelectTrigger className="h-8 text-xs">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="pending">Pendente</SelectItem>
+                            <SelectItem value="contacted">Contatado</SelectItem>
+                            <SelectItem value="completed">Concluído</SelectItem>
+                          </SelectContent>
+                        </Select>
                       </td>
                     </tr>
                   ))}

@@ -7,6 +7,7 @@ import { FUEL_OPTIONS } from "../../constants/fuelList"
 import { formatPrice } from "../../utils"
 import { useFavorites } from "../../contexts/FavoritesContext"
 import { FaHeart } from "react-icons/fa"
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "../../components/select"
 
 export default function Estoque() {
   const [searchParams] = useSearchParams()
@@ -133,23 +134,22 @@ export default function Estoque() {
           </div>
           <div className="flex items-center gap-2 w-full md:w-auto">
             <label className="text-sm whitespace-nowrap" style={{ color: "var(--text-secondary)" }} htmlFor="sort">Ordenar por:</label>
-            <select
-              className="rounded-lg text-sm w-full md:w-auto py-2 pl-3 pr-10 outline-none"
-              style={{ background: "var(--bg-card)", border: "1px solid var(--border-default)", color: "var(--text-primary)" }}
-              id="sort"
-              value={sortOrder}
-              onChange={e => setSortOrder(e.target.value)}
-            >
-              <option style={{ background: "var(--bg-main)", color: "var(--text-primary)" }}>Mais recentes</option>
-              <option style={{ background: "var(--bg-main)", color: "var(--text-primary)" }}>Menor preço</option>
-              <option style={{ background: "var(--bg-main)", color: "var(--text-primary)" }}>Maior preço</option>
-              <option style={{ background: "var(--bg-main)", color: "var(--text-primary)" }}>Menor KM</option>
-            </select>
+            <Select value={sortOrder} onValueChange={setSortOrder}>
+              <SelectTrigger className="w-full md:w-auto">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Mais recentes">Mais recentes</SelectItem>
+                <SelectItem value="Menor preço">Menor preço</SelectItem>
+                <SelectItem value="Maior preço">Maior preço</SelectItem>
+                <SelectItem value="Menor KM">Menor KM</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         </div>
 
         <div className="flex flex-col md:flex-row gap-6">
-          <aside className="w-full md:w-72 flex-shrink-0">
+          <aside className="w-full md:w-72 shrink-0">
             <div
               className="rounded-xl p-6 sticky top-24"
               style={{ background: "var(--bg-card)", border: "1px solid var(--border-default)", boxShadow: "0 4px 16px rgba(0,0,0,0.2)" }}
@@ -236,29 +236,27 @@ export default function Estoque() {
               <div className="mb-6">
                 <h3 className="text-xs font-semibold uppercase mb-3" style={{ color: "var(--text-secondary)" }}>Ano</h3>
                 <div className="flex gap-2 items-center">
-                  <select
-                    className="w-full rounded-lg text-sm py-2 px-3 outline-none"
-                    style={{ background: "var(--bg-secondary)", border: "1px solid var(--border-default)", color: "var(--text-primary)" }}
-                    value={anoDe}
-                    onChange={e => { setAnoDe(e.target.value); if (Number(e.target.value) > Number(anoAte)) setAnoAte(e.target.value) }}
-                  >
-                    <option value="" style={{ background: "var(--bg-main)", color: "var(--text-primary)" }}>Mínimo</option>
-                    {uniqueYears.map(y => (
-                      <option key={y} value={y} style={{ background: "var(--bg-main)", color: "var(--text-primary)" }}>{y}</option>
-                    ))}
-                  </select>
+                  <Select value={anoDe} onValueChange={(val) => { setAnoDe(val); if (Number(val) > Number(anoAte)) setAnoAte(val) }}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Mínimo" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {uniqueYears.map(y => (
+                        <SelectItem key={y} value={String(y)}>{String(y)}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                   <span style={{ color: "var(--text-muted)" }}>-</span>
-                  <select
-                    className="w-full rounded-lg text-sm py-2 px-3 outline-none"
-                    style={{ background: "var(--bg-secondary)", border: "1px solid var(--border-default)", color: "var(--text-primary)" }}
-                    value={anoAte}
-                    onChange={e => { setAnoAte(e.target.value); if (Number(e.target.value) < Number(anoDe)) setAnoDe(e.target.value) }}
-                  >
-                    <option value="" style={{ background: "var(--bg-main)", color: "var(--text-primary)" }}>Máximo</option>
-                    {uniqueYears.map(y => (
-                      <option key={y} value={y} style={{ background: "var(--bg-main)", color: "var(--text-primary)" }}>{y}</option>
-                    ))}
-                  </select>
+                  <Select value={anoAte} onValueChange={(val) => { setAnoAte(val); if (Number(val) < Number(anoDe)) setAnoDe(val) }}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Máximo" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {uniqueYears.map(y => (
+                        <SelectItem key={y} value={String(y)}>{String(y)}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
               </div>
 
