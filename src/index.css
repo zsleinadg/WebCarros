@@ -83,6 +83,45 @@
   --animate-pulse-whatsapp: pulse-whatsapp 2s infinite;
 }
 
+:root {
+  --bg-deepest: #05070D;
+  --bg-main: #080B14;
+  --bg-secondary: #0B1020;
+  --bg-card: #101625;
+  --bg-elevated: #141A2A;
+  --bg-hover: #151C2E;
+  --border-default: #20283A;
+  --border-light: #252D40;
+  --accent: #E9003F;
+  --accent-hover: #FF174F;
+  --text-primary: #ffffff;
+  --text-secondary: #A5ADBD;
+  --text-muted: #687286;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-default) var(--bg-card);
+}
+
+*::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+*::-webkit-scrollbar-track {
+  background: var(--bg-card);
+}
+
+*::-webkit-scrollbar-thumb {
+  background: var(--border-default);
+  border-radius: 3px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: var(--border-light);
+}
+
 body {
   background-color: var(--color-background);
   color: var(--color-on-background);

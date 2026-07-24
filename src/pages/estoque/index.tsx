@@ -6,7 +6,7 @@ import { WHATSAPP_NUMBER } from "../../constants/whatsapp"
 import { FUEL_OPTIONS } from "../../constants/fuelList"
 import { formatPrice } from "../../utils"
 import { useFavorites } from "../../contexts/FavoritesContext"
-import { FaHeart, FaRegHeart } from "react-icons/fa"
+import { FaHeart } from "react-icons/fa"
 
 export default function Estoque() {
   const [searchParams] = useSearchParams()
@@ -121,39 +121,70 @@ export default function Estoque() {
 
   return (
     <>
-
-
-      <main className="grow max-w-container-max mx-auto w-full px-margin-mobile md:px-margin-desktop py-stack-large min-h-screen">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-stack-medium gap-4">
+    <main
+      className="mx-auto w-full px-4 md:px-10 py-8 min-h-screen"
+      style={{ background: "var(--bg-main)" }}
+    >
+      <div className="max-w-7xl mx-auto">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-4">
           <div className="flex flex-col">
-            <h1 className="text-2xl font-title-large text-on-background font-bold">Encontramos {filteredCars.length} carros</h1>
-          <span>em todo o Brasil</span>
+            <h1 className="text-2xl font-bold text-white">Encontramos {filteredCars.length} carros</h1>
+            <span style={{ color: "var(--text-secondary)" }}>em todo o Brasil</span>
           </div>
           <div className="flex items-center gap-2 w-full md:w-auto">
-            <label className="text-body-small font-body-small text-secondary whitespace-nowrap" htmlFor="sort">Ordenar por:</label>
-            <select className="border border-border-subtle rounded-lg bg-surface-container-lowest text-body-small font-body-small focus:border-primary focus:ring-primary w-full md:w-auto py-2 pl-3 pr-10" id="sort" value={sortOrder} onChange={e => setSortOrder(e.target.value)}>
-              <option>Mais recentes</option>
-              <option>Menor preço</option>
-              <option>Maior preço</option>
-              <option>Menor KM</option>
+            <label className="text-sm whitespace-nowrap" style={{ color: "var(--text-secondary)" }} htmlFor="sort">Ordenar por:</label>
+            <select
+              className="rounded-lg text-sm w-full md:w-auto py-2 pl-3 pr-10 outline-none"
+              style={{ background: "var(--bg-card)", border: "1px solid var(--border-default)", color: "var(--text-primary)" }}
+              id="sort"
+              value={sortOrder}
+              onChange={e => setSortOrder(e.target.value)}
+            >
+              <option style={{ background: "var(--bg-main)", color: "var(--text-primary)" }}>Mais recentes</option>
+              <option style={{ background: "var(--bg-main)", color: "var(--text-primary)" }}>Menor preço</option>
+              <option style={{ background: "var(--bg-main)", color: "var(--text-primary)" }}>Maior preço</option>
+              <option style={{ background: "var(--bg-main)", color: "var(--text-primary)" }}>Menor KM</option>
             </select>
           </div>
         </div>
 
-        <div className="flex flex-col md:flex-row gap-gutter">
+        <div className="flex flex-col md:flex-row gap-6">
           <aside className="w-full md:w-72 flex-shrink-0">
-            <div className="bg-surface-container-lowest border border-border-subtle rounded-[12px] p-6 shadow-sm sticky top-24">
+            <div
+              className="rounded-xl p-6 sticky top-24"
+              style={{ background: "var(--bg-card)", border: "1px solid var(--border-default)", boxShadow: "0 4px 16px rgba(0,0,0,0.2)" }}
+            >
               <div className="flex justify-between items-center mb-6">
-                <h2 className="text-title-large font-title-large text-on-background">Filtros</h2>
-                <button onClick={clearFilters} className="text-primary text-body-small font-body-small hover:underline">Limpar</button>
+                <h2 className="text-lg font-bold text-white">Filtros</h2>
+                <button
+                  onClick={clearFilters}
+                  className="text-sm font-medium hover:underline cursor-pointer"
+                  style={{ color: "var(--accent)" }}
+                >
+                  Limpar
+                </button>
               </div>
 
               <div className="mb-6">
-                <h3 className="text-label-medium font-label-medium text-secondary uppercase mb-3">Buscar</h3>
-                <div className="flex items-center border border-border-subtle rounded-lg px-3 py-2 focus-within:border-primary focus-within:ring-1 focus-within:ring-primary transition-all bg-surface">
-                  <span className="material-symbols-outlined text-secondary mr-2" style={{ fontSize: 18 }}>search</span>
+                <h3 className="text-xs font-semibold uppercase mb-3" style={{ color: "var(--text-secondary)" }}>Buscar</h3>
+                <div
+                  className="flex items-center rounded-lg px-3 py-2 transition-all"
+                  style={{ background: "var(--bg-secondary)", border: "1px solid var(--border-default)" }}
+                  onFocusCapture={(e) => {
+                    const el = e.currentTarget
+                    el.style.borderColor = "var(--accent)"
+                    el.style.boxShadow = "0 0 0 3px rgba(233,0,63,0.12)"
+                  }}
+                  onBlurCapture={(e) => {
+                    const el = e.currentTarget
+                    el.style.borderColor = "var(--border-default)"
+                    el.style.boxShadow = "none"
+                  }}
+                >
+                  <span className="material-symbols-outlined mr-2" style={{ fontSize: 18, color: "var(--text-muted)" }}>search</span>
                   <input
-                    className="w-full bg-transparent border-none p-0 focus:ring-0 text-body-small placeholder:text-secondary-fixed-dim outline-none"
+                    className="w-full bg-transparent border-none p-0 text-sm outline-none"
+                    style={{ color: "var(--text-primary)" }}
                     placeholder="Marca, modelo ou cidade..."
                     type="text"
                     value={searchTerm}
@@ -163,81 +194,119 @@ export default function Estoque() {
               </div>
 
               <div className="mb-6">
-                <h3 className="text-label-medium font-label-medium text-secondary uppercase mb-3">Marca</h3>
+                <h3 className="text-xs font-semibold uppercase mb-3" style={{ color: "var(--text-secondary)" }}>Marca</h3>
                 <div className="space-y-2 max-h-40 overflow-y-auto pr-2">
                   {brands.map((marca) => (
                     <label key={marca} className="flex items-center gap-2 cursor-pointer">
                       <input
-                        className="rounded border-border-subtle text-primary focus:ring-primary"
+                        className="rounded accent-[#E9003F]"
                         type="checkbox"
                         checked={selectedBrands.includes(marca)}
                         onChange={() => toggleBrand(marca)}
                       />
-                      <span className="text-body-small font-body-small">{marca}</span>
+                      <span className="text-sm" style={{ color: "var(--text-primary)" }}>{marca}</span>
                     </label>
                   ))}
                 </div>
               </div>
 
               <div className="mb-6">
-                <h3 className="text-label-medium font-label-medium text-secondary uppercase mb-3">Preço</h3>
+                <h3 className="text-xs font-semibold uppercase mb-3" style={{ color: "var(--text-secondary)" }}>Preço</h3>
                 <div className="flex gap-2 items-center">
-                  <input className="w-full border border-border-subtle rounded-lg bg-surface text-body-small focus:border-primary focus:ring-primary py-2 px-3" placeholder="De" type="number" value={precoDe} onChange={e => setPrecoDe(e.target.value)} />
-                  <span className="text-secondary">-</span>
-                  <input className="w-full border border-border-subtle rounded-lg bg-surface text-body-small focus:border-primary focus:ring-primary py-2 px-3" placeholder="Até" type="number" value={precoAte} onChange={e => setPrecoAte(e.target.value)} />
+                  <input
+                    className="w-full rounded-lg text-sm py-2 px-3 outline-none"
+                    style={{ background: "var(--bg-secondary)", border: "1px solid var(--border-default)", color: "var(--text-primary)" }}
+                    placeholder="De"
+                    type="number"
+                    value={precoDe}
+                    onChange={e => setPrecoDe(e.target.value)}
+                  />
+                  <span style={{ color: "var(--text-muted)" }}>-</span>
+                  <input
+                    className="w-full rounded-lg text-sm py-2 px-3 outline-none"
+                    style={{ background: "var(--bg-secondary)", border: "1px solid var(--border-default)", color: "var(--text-primary)" }}
+                    placeholder="Até"
+                    type="number"
+                    value={precoAte}
+                    onChange={e => setPrecoAte(e.target.value)}
+                  />
                 </div>
               </div>
 
               <div className="mb-6">
-                <h3 className="text-label-medium font-label-medium text-secondary uppercase mb-3">Ano</h3>
+                <h3 className="text-xs font-semibold uppercase mb-3" style={{ color: "var(--text-secondary)" }}>Ano</h3>
                 <div className="flex gap-2 items-center">
-                  <select className="w-full border border-border-subtle rounded-lg bg-surface text-body-small focus:border-primary focus:ring-primary py-2 px-3" value={anoDe} onChange={e => { setAnoDe(e.target.value); if (Number(e.target.value) > Number(anoAte)) setAnoAte(e.target.value) }}>
-                    <option value="">Mínimo</option>
+                  <select
+                    className="w-full rounded-lg text-sm py-2 px-3 outline-none"
+                    style={{ background: "var(--bg-secondary)", border: "1px solid var(--border-default)", color: "var(--text-primary)" }}
+                    value={anoDe}
+                    onChange={e => { setAnoDe(e.target.value); if (Number(e.target.value) > Number(anoAte)) setAnoAte(e.target.value) }}
+                  >
+                    <option value="" style={{ background: "var(--bg-main)", color: "var(--text-primary)" }}>Mínimo</option>
                     {uniqueYears.map(y => (
-                      <option key={y} value={y}>{y}</option>
+                      <option key={y} value={y} style={{ background: "var(--bg-main)", color: "var(--text-primary)" }}>{y}</option>
                     ))}
                   </select>
-                  <span className="text-secondary">-</span>
-                  <select className="w-full border border-border-subtle rounded-lg bg-surface text-body-small focus:border-primary focus:ring-primary py-2 px-3" value={anoAte} onChange={e => { setAnoAte(e.target.value); if (Number(e.target.value) < Number(anoDe)) setAnoDe(e.target.value) }}>
-                    <option value="">Máximo</option>
+                  <span style={{ color: "var(--text-muted)" }}>-</span>
+                  <select
+                    className="w-full rounded-lg text-sm py-2 px-3 outline-none"
+                    style={{ background: "var(--bg-secondary)", border: "1px solid var(--border-default)", color: "var(--text-primary)" }}
+                    value={anoAte}
+                    onChange={e => { setAnoAte(e.target.value); if (Number(e.target.value) < Number(anoDe)) setAnoDe(e.target.value) }}
+                  >
+                    <option value="" style={{ background: "var(--bg-main)", color: "var(--text-primary)" }}>Máximo</option>
                     {uniqueYears.map(y => (
-                      <option key={y} value={y}>{y}</option>
+                      <option key={y} value={y} style={{ background: "var(--bg-main)", color: "var(--text-primary)" }}>{y}</option>
                     ))}
                   </select>
                 </div>
               </div>
 
               <div className="mb-6">
-                <h3 className="text-label-medium font-label-medium text-secondary uppercase mb-3">Combustível</h3>
+                <h3 className="text-xs font-semibold uppercase mb-3" style={{ color: "var(--text-secondary)" }}>Combustível</h3>
                 <div className="flex flex-wrap gap-2">
-                  {FUEL_OPTIONS.map((comb) => (
-                    <button
-                      key={comb}
-                      onClick={() => setSelectedFuel(selectedFuel === comb ? "" : comb)}
-                      className={`px-3 py-1.5 border rounded-full text-body-small font-body-small transition-colors ${selectedFuel === comb ? "border-primary bg-inverse-on-surface text-primary" : "border-border-subtle hover:border-primary hover:text-primary bg-surface"}`}
-                    >
-                      {comb}
-                    </button>
-                  ))}
+                  {FUEL_OPTIONS.map((comb) => {
+                    const isSelected = selectedFuel === comb
+                    return (
+                      <button
+                        key={comb}
+                        onClick={() => setSelectedFuel(isSelected ? "" : comb)}
+                        className="px-3 py-1.5 border rounded-full text-sm font-medium transition-all cursor-pointer"
+                        style={{
+                          background: isSelected ? "rgba(233,0,63,0.12)" : "var(--bg-secondary)",
+                          borderColor: isSelected ? "var(--accent)" : "var(--border-default)",
+                          color: isSelected ? "var(--accent)" : "var(--text-secondary)",
+                        }}
+                      >
+                        {comb}
+                      </button>
+                    )
+                  })}
                 </div>
               </div>
-
             </div>
           </aside>
 
           <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-max">
             {loading ? (
               [1, 2, 3, 4, 5, 6].map((i) => (
-                <article key={`skeleton-${i}`} className="bg-surface-container-lowest rounded-[12px] border border-border-subtle overflow-hidden animate-pulse flex flex-col relative">
-                  <div className="relative aspect-video overflow-hidden bg-surface-container-high flex items-center justify-center">
-                    <span className="material-symbols-outlined text-tertiary-fixed-dim" style={{ fontSize: 48 }}>directions_car</span>
+                <article
+                  key={`skeleton-${i}`}
+                  className="rounded-xl overflow-hidden animate-pulse flex flex-col relative"
+                  style={{
+                    background: "linear-gradient(145deg, var(--bg-elevated), var(--bg-card))",
+                    border: "1px solid var(--border-light)",
+                  }}
+                >
+                  <div className="relative aspect-video overflow-hidden flex items-center justify-center" style={{ background: "var(--bg-secondary)" }}>
+                    <span className="material-symbols-outlined" style={{ fontSize: 48, color: "var(--border-default)" }}>directions_car</span>
                   </div>
                   <div className="p-4 flex flex-col flex-1">
-                    <div className="h-6 bg-surface-container rounded mb-2 w-3/4"></div>
-                    <div className="h-4 bg-surface-container rounded mb-4 w-1/2"></div>
-                    <div className="mt-auto pt-4 border-t border-border-subtle flex flex-col">
-                      <div className="h-8 bg-surface-container rounded mb-2 w-1/2"></div>
-                      <div className="h-4 bg-surface-container rounded w-1/3"></div>
+                    <div className="h-6 rounded mb-2 w-3/4" style={{ background: "var(--border-default)" }}></div>
+                    <div className="h-4 rounded mb-4 w-1/2" style={{ background: "var(--border-default)" }}></div>
+                    <div className="mt-auto pt-4 border-t flex flex-col" style={{ borderColor: "var(--border-default)" }}>
+                      <div className="h-8 rounded mb-2 w-1/2" style={{ background: "var(--border-default)" }}></div>
+                      <div className="h-4 rounded w-1/3" style={{ background: "var(--border-default)" }}></div>
                     </div>
                   </div>
                 </article>
@@ -248,27 +317,51 @@ export default function Estoque() {
                 const imgUrl = car.images?.[0]?.url || "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=600&q=80"
                 return (
                   <Link key={car.id} to={`/car/${car.id}`} className="block">
-                    <article className="bg-surface-container-lowest rounded-[12px] border border-border-subtle overflow-hidden hover:shadow-lg transition-shadow duration-300 group flex flex-col relative">
+                    <article
+                      className="rounded-xl overflow-hidden transition-all duration-300 group flex flex-col relative"
+                      style={{
+                        background: "linear-gradient(145deg, var(--bg-elevated), var(--bg-card))",
+                        border: "1px solid var(--border-light)",
+                        boxShadow: "0 4px 16px rgba(0,0,0,0.2)",
+                      }}
+                      onMouseEnter={(e) => {
+                        const el = e.currentTarget
+                        el.style.transform = "translateY(-4px)"
+                        el.style.borderColor = "rgba(233,0,63,0.45)"
+                        el.style.boxShadow = "0 16px 40px rgba(0,0,0,0.35)"
+                      }}
+                      onMouseLeave={(e) => {
+                        const el = e.currentTarget
+                        el.style.transform = "translateY(0)"
+                        el.style.borderColor = "var(--border-light)"
+                        el.style.boxShadow = "0 4px 16px rgba(0,0,0,0.2)"
+                      }}
+                    >
                       <div className="relative aspect-video overflow-hidden">
                         <img className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src={imgUrl} alt="" />
                         <button
                           onClick={(e) => { e.preventDefault(); toggleFavorite(car.id) }}
-                          className="absolute top-3 right-3 flex items-center justify-center w-9 h-9 rounded-full bg-surface-container-lowest/80 hover:bg-surface-container-lowest transition-colors z-10 shadow-sm backdrop-blur-sm"
+                          className="absolute top-3 right-3 flex items-center justify-center w-9 h-9 rounded-full backdrop-blur-sm transition-colors z-10 shadow-sm"
+                          style={{ background: "rgba(16,22,37,0.8)" }}
                         >
-                          {isFav ? <FaHeart size={20} color="#ef4444" /> : <FaRegHeart size={20} color="var(--color-secondary)" />}
+                          {isFav ? (
+                            <FaHeart size={20} color="#ef4444" />
+                          ) : (
+                            <FaHeart size={20} style={{ color: "var(--text-muted)" }} />
+                          )}
                         </button>
                       </div>
                       <div className="p-4 flex flex-col flex-1">
-                        <h3 className="text-title-large font-title-large text-on-background mb-1 truncate">{car.name}</h3>
-                        <p className="text-body-small font-body-small text-secondary mb-3">{car.year} • {car.km} km</p>
-                        <div className="mt-auto pt-4 border-t border-border-subtle flex flex-col">
-                          <span className="text-headline-medium font-headline-medium font-bold text-primary-container mb-2">{formatPrice(car.price)}</span>
-                          <div className="flex items-center text-secondary text-body-small font-body-small">
+                        <h3 className="text-lg font-bold text-white mb-1 truncate">{car.name}</h3>
+                        <p className="text-sm mb-3" style={{ color: "var(--text-muted)" }}>{car.year} • {car.km} km</p>
+                        <div className="mt-auto pt-4 border-t flex flex-col" style={{ borderColor: "var(--border-default)" }}>
+                          <span className="text-2xl font-black mb-2" style={{ color: "var(--accent)" }}>{formatPrice(car.price)}</span>
+                          <div className="flex items-center text-sm" style={{ color: "var(--text-secondary)" }}>
                             <span className="material-symbols-outlined mr-1" style={{ fontSize: 16 }}>location_on</span>
                             {car.city}, {car.uf}
+                           </div>
                           </div>
                         </div>
-                      </div>
                     </article>
                   </Link>
                 )
@@ -276,13 +369,17 @@ export default function Estoque() {
             )}
           </div>
         </div>
+      </div>
+    </main>
 
-      </main>
-
-
-
-      <a className="fixed bottom-6 right-6 bg-whatsapp-green text-white p-4 rounded-full shadow-lg hover:-translate-y-1 transition-transform z-50 flex items-center justify-center" href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noopener noreferrer">
-        <svg fill="currentColor" height="24" viewBox="0 0 16 16" width="24" xmlns="http://www.w3.org/2000/svg">
+      <a
+        className="fixed bottom-6 right-6 p-4 rounded-full shadow-lg hover:-translate-y-1 transition-transform z-50 flex items-center justify-center"
+        style={{ background: "#25D366" }}
+        href={`https://wa.me/${WHATSAPP_NUMBER}`}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <svg fill="currentColor" height="24" viewBox="0 0 16 16" width="24" xmlns="http://www.w3.org/2000/svg" style={{ color: "white" }}>
           <path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.005-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z"></path>
         </svg>
       </a>
