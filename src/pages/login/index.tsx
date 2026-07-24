@@ -38,6 +38,8 @@ export default function Login() {
             if (result.success) {
                 toast.success("Bem-vindo a WebCarros!")
                 navigate("/dashboard")
+            } else {
+                toast.error("Email ou senha incorretos")
             }
         }
         catch (error) {

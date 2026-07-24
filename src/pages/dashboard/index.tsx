@@ -7,6 +7,7 @@ import { FiTrash2, FiEdit2, FiPlusCircle } from "react-icons/fi"
 import { supabase } from "../../services/supabaseClient"
 import { type CarProps } from "../../types/car"
 import { UserAuth } from "../../contexts/AuthContext"
+import toast from "react-hot-toast"
 
 
 export default function Dashboard() {
@@ -40,7 +41,31 @@ export default function Dashboard() {
     }, [user?.id])
 
     async function handleDeleteCar(id: string) {
-        if (!window.confirm("Deseja realmente excluir este carro e todas as suas imagens?")) return
+        const confirmed = await new Promise<boolean>((resolve) => {
+            toast.custom((t) => (
+                <div className="p-4 rounded-lg shadow-lg" style={{ background: "var(--bg-card)", border: "1px solid var(--border-default)" }}>
+                    <p className="font-medium text-white mb-3">Deseja realmente excluir este carro e todas as suas imagens?</p>
+                    <div className="flex gap-2 justify-end">
+                        <button
+                            className="px-3 py-1.5 rounded-lg text-sm font-medium cursor-pointer transition-colors"
+                            style={{ background: "var(--bg-secondary)", color: "var(--text-primary)" }}
+                            onClick={() => { toast.dismiss(t.id); resolve(false) }}
+                        >
+                            Cancelar
+                        </button>
+                        <button
+                            className="px-3 py-1.5 text-white rounded-lg text-sm font-medium cursor-pointer transition-colors"
+                            style={{ background: "var(--accent)" }}
+                            onClick={() => { toast.dismiss(t.id); resolve(true) }}
+                        >
+                            Sim, excluir
+                        </button>
+                    </div>
+                </div>
+            ), { duration: Infinity })
+        })
+
+        if (!confirmed) return
 
         try {
             const { data: car, error: fetchError } = await supabase
@@ -51,6 +76,7 @@ export default function Dashboard() {
 
             if (fetchError) {
                 console.error("Erro ao buscar carro antes de deletar: ", fetchError)
+                toast.error("Erro ao buscar carro")
                 return
             }
 
@@ -64,6 +90,7 @@ export default function Dashboard() {
 
                 if (storageError) {
                     console.error("Erro ao deletar imagens: ", storageError)
+                    toast.error("Erro ao deletar imagens do servidor")
                 }
             }
 
@@ -74,13 +101,16 @@ export default function Dashboard() {
 
             if (deleteError) {
                 console.error("Erro ao deletar carro no DB: ", deleteError)
+                toast.error("Erro ao excluir o carro")
                 return
             }
 
             setCars((prev) => prev.filter((car) => car.id !== id))
+            toast.success("Carro excluído com sucesso!")
         }
         catch (error) {
             console.error("Erro inesperado: ", error)
+            toast.error("Erro inesperado ao excluir o carro")
         }
     }
 
