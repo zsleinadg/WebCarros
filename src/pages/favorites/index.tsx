@@ -71,7 +71,7 @@ export default function Favorites() {
                   className="absolute top-4 right-4 z-10 w-10 h-10 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm transition-transform"
                   style={{ background: "rgba(16,22,37,0.8)" }}
                 >
-                  <FaHeart size={24} color={favorites.has(car.id) ? "#ef4444" : "var(--text-muted)"} />
+                  <FaHeart size={24} style={{ color: favorites.has(car.id) ? "var(--accent)" : "var(--text-muted)" }} />
                 </button>
                 <div className="relative h-56 w-full" style={{ background: "var(--bg-secondary)" }}>
                   <img alt={car.name} className="w-full h-full object-cover" src={imgUrl} />

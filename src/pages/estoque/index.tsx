@@ -345,7 +345,7 @@ export default function Estoque() {
                           style={{ background: "rgba(16,22,37,0.8)" }}
                         >
                           {isFav ? (
-                            <FaHeart size={20} color="#ef4444" />
+                            <FaHeart size={20} style={{ color: "var(--accent)" }} />
                           ) : (
                             <FaHeart size={20} style={{ color: "var(--text-muted)" }} />
                           )}
