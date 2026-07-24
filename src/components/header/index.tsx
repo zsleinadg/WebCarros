@@ -46,9 +46,9 @@ export default function Header() {
                 <Link
                   key={link.label}
                   to={link.to}
-                  className={`px-3 py-1 text-base font-medium transition-colors relative ${
+                  className={`px-3 py-1 text-base transition-colors relative ${
                     active
-                      ? "text-[#E9003F] after:absolute after:-bottom-0.5 after:left-3 after:right-3 after:h-0.5 after:bg-[#E9003F] after:rounded-full"
+                      ? "font-bold text-[#E9003F] after:absolute after:-bottom-0.5 after:left-3 after:right-3 after:h-0.5 after:bg-[#E9003F] after:rounded-full"
                       : "text-[#A5ADBD] hover:text-white"
                   }`}
                 >

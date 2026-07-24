@@ -189,7 +189,7 @@ export default function New() {
 
             if (error) {
                 console.log("Houve um erro ao deletar a imagem no servidor: ", error)
-                alert("Erro ao deletar imagem no servidor.")
+                toast.error("Erro ao deletar imagem no servidor.")
                 return
             }
 

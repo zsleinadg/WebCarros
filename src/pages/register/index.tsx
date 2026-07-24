@@ -40,6 +40,8 @@ export default function Register() {
             if (result.success) {
                 toast.success("Usuário cadastrado com sucesso!")
                 navigate("/login")
+            } else {
+                toast.error(result.error || "Erro ao cadastrar")
             }
         }
         catch (error) {

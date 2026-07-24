@@ -63,7 +63,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
                 password: password
             })
             if (error) {
-                alert("Falha ao fazer login, tente novamente!")
                 console.error("Deu erro no login: ", error)
                 return { success: false, error: error.message }
             }
