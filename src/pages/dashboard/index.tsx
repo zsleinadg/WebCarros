@@ -90,81 +90,109 @@ export default function Dashboard() {
 
 
     return (
-        <Container>
-            <div className="min-h-[calc(100vh-64px)] flex flex-col">
-            <DashboardHeader />
+        <div className="w-full" style={{ background: "var(--bg-main)" }}>
+            <Container>
+                <div className="min-h-[calc(100vh-64px)] flex flex-col">
+                    <DashboardHeader />
 
-            <main className="flex-1 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 content-start">
+                    <main className="flex-1 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 content-start">
 
-                {loading ? (
-                    <div className="col-span-full flex justify-center py-16">
-                        <div className="animate-spin h-8 w-8 border-4 border-zinc-800 border-t-transparent rounded-full" />
-                    </div>
-                ) : cars.length === 0 ? (
-                    <div className="col-span-full flex flex-col items-center justify-center py-16 text-zinc-500">
-                        <span className="material-symbols-outlined text-6xl mb-4" style={{ fontSize: 64 }}>directions_car</span>
-                        <p className="text-lg font-medium mb-1">Nenhum carro cadastrado</p>
-                        <p className="text-sm mb-6">Clique em "Cadastrar carro" para começar.</p>
-                        <Link
-                            to="/dashboard/new"
-                            className="inline-flex items-center gap-2 bg-red-500 text-white px-5 py-2.5 rounded-lg text-sm font-medium hover:bg-red-600 transition-colors"
-                        >
-                            <FiPlusCircle size={18} />
-                            Cadastrar carro
-                        </Link>
-                    </div>
-                ) : (
-                    cars.map((car) => (
-                        <section key={car.id} className="w-full bg-white rounded-lg relative">
-                            <div>
-
+                        {loading ? (
+                            <div className="col-span-full flex justify-center py-16">
+                                <div className="animate-spin h-8 w-8 border-4 rounded-full" style={{ borderColor: "var(--accent)", borderTopColor: "transparent" }} />
+                            </div>
+                        ) : cars.length === 0 ? (
+                            <div className="col-span-full flex flex-col items-center justify-center py-16" style={{ color: "var(--text-secondary)" }}>
+                                <span className="material-symbols-outlined text-6xl mb-4" style={{ fontSize: 64, color: "var(--text-muted)" }}>directions_car</span>
+                                <p className="text-lg font-medium mb-1" style={{ color: "var(--text-primary)" }}>Nenhum carro cadastrado</p>
+                                <p className="text-sm mb-6" style={{ color: "var(--text-secondary)" }}>Clique em "Cadastrar carro" para começar.</p>
                                 <Link
-                                    to={`/dashboard/edit/${car.id}`}
-                                    className="absolute bg-white p-2 rounded-2xl opacity-45 cursor-pointer                                     hover:scale-105 hover:opacity-65 left-2 top-2"
+                                    to="/dashboard/new"
+                                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-medium transition-colors text-white"
+                                    style={{ background: "var(--accent)" }}
                                 >
-                                    <FiEdit2 size={24} color="#000" />
+                                    <FiPlusCircle size={18} />
+                                    Cadastrar carro
                                 </Link>
-                                <button
-                                    onClick={() => handleDeleteCar(car.id)}
-                                    className="absolute bg-white p-2 rounded-2xl opacity-45 cursor-pointer                                     hover:scale-105 hover:opacity-65 right-2 top-2"
+                            </div>
+                        ) : (
+                            cars.map((car) => (
+                                <section
+                                    key={car.id}
+                                    className="w-full rounded-xl overflow-hidden transition-all duration-300 relative"
+                                    style={{
+                                        background: "linear-gradient(145deg, var(--bg-elevated), var(--bg-card))",
+                                        border: "1px solid var(--border-light)",
+                                        boxShadow: "0 4px 16px rgba(0,0,0,0.2)",
+                                    }}
+                                    onMouseEnter={(e) => {
+                                        const el = e.currentTarget
+                                        el.style.transform = "translateY(-4px)"
+                                        el.style.borderColor = "rgba(233,0,63,0.45)"
+                                        el.style.boxShadow = "0 16px 40px rgba(0,0,0,0.35)"
+                                    }}
+                                    onMouseLeave={(e) => {
+                                        const el = e.currentTarget
+                                        el.style.transform = "translateY(0)"
+                                        el.style.borderColor = "var(--border-light)"
+                                        el.style.boxShadow = "0 4px 16px rgba(0,0,0,0.2)"
+                                    }}
                                 >
-                                    <FiTrash2 size={24} color="#000" />
-                                </button>
-                                <div 
-                                style={{display: loadImages.includes(car.id) ? "none" : "block"}}
-                                className=" w-full rounded-lg mb-2 max-h-70 bg-slate-200"></div>
-                                <img
-                                    className="w-full rounded-lg mb-2 max-h-70 h-70 object-cover"
-                                    src={car.images?.[0]?.url || "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=600&q=80"}
-                                    alt="Imagem do carro"
-                                    onLoad={() => handleImageLoad(car.id)}
-                                    style={{display: loadImages.includes(car.id) ? "block" : "none"}}
-                                />
-                            </div>
+                                    <div>
+                                        <Link
+                                            to={`/dashboard/edit/${car.id}`}
+                                            className="absolute p-2 rounded-2xl opacity-45 cursor-pointer hover:scale-105 hover:opacity-65 left-2 top-2 transition-all"
+                                            style={{ background: "var(--bg-card)" }}
+                                        >
+                                            <FiEdit2 size={24} style={{ color: "var(--accent)" }} />
+                                        </Link>
+                                        <button
+                                            onClick={() => handleDeleteCar(car.id)}
+                                            className="absolute p-2 rounded-2xl opacity-45 cursor-pointer hover:scale-105 hover:opacity-65 right-2 top-2 transition-all"
+                                            style={{ background: "var(--bg-card)" }}
+                                        >
+                                            <FiTrash2 size={24} style={{ color: "var(--accent)" }} />
+                                        </button>
+                                        <div
+                                            className="w-full rounded-lg mb-2 max-h-70 h-70"
+                                            style={{
+                                                display: loadImages.includes(car.id) ? "none" : "block",
+                                                background: "var(--bg-secondary)"
+                                            }}
+                                        />
+                                        <img
+                                            className="w-full rounded-lg mb-2 max-h-70 h-70 object-cover"
+                                            src={car.images?.[0]?.url || "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=600&q=80"}
+                                            alt="Imagem do carro"
+                                            onLoad={() => handleImageLoad(car.id)}
+                                            style={{ display: loadImages.includes(car.id) ? "block" : "none" }}
+                                        />
+                                    </div>
 
-                            <p className=" font-bold mt-1 px-2 mb-2">{car.name}</p>
+                                    <p className="font-bold mt-1 px-2 mb-2 text-white">{car.name}</p>
 
-                            <div className=" flex flex-col px-2">
-                                <span className="text-zinc-700">
-                                    Ano {car.year} | {car.km} km
-                                </span>
-                                <strong className=" font-bold mt-4">
-                                    {(Number(car?.price).toLocaleString("pt-BR", {style:"currency", currency:"BRL"}))}
-                                </strong>
-                            </div>
+                                    <div className="flex flex-col px-2">
+                                        <span style={{ color: "var(--text-secondary)" }}>
+                                            Ano {car.year} | {car.km} km
+                                        </span>
+                                        <strong className="font-bold mt-4" style={{ color: "var(--accent)" }}>
+                                            {(Number(car?.price).toLocaleString("pt-BR", { style: "currency", currency: "BRL" }))}
+                                        </strong>
+                                    </div>
 
-                            <div className=" w-full h-px bg-slate-200 my-2"></div>
-                            <div className=" px-2 pb-2 ">
-                                <span>
-                                    {car.city}
-                                </span>
-                            </div>
-                        </section>
-                    ))
-                )}
+                                    <div className="w-full h-px my-2" style={{ background: "var(--border-default)" }} />
+                                    <div className="px-2 pb-2">
+                                        <span style={{ color: "var(--text-secondary)" }}>
+                                            {car.city}
+                                        </span>
+                                    </div>
+                                </section>
+                            ))
+                        )}
 
-            </main>
-            </div>
-        </Container>
+                    </main>
+                </div>
+            </Container>
+        </div>
     )
 }

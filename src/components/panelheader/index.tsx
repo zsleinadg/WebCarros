@@ -10,17 +10,19 @@ export default function DashboardHeader() {
     async function handleSignout() {
         const confirmed = await new Promise((resolve) => {
             toast.custom((t) => (
-                <div className="bg-white p-4 rounded-lg shadow-lg border border-border-subtle">
-                    <p className="font-medium text-on-background mb-3">Deseja realmente sair?</p>
+                <div className="p-4 rounded-lg shadow-lg" style={{ background: "var(--bg-card)", border: "1px solid var(--border-default)" }}>
+                    <p className="font-medium text-white mb-3">Deseja realmente sair?</p>
                     <div className="flex gap-2 justify-end">
                         <button
-                            className="px-3 py-1.5 bg-gray-200 rounded-lg text-sm font-medium cursor-pointer hover:bg-gray-300 transition-colors"
+                            className="px-3 py-1.5 rounded-lg text-sm font-medium cursor-pointer transition-colors"
+                            style={{ background: "var(--bg-secondary)", color: "var(--text-primary)" }}
                             onClick={() => { toast.dismiss(t.id); resolve(false) }}
                         >
                             Cancelar
                         </button>
                         <button
-                            className="px-3 py-1.5 bg-red-500 text-white rounded-lg text-sm font-medium cursor-pointer hover:bg-red-600 transition-colors"
+                            className="px-3 py-1.5 text-white rounded-lg text-sm font-medium cursor-pointer transition-colors"
+                            style={{ background: "var(--accent)" }}
                             onClick={() => { toast.dismiss(t.id); resolve(true) }}
                         >
                             Sim, sair

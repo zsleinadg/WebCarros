@@ -256,196 +256,211 @@ export default function Edit() {
 
     if (fetching) {
         return (
-            <Container>
-                <DashboardHeader />
-                <div className="w-full flex justify-center my-4">
-                    <div className="animate-spin h-8 w-8 border-4 border-zinc-800 border-t-transparent rounded-full"></div>
-                </div>
-            </Container>
+            <div className="w-full min-h-screen" style={{ background: "var(--bg-main)" }}>
+                <Container>
+                    <DashboardHeader />
+                    <div className="w-full flex justify-center my-4">
+                        <div className="animate-spin h-8 w-8 border-4 rounded-full" style={{ borderColor: "var(--accent)", borderTopColor: "transparent" }} />
+                    </div>
+                </Container>
+            </div>
         )
     }
 
     return (
-        <Container>
-            <DashboardHeader />
+        <div className="w-full min-h-screen" style={{ background: "var(--bg-main)" }}>
+            <Container>
+                <DashboardHeader />
 
-            {loading && (
-                <div className="w-full flex justify-center my-4">
-                    <div className="animate-spin h-8 w-8 border-4 border-zinc-800 border-t-transparent rounded-full"></div>
-                </div>
-            )}
-
-            <div className="w-full bg-white p-3 rounded-lg flex flex-col sm:flex-row items-center gap-2">
-                <button className="border-2 w-48 rounded-lg flex items-center justify-center cursor-pointer border-gray-600 h-32 md:w-48">
-                    <div className="absolute cursor-pointer">
-                        <FiUpload size={30} color="#000" />
+                {loading && (
+                    <div className="w-full flex justify-center my-4">
+                        <div className="animate-spin h-8 w-8 border-4 rounded-full" style={{ borderColor: "var(--accent)", borderTopColor: "transparent" }} />
                     </div>
-                    <div className="cursor-pointer">
-                        <input
-                            type="file"
-                            accept="image/*"
-                            className="opacity-0 cursor-pointer"
-                            onChange={handleFile}
-                        />
-                    </div>
-                </button>
+                )}
 
-                {[...existingImages, ...carImages].map(item => (
-                    <div key={item.path}
-                        className="flex justify-center items-center relative">
-                        <button
-                            onClick={() => handleDeleteImage(item)}
-                            className="absolute bg-white p-2 rounded-2xl opacity-45 cursor-pointer hover:scale-105 hover:opacity-65"
-                        >
-                            <FiTrash size={24} color="#000" />
-                        </button>
-                        <img
-                            src={item.previewUrl}
-                            alt="Foto do carro"
-                            className="rounded-lg w-full h-32 object-cover"
-                        />
-                    </div>
-                ))}
-            </div>
-
-            <div className="w-full bg-white p-3 rounded-lg flex flex-col sm:flex-row items-center gap-2 mt-2">
-                <form
-                    className="w-full"
-                    onSubmit={handleSubmit(onSubmit)}>
-
-                    <div className="mb-3">
-                        <p className="mb-2 font-medium">Nome do carro</p>
-                        <Input
-                            type="text"
-                            name="name"
-                            placeholder="Ex: Onix 1.0..."
-                            register={register}
-                            error={errors.name?.message}
-                        />
-                    </div>
-
-                    <div className="mb-3">
-                        <p className="mb-2 font-medium">Modelo do carro</p>
-                        <Input
-                            type="text"
-                            name="model"
-                            placeholder="Ex: 1.0 Flex PLUS MANUAL..."
-                            register={register}
-                            error={errors.model?.message}
-                        />
-                    </div>
-
-                    <div className="flex flex-row w-full mb-3 items-center gap-4">
-                        <div className="w-full">
-                            <p className="mb-2 font-medium">Ano do carro</p>
-                            <Input
-                                type="text"
-                                name="year"
-                                placeholder="Ex: 2016/2020..."
-                                register={register}
-                                error={errors.year?.message}
+                <div className="w-full p-3 rounded-lg flex flex-col sm:flex-row items-center gap-2" style={{ background: "var(--bg-card)", border: "1px solid var(--border-default)" }}>
+                    <button className="border-2 w-48 rounded-lg flex items-center justify-center cursor-pointer h-32 md:w-48" style={{ borderColor: "var(--border-default)" }}>
+                        <div className="absolute cursor-pointer">
+                            <FiUpload size={30} style={{ color: "var(--text-muted)" }} />
+                        </div>
+                        <div className="cursor-pointer">
+                            <input
+                                type="file"
+                                accept="image/*"
+                                className="opacity-0 cursor-pointer"
+                                onChange={handleFile}
                             />
                         </div>
-
-                        <div className="w-full">
-                            <p className="mb-2 font-medium">KM rodados</p>
-                            <Input
-                                type="text"
-                                name="km"
-                                placeholder="Ex: 25.700..."
-                                register={register}
-                                error={errors.km?.message}
-                            />
-                        </div>
-
-                        <div className="w-full">
-                            <p className="mb-2 font-medium">Combustível</p>
-                            <select
-                                className="border-2 border-[#878787] w-full rounded-md h-10 px-2"
-                                id="fuel"
-                                {...register("fuel")}
-                            >
-                                <option value="" disabled>Selecione</option>
-                                {FUEL_OPTIONS.map(fuel => (
-                                    <option key={fuel} value={fuel}>{fuel}</option>
-                                ))}
-                            </select>
-                            {errors.fuel && (
-                                <p className="mb-1 text-red-500">{errors.fuel?.message}</p>
-                            )}
-                        </div>
-                    </div>
-
-                    <div className="flex flex-row w-full mb-3 items-center gap-4">
-                        <div className="w-full">
-                            <p className="mb-2 font-medium">Telefone / Whatsapp</p>
-                            <Input
-                                type="text"
-                                name="whatsapp"
-                                placeholder="01140028922"
-                                register={register}
-                                error={errors.whatsapp?.message}
-                            />
-                        </div>
-
-                        <div className="w-full">
-                            <p className="mb-2 font-medium">Cidade</p>
-                            <Input
-                                type="text"
-                                name="city"
-                                placeholder="Chique-Chique"
-                                register={register}
-                                error={errors.city?.message}
-                            />
-                        </div>
-
-                        <div className="w-full">
-                            <p className="mb-2 font-medium">UF</p>
-                            <select
-                                className="border-2 border-[#878787] w-full rounded-md h-10 px-2"
-                                id="uf"
-                                {...register("uf")}
-                            >
-                                <option value="" disabled>Selecione</option>
-                                {UF_OPTIONS.map(uf => (
-                                    <option key={uf} value={uf}>{uf}</option>
-                                ))}
-                            </select>
-                            {errors.uf && (
-                                <p className="mb-1 text-red-500">{errors.uf?.message}</p>
-                            )}
-                        </div>
-                    </div>
-
-                    <div className="mb-3">
-                        <p className="mb-2 font-medium">Preço</p>
-                        <Input
-                            type="text"
-                            name="price"
-                            placeholder="Ex: 25.000..."
-                            register={register}
-                            error={errors.price?.message}
-                        />
-                    </div>
-
-                    <div className="mb-3">
-                        <p className="mb-2 font-medium">Descrição</p>
-                        <textarea
-                            className="border-2 border-[#878787] w-full rounded-md h-24 px-2"
-                            placeholder="Digite a descrição completa sobre o carro..."
-                            {...register("description")}
-                            id="description"
-                        />
-                        {errors.description && (
-                            <p className="mb-1 text-red-500">{errors.description?.message}</p>
-                        )}
-                    </div>
-
-                    <button type="submit" className="rounded-md w-full h-10 bg-zinc-900 text-white font-medium cursor-pointer">
-                        Salvar alterações
                     </button>
-                </form>
-            </div>
-        </Container>
+
+                    {[...existingImages, ...carImages].map(item => (
+                        <div key={item.path} className="flex justify-center items-center relative">
+                            <button
+                                onClick={() => handleDeleteImage(item)}
+                                className="absolute p-2 rounded-2xl opacity-45 cursor-pointer hover:scale-105 hover:opacity-65 transition-all"
+                                style={{ background: "var(--bg-card)" }}
+                            >
+                                <FiTrash size={24} style={{ color: "var(--accent)" }} />
+                            </button>
+                            <img
+                                src={item.previewUrl}
+                                alt="Foto do carro"
+                                className="rounded-lg w-full h-32 object-cover"
+                            />
+                        </div>
+                    ))}
+                </div>
+
+                <div className="w-full p-3 rounded-lg flex flex-col sm:flex-row items-center gap-2 mt-2" style={{ background: "var(--bg-card)", border: "1px solid var(--border-default)" }}>
+                    <form
+                        className="w-full"
+                        onSubmit={handleSubmit(onSubmit)}>
+
+                        <div className="mb-3">
+                            <p className="mb-2 font-medium text-white">Nome do carro</p>
+                            <Input
+                                type="text"
+                                name="name"
+                                placeholder="Ex: Onix 1.0..."
+                                register={register}
+                                error={errors.name?.message}
+                            />
+                        </div>
+
+                        <div className="mb-3">
+                            <p className="mb-2 font-medium text-white">Modelo do carro</p>
+                            <Input
+                                type="text"
+                                name="model"
+                                placeholder="Ex: 1.0 Flex PLUS MANUAL..."
+                                register={register}
+                                error={errors.model?.message}
+                            />
+                        </div>
+
+                        <div className="flex flex-row w-full mb-3 items-center gap-4">
+                            <div className="w-full">
+                                <p className="mb-2 font-medium text-white">Ano do carro</p>
+                                <Input
+                                    type="text"
+                                    name="year"
+                                    placeholder="Ex: 2016/2020..."
+                                    register={register}
+                                    error={errors.year?.message}
+                                />
+                            </div>
+
+                            <div className="w-full">
+                                <p className="mb-2 font-medium text-white">KM rodados</p>
+                                <Input
+                                    type="text"
+                                    name="km"
+                                    placeholder="Ex: 25.700..."
+                                    register={register}
+                                    error={errors.km?.message}
+                                />
+                            </div>
+
+                            <div className="w-full">
+                                <p className="mb-2 font-medium text-white">Combustível</p>
+                                <select
+                                    className="w-full rounded-md h-10 px-2 outline-none"
+                                    style={{ background: "var(--bg-secondary)", border: "1px solid var(--border-default)", color: "var(--text-primary)" }}
+                                    id="fuel"
+                                    {...register("fuel")}
+                                >
+                                    <option value="" disabled style={{ background: "var(--bg-main)", color: "var(--text-primary)" }}>Selecione</option>
+                                    {FUEL_OPTIONS.map(fuel => (
+                                        <option key={fuel} value={fuel} style={{ background: "var(--bg-main)", color: "var(--text-primary)" }}>{fuel}</option>
+                                    ))}
+                                </select>
+                                {errors.fuel && (
+                                    <p className="mb-1 text-red-400">{errors.fuel?.message}</p>
+                                )}
+                            </div>
+                        </div>
+
+                        <div className="flex flex-row w-full mb-3 items-center gap-4">
+                            <div className="w-full">
+                                <p className="mb-2 font-medium text-white">Telefone / Whatsapp</p>
+                                <Input
+                                    type="text"
+                                    name="whatsapp"
+                                    placeholder="01140028922"
+                                    register={register}
+                                    error={errors.whatsapp?.message}
+                                />
+                            </div>
+
+                            <div className="w-full">
+                                <p className="mb-2 font-medium text-white">Cidade</p>
+                                <Input
+                                    type="text"
+                                    name="city"
+                                    placeholder="Chique-Chique"
+                                    register={register}
+                                    error={errors.city?.message}
+                                />
+                            </div>
+
+                            <div className="w-full">
+                                <p className="mb-2 font-medium text-white">UF</p>
+                                <select
+                                    className="w-full rounded-md h-10 px-2 outline-none"
+                                    style={{ background: "var(--bg-secondary)", border: "1px solid var(--border-default)", color: "var(--text-primary)" }}
+                                    id="uf"
+                                    {...register("uf")}
+                                >
+                                    <option value="" disabled style={{ background: "var(--bg-main)", color: "var(--text-primary)" }}>Selecione</option>
+                                    {UF_OPTIONS.map(uf => (
+                                        <option key={uf} value={uf} style={{ background: "var(--bg-main)", color: "var(--text-primary)" }}>{uf}</option>
+                                    ))}
+                                </select>
+                                {errors.uf && (
+                                    <p className="mb-1 text-red-400">{errors.uf?.message}</p>
+                                )}
+                            </div>
+                        </div>
+
+                        <div className="mb-3">
+                            <p className="mb-2 font-medium text-white">Preço</p>
+                            <Input
+                                type="text"
+                                name="price"
+                                placeholder="Ex: 25.000..."
+                                register={register}
+                                error={errors.price?.message}
+                            />
+                        </div>
+
+                        <div className="mb-3">
+                            <p className="mb-2 font-medium text-white">Descrição</p>
+                            <textarea
+                                className="w-full rounded-md h-24 px-2 outline-none resize-none"
+                                style={{ background: "var(--bg-secondary)", border: "1px solid var(--border-default)", color: "var(--text-primary)" }}
+                                placeholder="Digite a descrição completa sobre o carro..."
+                                {...register("description")}
+                                id="description"
+                                onFocusCapture={(e) => { e.currentTarget.style.borderColor = "var(--accent)"; e.currentTarget.style.boxShadow = "0 0 0 3px rgba(233,0,63,0.12)" }}
+                                onBlurCapture={(e) => { e.currentTarget.style.borderColor = "var(--border-default)"; e.currentTarget.style.boxShadow = "none" }}
+                            />
+                            {errors.description && (
+                                <p className="mb-1 text-red-400">{errors.description?.message}</p>
+                            )}
+                        </div>
+
+                        <button
+                            type="submit"
+                            className="rounded-md w-full h-10 font-medium cursor-pointer text-white transition-all"
+                            style={{ background: "var(--accent)" }}
+                            onMouseEnter={(e) => { e.currentTarget.style.background = "var(--accent-hover)" }}
+                            onMouseLeave={(e) => { e.currentTarget.style.background = "var(--accent)" }}
+                        >
+                            Salvar alterações
+                        </button>
+                    </form>
+                </div>
+            </Container>
+        </div>
     )
 }

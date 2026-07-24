@@ -25,12 +25,6 @@ const statusLabels: Record<string, string> = {
   completed: "Concluído",
 }
 
-const statusColors: Record<string, string> = {
-  pending: "bg-yellow-100 text-yellow-800 border-yellow-300",
-  contacted: "bg-blue-100 text-blue-800 border-blue-300",
-  completed: "bg-green-100 text-green-800 border-green-300",
-}
-
 export default function Vendas() {
   const [requests, setRequests] = useState<SellRequest[]>([])
   const [loading, setLoading] = useState(true)
@@ -87,92 +81,114 @@ export default function Vendas() {
   }
 
   return (
-    <Container>
-      <div className="min-h-[calc(100vh-64px)] flex flex-col">
-        <DashboardHeader />
+    <div className="w-full min-h-screen" style={{ background: "var(--bg-main)" }}>
+      <Container>
+        <div className="min-h-[calc(100vh-64px)] flex flex-col gap-6">
+          <DashboardHeader />
 
-        <div className="flex-1 flex flex-col gap-6">
-          <div className="bg-white rounded-lg p-4 flex items-center justify-between shadow-sm border border-zinc-200">
-            <h1 className="text-lg font-bold text-zinc-800">Pedidos de Venda</h1>
+          <div
+            className="rounded-lg p-4 flex items-center justify-between shadow-sm"
+            style={{ background: "var(--bg-card)", border: "1px solid var(--border-default)" }}
+          >
+            <h1 className="text-lg font-bold text-white">Pedidos de Venda</h1>
             <div className="flex items-center gap-2">
-              <label className="text-sm text-zinc-500">Filtrar:</label>
+              <label className="text-sm" style={{ color: "var(--text-secondary)" }}>Filtrar:</label>
               <select
-                className="border border-zinc-300 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-red-400"
+                className="rounded-lg px-3 py-1.5 text-sm outline-none"
+                style={{ background: "var(--bg-secondary)", border: "1px solid var(--border-default)", color: "var(--text-primary)" }}
                 value={filterStatus}
                 onChange={e => setFilterStatus(e.target.value)}
               >
-                <option value="">Todos</option>
-                <option value="pending">Pendente</option>
-                <option value="contacted">Contatado</option>
-                <option value="completed">Concluído</option>
+                <option value="" style={{ background: "var(--bg-main)", color: "var(--text-primary)" }}>Todos</option>
+                <option value="pending" style={{ background: "var(--bg-main)", color: "var(--text-primary)" }}>Pendente</option>
+                <option value="contacted" style={{ background: "var(--bg-main)", color: "var(--text-primary)" }}>Contatado</option>
+                <option value="completed" style={{ background: "var(--bg-main)", color: "var(--text-primary)" }}>Concluído</option>
               </select>
             </div>
           </div>
 
           {loading ? (
             <div className="flex justify-center py-16">
-              <div className="animate-spin h-8 w-8 border-4 border-zinc-800 border-t-transparent rounded-full" />
+              <div className="animate-spin h-8 w-8 border-4 rounded-full" style={{ borderColor: "var(--accent)", borderTopColor: "transparent" }} />
             </div>
           ) : requests.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-16 text-zinc-500 bg-white rounded-lg shadow-sm border border-zinc-200">
-              <FiMessageSquare size={64} className="mb-4 text-zinc-300" />
-              <p className="text-lg font-medium mb-1">Nenhum pedido de venda</p>
+            <div
+              className="flex flex-col items-center justify-center py-16 rounded-lg shadow-sm"
+              style={{ background: "var(--bg-card)", border: "1px solid var(--border-default)", color: "var(--text-secondary)" }}
+            >
+              <FiMessageSquare size={64} className="mb-4" style={{ color: "var(--text-muted)" }} />
+              <p className="text-lg font-medium mb-1 text-white">Nenhum pedido de venda</p>
               <p className="text-sm">Quando alguém solicitar uma venda, aparecerá aqui.</p>
             </div>
           ) : (
-            <div className="overflow-x-auto bg-white rounded-lg shadow-sm border border-zinc-200">
+            <div
+              className="overflow-x-auto rounded-lg shadow-sm"
+              style={{ background: "var(--bg-card)", border: "1px solid var(--border-default)" }}
+            >
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-zinc-200">
-                    <th className="text-left px-4 py-3 font-semibold text-zinc-700">Data</th>
-                    <th className="text-left px-4 py-3 font-semibold text-zinc-700">Nome</th>
-                    <th className="text-left px-4 py-3 font-semibold text-zinc-700">Telefone</th>
-                    <th className="text-left px-4 py-3 font-semibold text-zinc-700">Email</th>
-                    <th className="text-left px-4 py-3 font-semibold text-zinc-700">Veículo</th>
-                    <th className="text-left px-4 py-3 font-semibold text-zinc-700">Ano/KM</th>
-                    <th className="text-left px-4 py-3 font-semibold text-zinc-700">Preço</th>
-                    <th className="text-left px-4 py-3 font-semibold text-zinc-700">Status</th>
-                    <th className="text-left px-4 py-3 font-semibold text-zinc-700">Ações</th>
+                  <tr className="border-b" style={{ borderColor: "var(--border-default)" }}>
+                    <th className="text-left px-4 py-3 font-semibold text-white">Data</th>
+                    <th className="text-left px-4 py-3 font-semibold text-white">Nome</th>
+                    <th className="text-left px-4 py-3 font-semibold text-white">Telefone</th>
+                    <th className="text-left px-4 py-3 font-semibold text-white">Email</th>
+                    <th className="text-left px-4 py-3 font-semibold text-white">Veículo</th>
+                    <th className="text-left px-4 py-3 font-semibold text-white">Ano/KM</th>
+                    <th className="text-left px-4 py-3 font-semibold text-white">Preço</th>
+                    <th className="text-left px-4 py-3 font-semibold text-white">Status</th>
+                    <th className="text-left px-4 py-3 font-semibold text-white">Ações</th>
                   </tr>
                 </thead>
                 <tbody>
                   {requests.map((req) => (
-                    <tr key={req.id} className="border-b border-zinc-100 hover:bg-zinc-50 transition-colors">
-                      <td className="px-4 py-3 text-zinc-600 whitespace-nowrap">{formatDate(req.created_at)}</td>
-                      <td className="px-4 py-3 font-medium text-zinc-800">{req.nome}</td>
+                    <tr
+                      key={req.id}
+                      className="border-b transition-colors"
+                      style={{ borderColor: "var(--border-default)" }}
+                    >
+                      <td className="px-4 py-3 whitespace-nowrap" style={{ color: "var(--text-secondary)" }}>{formatDate(req.created_at)}</td>
+                      <td className="px-4 py-3 font-medium text-white">{req.nome}</td>
                       <td className="px-4 py-3">
                         <a
                           href={`https://wa.me/55${req.telefone.replace(/\D/g, "")}`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-zinc-600 hover:text-red-500 transition-colors"
-                          title="Abrir WhatsApp"
+                          className="transition-colors"
+                          style={{ color: "var(--text-secondary)" }}
                         >
                           {req.telefone}
                         </a>
                       </td>
                       <td className="px-4 py-3">
-                        <a href={`mailto:${req.email}`} className="text-zinc-600 hover:text-red-500 transition-colors">
+                        <a href={`mailto:${req.email}`} className="transition-colors" style={{ color: "var(--text-secondary)" }}>
                           {req.email}
                         </a>
                       </td>
-                      <td className="px-4 py-3 text-zinc-800">{req.marca} {req.modelo}</td>
-                      <td className="px-4 py-3 text-zinc-600 whitespace-nowrap">{req.ano} / {req.km} km</td>
-                      <td className="px-4 py-3 text-zinc-800 font-semibold">{formatPrice(req.preco)}</td>
+                      <td className="px-4 py-3 text-white">{req.marca} {req.modelo}</td>
+                      <td className="px-4 py-3 whitespace-nowrap" style={{ color: "var(--text-secondary)" }}>{req.ano} / {req.km} km</td>
+                      <td className="px-4 py-3 font-semibold" style={{ color: "var(--accent)" }}>{formatPrice(req.preco)}</td>
                       <td className="px-4 py-3">
-                        <span className={`inline-block px-2.5 py-1 rounded-full text-xs font-semibold border ${statusColors[req.status] || "bg-gray-100 text-gray-800"}`}>
+                        <span
+                          className={`inline-block px-2.5 py-1 rounded-full text-xs font-semibold border ${
+                            req.status === "pending" ? "bg-yellow-900/30 text-yellow-400 border-yellow-600/50" :
+                            req.status === "contacted" ? "bg-blue-900/30 text-blue-400 border-blue-600/50" :
+                            req.status === "completed" ? "bg-green-900/30 text-green-400 border-green-600/50" :
+                            "bg-gray-800 text-gray-400 border-gray-600"
+                          }`}
+                        >
                           {statusLabels[req.status] || req.status}
                         </span>
                       </td>
                       <td className="px-4 py-3">
                         <select
-                          className="border border-zinc-300 rounded px-2 py-1 text-xs focus:outline-none focus:ring-2 focus:ring-red-400"
+                          className="rounded px-2 py-1 text-xs outline-none"
+                          style={{ background: "var(--bg-secondary)", border: "1px solid var(--border-default)", color: "var(--text-primary)" }}
                           value={req.status}
                           onChange={e => handleStatusChange(req.id, e.target.value)}
                         >
-                          <option value="pending">Pendente</option>
-                          <option value="contacted">Contatado</option>
-                          <option value="completed">Concluído</option>
+                          <option value="pending" style={{ background: "var(--bg-main)", color: "var(--text-primary)" }}>Pendente</option>
+                          <option value="contacted" style={{ background: "var(--bg-main)", color: "var(--text-primary)" }}>Contatado</option>
+                          <option value="completed" style={{ background: "var(--bg-main)", color: "var(--text-primary)" }}>Concluído</option>
                         </select>
                       </td>
                     </tr>
@@ -182,7 +198,7 @@ export default function Vendas() {
             </div>
           )}
         </div>
-      </div>
-    </Container>
+      </Container>
+    </div>
   )
 }
