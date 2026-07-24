@@ -6,6 +6,7 @@ export default function Layout(){
     return(
         <>
         <Header/>
+        <div className="h-16" />
         <Outlet/>
         <Footer/>
         </>

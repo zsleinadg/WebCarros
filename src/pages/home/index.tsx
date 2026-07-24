@@ -72,6 +72,7 @@ export default function Home() {
     <div className="flex flex-col min-h-screen">
       <WhatsAppFloat />
       <Header />
+      <div className="h-16" />
 
       <section className="relative min-h-[80vh] flex flex-col">
         <HeroBackground />

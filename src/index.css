@@ -89,7 +89,6 @@ body {
   font-family: var(--font-body-medium);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  padding-top: 64px;
 }
 
 @utility shadow-ambient {
