@@ -36,8 +36,8 @@ export default function Favorites() {
           style={{ borderColor: "var(--border-default)" }}
         >
           <div>
-            <h1 className="text-[28px] md:text-3xl font-bold text-white mb-1">Meus Favoritos</h1>
-            <p className="text-base" style={{ color: "var(--text-secondary)" }}>{favorites.size} veículos salvos</p>
+            <h1 className="text-2xl font-bold text-white">Meus Favoritos</h1>
+            <span style={{ color: "var(--text-secondary)" }}>{favorites.size} veículos salvos</span>
           </div>
         </section>
 
