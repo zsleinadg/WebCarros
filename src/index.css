@@ -162,7 +162,7 @@ body {
   left: 50%;
   width: 100%;
   height: 2px;
-  background: #E2E8F0;
+  background: #252D40;
   z-index: 0;
 }
 
@@ -177,7 +177,7 @@ body {
 }
 
 .badge-destaque {
-  background: linear-gradient(135deg, #b50029, #e11138);
+  background: #E9003F;
 }
 
 

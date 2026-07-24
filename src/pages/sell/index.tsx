@@ -74,9 +74,7 @@ export default function Sell() {
   }
 
   return (
-    <>
-
-
+    <div className="min-h-screen">
       <header className="relative bg-inverse-surface text-on-tertiary-container overflow-hidden pt-stack-large pb-24 md:pt-24 md:pb-32 px-margin-mobile md:px-margin-desktop">
         <div className="absolute inset-0 z-0 opacity-20">
           <div className="bg-cover bg-center w-full h-full" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=1600&q=80')" }}></div>
@@ -224,6 +222,6 @@ export default function Sell() {
         </div>
       </section>
 
-    </>
+    </div>
   )
 }

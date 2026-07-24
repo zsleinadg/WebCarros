@@ -83,7 +83,7 @@ export default function CarDetail() {
     <>
 
 
-      <main className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-stack-large flex flex-col gap-stack-large">
+      <main className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-stack-large flex flex-col gap-stack-large min-h-screen">
         <nav className="flex text-body-small text-secondary items-center gap-2">
           <Link to="/" className="hover:text-primary transition-colors">Home</Link>
           <span className="material-symbols-outlined text-sm">chevron_right</span>

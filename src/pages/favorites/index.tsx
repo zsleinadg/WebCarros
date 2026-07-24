@@ -27,7 +27,7 @@ export default function Favorites() {
 
   return (
     <>
-      <main className="flex-grow w-full px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto py-margin-desktop">
+      <main className="flex-grow w-full px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto py-margin-desktop min-h-screen">
         <section className="mb-stack-large flex flex-col md:flex-row md:items-end justify-between border-b border-border-subtle pb-stack-medium">
           <div>
             <h1 className="text-[28px] md:text-headline-large font-[700] md:font-headline-large text-on-background mb-base">Meus Favoritos</h1>

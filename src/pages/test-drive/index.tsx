@@ -69,7 +69,7 @@ export default function TestDrive() {
   if (!carId && !loadingCar) {
     return (
       <>
-        <main className="flex-grow w-full max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-stack-large flex flex-col items-center justify-center gap-6 min-h-[60vh]">
+        <main className="flex-grow w-full max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-stack-large flex flex-col items-center justify-center gap-6 min-h-screen">
           <span className="material-symbols-outlined text-secondary" style={{ fontSize: 64 }}>directions_car</span>
           <h1 className="text-headline-medium font-headline-medium text-on-surface text-center">Nenhum carro selecionado</h1>
           <p className="text-body-medium text-body-medium text-secondary text-center max-w-md">Navegue pelo nosso estoque e escolha um carro para agendar um test drive.</p>
@@ -91,7 +91,7 @@ export default function TestDrive() {
 
   return (
     <>
-      <main className="flex-grow w-full max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-stack-large flex flex-col gap-stack-large">
+      <main className="flex-grow w-full max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-stack-large flex flex-col gap-stack-large min-h-screen">
         <nav aria-label="Breadcrumb" className="w-full">
           <ol className="flex items-center space-x-2 font-body-small text-body-small text-on-surface-variant">
             <li><Link to="/" className="hover:text-primary transition-colors">Home</Link></li>

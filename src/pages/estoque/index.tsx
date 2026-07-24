@@ -123,9 +123,12 @@ export default function Estoque() {
     <>
 
 
-      <main className="flex-grow max-w-container-max mx-auto w-full px-margin-mobile md:px-margin-desktop py-stack-large">
+      <main className="grow max-w-container-max mx-auto w-full px-margin-mobile md:px-margin-desktop py-stack-large min-h-screen">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-stack-medium gap-4">
-          <h1 className="text-title-large font-title-large text-on-background">{filteredCars.length} carros encontrados</h1>
+          <div className="flex flex-col">
+            <h1 className="text-2xl font-title-large text-on-background font-bold">Encontramos {filteredCars.length} carros</h1>
+          <span>em todo o Brasil</span>
+          </div>
           <div className="flex items-center gap-2 w-full md:w-auto">
             <label className="text-body-small font-body-small text-secondary whitespace-nowrap" htmlFor="sort">Ordenar por:</label>
             <select className="border border-border-subtle rounded-lg bg-surface-container-lowest text-body-small font-body-small focus:border-primary focus:ring-primary w-full md:w-auto py-2 pl-3 pr-10" id="sort" value={sortOrder} onChange={e => setSortOrder(e.target.value)}>

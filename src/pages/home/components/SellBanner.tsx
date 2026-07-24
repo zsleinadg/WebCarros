@@ -1,13 +1,93 @@
+import { useState, useCallback, useRef, useEffect } from "react"
 import { Link } from "react-router"
 import sellBg from "../../../assets/sellcar-section.png"
+import carSellBg from "../../../assets/car-sellcar-bg.png"
 
 export default function SellBanner() {
+  const [isOverCar, setIsOverCar] = useState(false)
+  const carPixelsRef = useRef<Uint8ClampedArray | null>(null)
+  const carSizeRef = useRef({ w: 0, h: 0 })
+  const carLayerRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const img = new Image()
+    img.src = carSellBg
+    img.onload = () => {
+      const canvas = document.createElement("canvas")
+      canvas.width = img.width
+      canvas.height = img.height
+      const ctx = canvas.getContext("2d")
+      if (!ctx) return
+      ctx.drawImage(img, 0, 0)
+      const data = ctx.getImageData(0, 0, img.width, img.height)
+      carPixelsRef.current = data.data
+      carSizeRef.current = { w: img.width, h: img.height }
+    }
+  }, [])
+
+  const checkIsOverCar = useCallback((clientX: number, clientY: number) => {
+    const pixels = carPixelsRef.current
+    const { w, h } = carSizeRef.current
+    const el = carLayerRef.current
+    if (!pixels || !w || !h || !el) return false
+
+    const rect = el.getBoundingClientRect()
+    const mx = clientX - rect.left
+    const my = clientY - rect.top
+    const scale = Math.max(rect.width / w, rect.height / h)
+    const startX = Math.max(0, (w * scale - rect.width) / 2 / scale)
+    const startY = Math.max(0, (h * scale - rect.height) / 2 / scale)
+    const imgX = startX + mx / scale
+    const imgY = startY + my / scale
+
+    if (imgX < 0 || imgX >= w || imgY < 0 || imgY >= h) return false
+
+    const px = Math.floor(imgX)
+    const py = Math.floor(imgY)
+    return pixels[(py * w + px) * 4 + 3] > 30
+  }, [])
+
+  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    setIsOverCar(checkIsOverCar(e.clientX, e.clientY))
+  }, [checkIsOverCar])
+
+  const handleMouseLeave = useCallback(() => {
+    setIsOverCar(false)
+  }, [])
+
   return (
-    <section className="max-w-10/12 mx-auto">
-      <div className="relative rounded-2xl overflow-hidden py-16 sm:pt-20 sm:pb-40">
+    <div className="w-full bg-[#080B14]">
+    <section
+      className="max-w-10/12 mx-auto bg-[#080B14]"
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+    >
+      <div className="relative rounded-2xl overflow-hidden py-16 sm:pt-20 sm:pb-40 border-[#20283A] border-2">
         <div className="absolute inset-0 overflow-hidden">
           <img src={sellBg} alt="" className="w-full h-full object-cover" />
           <div className="absolute inset-0 bg-black/20" />
+          <div ref={carLayerRef} className="absolute inset-0 pointer-events-none">
+            <img
+              src={carSellBg}
+              alt=""
+              className="w-full h-full object-cover object-center pointer-events-auto"
+              style={{
+                filter: isOverCar ? "drop-shadow(0 0 40px rgba(0, 150, 255, 0.6))" : "drop-shadow(0 0 0 transparent)",
+                transition: "filter 0.4s ease",
+              }}
+            />
+            <div
+              className="absolute inset-0 pointer-events-none"
+              style={{
+                maskImage: `url(${carSellBg})`,
+                WebkitMaskImage: `url(${carSellBg})`,
+                maskSize: "cover",
+                maskPosition: "center",
+                maskRepeat: "no-repeat",
+                backgroundColor: "rgba(0,0,0,0.2)",
+              }}
+            />
+          </div>
         </div>
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6">
           <div className="flex flex-col lg:flex-row items-center gap-10 lg:gap-16">
@@ -73,5 +153,6 @@ export default function SellBanner() {
         </div>
       </div>
     </section>
+      </div>
   )
 }

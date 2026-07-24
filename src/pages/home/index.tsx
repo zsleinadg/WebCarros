@@ -3,7 +3,7 @@ import { useNavigate } from "react-router"
 import { supabase } from "../../services/supabaseClient"
 import type { CarProps } from "../../types/car"
 import Footer from "../../components/footer"
-import Navbar from "./components/Navbar"
+import Header from "../../components/header"
 import WhatsAppFloat from "./components/WhatsAppFloat"
 import Hero, { HeroBackground } from "./components/Hero"
 import SearchCard from "./components/SearchCard"
@@ -69,9 +69,9 @@ export default function Home() {
   }
 
   return (
-    <>
+    <div className="flex flex-col min-h-screen">
       <WhatsAppFloat />
-      <Navbar />
+      <Header />
 
       <section className="relative min-h-[80vh] flex flex-col">
         <HeroBackground />
@@ -91,13 +91,14 @@ export default function Home() {
         />
       </section>
 
-      <div className="bg-gray-50 pt-24 sm:pt-28" />
+      <div className="bg-[#080B14] pt-24 sm:pt-28" />
 
       <Categories onCategoryClick={handleCategoryClick} />
       <FeaturedCars cars={featuredCars} />
       <SellBanner />
       <HowItWorks />
+      <div className="flex-1" />
       <Footer />
-    </>
+    </div>
   )
 }
