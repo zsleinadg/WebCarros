@@ -277,6 +277,12 @@ export default function Estoque() {
                           borderColor: isSelected ? "var(--accent)" : "var(--border-default)",
                           color: isSelected ? "var(--accent)" : "var(--text-secondary)",
                         }}
+                        onMouseEnter={(e) => {
+                          if (!isSelected) e.currentTarget.style.borderColor = "var(--accent)"
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.borderColor = isSelected ? "var(--accent)" : "var(--border-default)"
+                        }}
                       >
                         {comb}
                       </button>
