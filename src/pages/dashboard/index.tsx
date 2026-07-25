@@ -49,14 +49,14 @@ export default function Dashboard() {
                         <button
                             className="px-3 py-1.5 rounded-lg text-sm font-medium cursor-pointer transition-colors"
                             style={{ background: "var(--bg-secondary)", color: "var(--text-primary)" }}
-                            onClick={() => { toast.dismiss(t.id); resolve(false) }}
+                            onClick={() => { toast.remove(t.id); resolve(false) }}
                         >
                             Cancelar
                         </button>
                         <button
                             className="px-3 py-1.5 text-white rounded-lg text-sm font-medium cursor-pointer transition-colors"
                             style={{ background: "var(--accent)" }}
-                            onClick={() => { toast.dismiss(t.id); resolve(true) }}
+                            onClick={() => { toast.remove(t.id); resolve(true) }}
                         >
                             Sim, excluir
                         </button>
