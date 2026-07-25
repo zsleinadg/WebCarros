@@ -249,21 +249,33 @@ export default function Sell() {
                   <div>
                     <label className="block text-xs font-semibold text-white mb-1 uppercase tracking-wider" htmlFor="ano">Ano</label>
                     <Input
-                      type="number"
+                      type="text"
+                      inputMode="numeric"
+                      className="no-spinner"
                       placeholder="Ex: 2020"
                       name="ano"
                       register={register}
                       error={errors.ano?.message}
+                      mask={(val) => val.replace(/\D/g, "")}
+                      onKeyDown={(e) => {
+                        if (["e", "E", "+", "-"].includes(e.key)) e.preventDefault()
+                      }}
                     />
                   </div>
                   <div>
                     <label className="block text-xs font-semibold text-white mb-1 uppercase tracking-wider" htmlFor="km">Quilometragem</label>
                     <Input
-                      type="number"
+                      type="text"
+                      inputMode="numeric"
+                      className="no-spinner"
                       placeholder="Ex: 45000"
                       name="km"
                       register={register}
                       error={errors.km?.message}
+                      mask={(val) => val.replace(/\D/g, "")}
+                      onKeyDown={(e) => {
+                        if (["e", "E", "+", "-"].includes(e.key)) e.preventDefault()
+                      }}
                     />
                   </div>
                 </div>
@@ -271,11 +283,17 @@ export default function Sell() {
               <div>
                 <label className="block text-xs font-semibold text-white mb-1 uppercase tracking-wider" htmlFor="preco">Preço pretendido (R$)</label>
                 <Input
-                  type="number"
+                  type="text"
+                  inputMode="numeric"
+                  className="no-spinner"
                   placeholder="R$ 0,00"
                   name="preco"
                   register={register}
                   error={errors.preco?.message}
+                  mask={(val) => val.replace(/\D/g, "")}
+                  onKeyDown={(e) => {
+                    if (["e", "E", "+", "-"].includes(e.key)) e.preventDefault()
+                  }}
                 />
               </div>
               <div>

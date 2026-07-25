@@ -345,10 +345,16 @@ export default function Edit() {
                                 <p className="mb-2 font-medium text-white">Ano do carro</p>
                                 <Input
                                     type="text"
+                                    inputMode="numeric"
+                                    className="no-spinner"
                                     name="year"
                                     placeholder="Ex: 2016/2020..."
                                     register={register}
                                     error={errors.year?.message}
+                                    mask={(val) => val.replace(/\D/g, "")}
+                                    onKeyDown={(e) => {
+                                        if (["e", "E", "+", "-"].includes(e.key)) e.preventDefault()
+                                    }}
                                 />
                             </div>
 
@@ -356,10 +362,16 @@ export default function Edit() {
                                 <p className="mb-2 font-medium text-white">KM rodados</p>
                                 <Input
                                     type="text"
+                                    inputMode="numeric"
+                                    className="no-spinner"
                                     name="km"
                                     placeholder="Ex: 25.700..."
                                     register={register}
                                     error={errors.km?.message}
+                                    mask={(val) => val.replace(/\D/g, "")}
+                                    onKeyDown={(e) => {
+                                        if (["e", "E", "+", "-"].includes(e.key)) e.preventDefault()
+                                    }}
                                 />
                             </div>
 
@@ -427,10 +439,16 @@ export default function Edit() {
                             <p className="mb-2 font-medium text-white">Preço</p>
                             <Input
                                 type="text"
+                                inputMode="numeric"
+                                className="no-spinner"
                                 name="price"
                                 placeholder="Ex: 25.000..."
                                 register={register}
                                 error={errors.price?.message}
+                                mask={(val) => val.replace(/\D/g, "")}
+                                onKeyDown={(e) => {
+                                    if (["e", "E", "+", "-"].includes(e.key)) e.preventDefault()
+                                }}
                             />
                         </div>
 
