@@ -214,21 +214,29 @@ export default function Estoque() {
                 <h3 className="text-xs font-semibold uppercase mb-3" style={{ color: "var(--text-secondary)" }}>Preço</h3>
                 <div className="flex gap-2 items-center">
                   <input
-                    className="w-full rounded-lg text-sm py-2 px-3 outline-none"
+                    className="w-full rounded-lg text-sm py-2 px-3 outline-none no-spinner"
                     style={{ background: "var(--bg-secondary)", border: "1px solid var(--border-default)", color: "var(--text-primary)" }}
                     placeholder="De"
-                    type="number"
+                    type="text"
+                    inputMode="numeric"
                     value={precoDe}
-                    onChange={e => setPrecoDe(e.target.value)}
+                    onChange={e => setPrecoDe(e.target.value.replace(/\D/g, ""))}
+                    onKeyDown={(e) => {
+                      if (["e", "E", "+", "-"].includes(e.key)) e.preventDefault()
+                    }}
                   />
                   <span style={{ color: "var(--text-muted)" }}>-</span>
                   <input
-                    className="w-full rounded-lg text-sm py-2 px-3 outline-none"
+                    className="w-full rounded-lg text-sm py-2 px-3 outline-none no-spinner"
                     style={{ background: "var(--bg-secondary)", border: "1px solid var(--border-default)", color: "var(--text-primary)" }}
                     placeholder="Até"
-                    type="number"
+                    type="text"
+                    inputMode="numeric"
                     value={precoAte}
-                    onChange={e => setPrecoAte(e.target.value)}
+                    onChange={e => setPrecoAte(e.target.value.replace(/\D/g, ""))}
+                    onKeyDown={(e) => {
+                      if (["e", "E", "+", "-"].includes(e.key)) e.preventDefault()
+                    }}
                   />
                 </div>
               </div>
