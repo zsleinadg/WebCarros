@@ -105,13 +105,6 @@ export default function Sell() {
               Quero vender meu carro
             </a>
           </div>
-          <div className="hidden md:block relative h-[400px]">
-            <img
-              className="object-contain w-full h-full absolute inset-0 z-10"
-              alt=""
-              src="https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=800&q=80"
-            />
-          </div>
         </div>
       </header>
 

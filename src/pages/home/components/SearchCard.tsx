@@ -1,4 +1,6 @@
 import { FUEL_OPTIONS } from "../../../constants/fuelList"
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "../../../components/select"
+import { useNavigate } from "react-router"
 
 interface SearchCardProps {
   searchTerm: string
@@ -33,6 +35,7 @@ export default function SearchCard({
   searchTab, setSearchTab,
   carCount, yearOptions, onSearch,
 }: SearchCardProps) {
+  const navigate = useNavigate()
   return (
     <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 w-full -mb-16 sm:-mb-20 pb-8">
       <div
@@ -50,7 +53,13 @@ export default function SearchCard({
           ].map(({ key, label }) => (
             <button
               key={key}
-              onClick={() => setSearchTab(key as "comprar" | "vender")}
+              onClick={() => {
+                if (key === "vender") {
+                  navigate("/vender")
+                } else {
+                  setSearchTab(key as "comprar" | "vender")
+                }
+              }}
               className={`pb-3 px-1 mr-4 text-sm font-semibold border-b-2 transition-colors -mb-px cursor-pointer ${searchTab === key
                   ? "text-[#E9003F] border-[#E9003F]"
                   : "text-[#A5ADBD] border-transparent hover:text-white"
@@ -96,40 +105,40 @@ export default function SearchCard({
             </div>
             <div>
               <label className="block text-xs font-semibold text-[#A5ADBD] mb-1.5 uppercase tracking-wide">Ano</label>
-              <select
-                className="w-full rounded-lg px-3 py-2.5 text-sm text-white outline-none appearance-none"
-                style={{
-                  background: "#101625",
-                  border: "1px solid #20283A",
-                }}
-                value={selectedYear}
-                onChange={e => setSelectedYear(e.target.value)}
-              >
-                <option value="" className="bg-[#080B14]">Todos</option>
-                {yearOptions.map(y => (
-                  <option key={y} value={y} className="bg-[#080B14]">{y}</option>
-                ))}
-              </select>
+              <Select value={selectedYear} onValueChange={setSelectedYear}>
+                <SelectTrigger
+                  className="py-2.5 h-auto"
+                  style={{ background: "#101625", border: "1px solid #20283A", color: "var(--text-primary)" }}
+                >
+                  <SelectValue placeholder="Todos" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="">Todos</SelectItem>
+                  {yearOptions.map(y => (
+                    <SelectItem key={y} value={y}>{y}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
             <div>
               <label className="block text-xs font-semibold text-[#A5ADBD] mb-1.5 uppercase tracking-wide">Preço máx.</label>
-              <select
-                className="w-full rounded-lg px-3 py-2.5 text-sm text-white outline-none appearance-none"
-                style={{
-                  background: "#101625",
-                  border: "1px solid #20283A",
-                }}
-                value={selectedPrice}
-                onChange={e => setSelectedPrice(e.target.value)}
-              >
-                <option value="" className="bg-[#080B14]">Sem limite</option>
-                <option value="30000" className="bg-[#080B14]">Até R$ 30.000</option>
-                <option value="50000" className="bg-[#080B14]">Até R$ 50.000</option>
-                <option value="80000" className="bg-[#080B14]">Até R$ 80.000</option>
-                <option value="100000" className="bg-[#080B14]">Até R$ 100.000</option>
-                <option value="150000" className="bg-[#080B14]">Até R$ 150.000</option>
-                <option value="200000" className="bg-[#080B14]">Até R$ 200.000</option>
-              </select>
+              <Select value={selectedPrice} onValueChange={setSelectedPrice}>
+                <SelectTrigger
+                  className="py-2.5 h-auto"
+                  style={{ background: "#101625", border: "1px solid #20283A", color: "var(--text-primary)" }}
+                >
+                  <SelectValue placeholder="Sem limite" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="">Sem limite</SelectItem>
+                  <SelectItem value="30000">Até R$ 30.000</SelectItem>
+                  <SelectItem value="50000">Até R$ 50.000</SelectItem>
+                  <SelectItem value="80000">Até R$ 80.000</SelectItem>
+                  <SelectItem value="100000">Até R$ 100.000</SelectItem>
+                  <SelectItem value="150000">Até R$ 150.000</SelectItem>
+                  <SelectItem value="200000">Até R$ 200.000</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
 
@@ -137,55 +146,46 @@ export default function SearchCard({
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <div>
                 <label className="block text-xs font-semibold text-[#A5ADBD] mb-1.5 uppercase tracking-wide">Combustível</label>
-                <select
-                  className="w-full rounded-lg px-3 py-2.5 text-sm text-white outline-none appearance-none"
-                  style={{
-                    background: "#101625",
-                    border: "1px solid #20283A",
-                  }}
-                  value={selectedFuel}
-                  onChange={e => setSelectedFuel(e.target.value)}
-                >
-                  <option value="" className="bg-[#080B14]">Todos</option>
-                  {FUEL_OPTIONS.map(f => (
-                    <option key={f} value={f} className="bg-[#080B14]">{f}</option>
-                  ))}
-                </select>
+                <Select value={selectedFuel} onValueChange={setSelectedFuel}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Todos" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="">Todos</SelectItem>
+                    {FUEL_OPTIONS.map(f => (
+                      <SelectItem key={f} value={f}>{f}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
               <div>
                 <label className="block text-xs font-semibold text-[#A5ADBD] mb-1.5 uppercase tracking-wide">Câmbio</label>
-                <select
-                  className="w-full rounded-lg px-3 py-2.5 text-sm text-white outline-none appearance-none"
-                  style={{
-                    background: "#101625",
-                    border: "1px solid #20283A",
-                  }}
-                  value={selectedTransmission}
-                  onChange={e => setSelectedTransmission(e.target.value)}
-                >
-                  <option value="" className="bg-[#080B14]">Todos</option>
-                  <option value="Manual" className="bg-[#080B14]">Manual</option>
-                  <option value="Automático" className="bg-[#080B14]">Automático</option>
-                  <option value="Semi-Automático" className="bg-[#080B14]">Semi-Automático</option>
-                </select>
+                <Select value={selectedTransmission} onValueChange={setSelectedTransmission}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Todos" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="">Todos</SelectItem>
+                    <SelectItem value="Manual">Manual</SelectItem>
+                    <SelectItem value="Automático">Automático</SelectItem>
+                    <SelectItem value="Semi-Automático">Semi-Automático</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
               <div>
                 <label className="block text-xs font-semibold text-[#A5ADBD] mb-1.5 uppercase tracking-wide">KM</label>
-                <select
-                  className="w-full rounded-lg px-3 py-2.5 text-sm text-white outline-none appearance-none"
-                  style={{
-                    background: "#101625",
-                    border: "1px solid #20283A",
-                  }}
-                  value={selectedKmRange}
-                  onChange={e => setSelectedKmRange(e.target.value)}
-                >
-                  <option value="" className="bg-[#080B14]">Todos</option>
-                  <option value="ate-10000" className="bg-[#080B14]">Até 10.000 km</option>
-                  <option value="10000-30000" className="bg-[#080B14]">10.000 - 30.000 km</option>
-                  <option value="30000-50000" className="bg-[#080B14]">30.000 - 50.000 km</option>
-                  <option value="50000-100000" className="bg-[#080B14]">50.000 - 100.000 km</option>
-                </select>
+                <Select value={selectedKmRange} onValueChange={setSelectedKmRange}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Todos" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="">Todos</SelectItem>
+                    <SelectItem value="ate-10000">Até 10.000 km</SelectItem>
+                    <SelectItem value="10000-30000">10.000 - 30.000 km</SelectItem>
+                    <SelectItem value="30000-50000">30.000 - 50.000 km</SelectItem>
+                    <SelectItem value="50000-100000">50.000 - 100.000 km</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
             </div>
           </div>
