@@ -7,10 +7,13 @@ interface InputProps {
     name: string,
     register: UseFormRegister<any>,
     error?: string,
-    rules?: RegisterOptions
+    rules?: RegisterOptions,
+    mask?: (value: string) => string
 }
 
-export default function Input({ type, placeholder, name, register, error, rules }: InputProps) {
+export default function Input({ type, placeholder, name, register, error, rules, mask }: InputProps) {
+    const { onChange: originalOnChange, ...rest } = register(name, rules)
+
     return (
         <div>
             <input
@@ -18,8 +21,14 @@ export default function Input({ type, placeholder, name, register, error, rules 
                 style={{ background: "var(--bg-secondary)", border: "1px solid var(--border-default)", color: "var(--text-primary)" }}
                 type={type}
                 placeholder={placeholder}
-                {...register(name, rules)}
+                {...rest}
                 id={name}
+                onChange={(e) => {
+                    if (mask) {
+                        e.target.value = mask(e.target.value)
+                    }
+                    originalOnChange(e)
+                }}
                 onFocusCapture={(e) => { e.currentTarget.style.borderColor = "var(--accent)"; e.currentTarget.style.boxShadow = "0 0 0 3px rgba(233,0,63,0.12)" }}
                 onBlurCapture={(e) => { e.currentTarget.style.borderColor = "var(--border-default)"; e.currentTarget.style.boxShadow = "none" }}
             />

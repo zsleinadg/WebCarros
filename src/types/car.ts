@@ -9,7 +9,7 @@ export const CarSchema = z.object({
     price: z.string().nonempty("O preço é obrigatório"),
     city: z.string().nonempty("A cidade é obrigatório"),
     uf: z.string().min(2, "Selecione o estado").refine(value => UF_OPTIONS.includes(value), {message: "Selecione uma UF válida"}),
-    whatsapp: z.string().min(1, "O telefone é obrigatório").refine((value) => /^(\d{11,12})$/.test(value), {
+    whatsapp: z.string().min(1, "O telefone é obrigatório").transform((val) => val.replace(/\D/g, "")).refine((value) => /^(\d{11,12})$/.test(value), {
         message: "Número de telefone inválido"
     }),
     description: z.string().nonempty("A descrição é obrigatória"),

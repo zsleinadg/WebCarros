@@ -4,10 +4,12 @@ import { z } from "zod"
 import toast from "react-hot-toast"
 import { supabase } from "../../services/supabaseClient"
 import { WHATSAPP_NUMBER } from "../../constants/whatsapp"
+import Input from "../../components/input"
+import { formatPhone } from "../../utils/formatPhone"
 
 const SellSchema = z.object({
   nome: z.string().nonempty("Nome é obrigatório"),
-  telefone: z.string().min(10, "Telefone inválido"),
+  telefone: z.string().min(1, "Telefone é obrigatório").transform(val => val.replace(/\D/g, "")).refine(val => val.length >= 10, "Telefone inválido"),
   email: z.string().email("Email inválido"),
   marca: z.string().nonempty("Marca é obrigatória"),
   modelo: z.string().nonempty("Modelo é obrigatório"),
@@ -191,105 +193,90 @@ export default function Sell() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div>
                   <label className="block text-xs font-semibold text-white mb-1 uppercase tracking-wider" htmlFor="nome">Nome</label>
-                  <input
-                    className="w-full rounded-xl text-sm py-2 px-3 outline-none"
-                    style={{ background: "var(--bg-secondary)", border: "1px solid var(--border-default)", color: "var(--text-primary)" }}
-                    id="nome" placeholder="Seu nome completo" type="text"
-                    onFocusCapture={(e) => { e.currentTarget.style.borderColor = "var(--accent)"; e.currentTarget.style.boxShadow = "0 0 0 3px rgba(233,0,63,0.12)" }}
-                    onBlurCapture={(e) => { e.currentTarget.style.borderColor = "var(--border-default)"; e.currentTarget.style.boxShadow = "none" }}
-                    {...register("nome")}
+                  <Input
+                    type="text"
+                    placeholder="Seu nome completo"
+                    name="nome"
+                    register={register}
+                    error={errors.nome?.message}
                   />
-                  {errors.nome && <p className="text-red-400 text-sm mt-1">{errors.nome.message}</p>}
                 </div>
                 <div>
                   <label className="block text-xs font-semibold text-white mb-1 uppercase tracking-wider" htmlFor="telefone">Telefone / WhatsApp</label>
-                  <input
-                    className="w-full rounded-xl text-sm py-2 px-3 outline-none"
-                    style={{ background: "var(--bg-secondary)", border: "1px solid var(--border-default)", color: "var(--text-primary)" }}
-                    id="telefone" placeholder="(00) 00000-0000" type="tel"
-                    onFocusCapture={(e) => { e.currentTarget.style.borderColor = "var(--accent)"; e.currentTarget.style.boxShadow = "0 0 0 3px rgba(233,0,63,0.12)" }}
-                    onBlurCapture={(e) => { e.currentTarget.style.borderColor = "var(--border-default)"; e.currentTarget.style.boxShadow = "none" }}
-                    {...register("telefone")}
+                  <Input
+                    type="tel"
+                    placeholder="(00) 00000-0000"
+                    name="telefone"
+                    register={register}
+                    mask={formatPhone}
+                    error={errors.telefone?.message}
                   />
-                  {errors.telefone && <p className="text-red-400 text-sm mt-1">{errors.telefone.message}</p>}
                 </div>
               </div>
               <div>
                 <label className="block text-xs font-semibold text-white mb-1 uppercase tracking-wider" htmlFor="email">Email</label>
-                <input
-                  className="w-full rounded-xl text-sm py-2 px-3 outline-none"
-                  style={{ background: "var(--bg-secondary)", border: "1px solid var(--border-default)", color: "var(--text-primary)" }}
-                  id="email" placeholder="seu.email@exemplo.com" type="email"
-                  onFocusCapture={(e) => { e.currentTarget.style.borderColor = "var(--accent)"; e.currentTarget.style.boxShadow = "0 0 0 3px rgba(233,0,63,0.12)" }}
-                  onBlurCapture={(e) => { e.currentTarget.style.borderColor = "var(--border-default)"; e.currentTarget.style.boxShadow = "none" }}
-                  {...register("email")}
+                <Input
+                  type="email"
+                  placeholder="seu.email@exemplo.com"
+                  name="email"
+                  register={register}
+                  error={errors.email?.message}
                 />
-                {errors.email && <p className="text-red-400 text-sm mt-1">{errors.email.message}</p>}
               </div>
               <div className="border-t pt-6 mt-6" style={{ borderColor: "var(--border-default)" }}>
                 <h4 className="text-lg font-bold text-white mb-5">Dados do Veículo</h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div>
                     <label className="block text-xs font-semibold text-white mb-1 uppercase tracking-wider" htmlFor="marca">Marca</label>
-                    <input
-                      className="w-full rounded-xl text-sm py-2 px-3 outline-none"
-                      style={{ background: "var(--bg-secondary)", border: "1px solid var(--border-default)", color: "var(--text-primary)" }}
-                      id="marca" placeholder="Ex: Honda, Toyota" type="text"
-                      onFocusCapture={(e) => { e.currentTarget.style.borderColor = "var(--accent)"; e.currentTarget.style.boxShadow = "0 0 0 3px rgba(233,0,63,0.12)" }}
-                      onBlurCapture={(e) => { e.currentTarget.style.borderColor = "var(--border-default)"; e.currentTarget.style.boxShadow = "none" }}
-                      {...register("marca")}
+                    <Input
+                      type="text"
+                      placeholder="Ex: Honda, Toyota"
+                      name="marca"
+                      register={register}
+                      error={errors.marca?.message}
                     />
-                    {errors.marca && <p className="text-red-400 text-sm mt-1">{errors.marca.message}</p>}
                   </div>
                   <div>
                     <label className="block text-xs font-semibold text-white mb-1 uppercase tracking-wider" htmlFor="modelo">Modelo</label>
-                    <input
-                      className="w-full rounded-xl text-sm py-2 px-3 outline-none"
-                      style={{ background: "var(--bg-secondary)", border: "1px solid var(--border-default)", color: "var(--text-primary)" }}
-                      id="modelo" placeholder="Ex: Civic EXL" type="text"
-                      onFocusCapture={(e) => { e.currentTarget.style.borderColor = "var(--accent)"; e.currentTarget.style.boxShadow = "0 0 0 3px rgba(233,0,63,0.12)" }}
-                      onBlurCapture={(e) => { e.currentTarget.style.borderColor = "var(--border-default)"; e.currentTarget.style.boxShadow = "none" }}
-                      {...register("modelo")}
+                    <Input
+                      type="text"
+                      placeholder="Ex: Civic EXL"
+                      name="modelo"
+                      register={register}
+                      error={errors.modelo?.message}
                     />
-                    {errors.modelo && <p className="text-red-400 text-sm mt-1">{errors.modelo.message}</p>}
                   </div>
                   <div>
                     <label className="block text-xs font-semibold text-white mb-1 uppercase tracking-wider" htmlFor="ano">Ano</label>
-                    <input
-                      className="w-full rounded-xl text-sm py-2 px-3 outline-none"
-                      style={{ background: "var(--bg-secondary)", border: "1px solid var(--border-default)", color: "var(--text-primary)" }}
-                      id="ano" placeholder="Ex: 2020" type="number"
-                      onFocusCapture={(e) => { e.currentTarget.style.borderColor = "var(--accent)"; e.currentTarget.style.boxShadow = "0 0 0 3px rgba(233,0,63,0.12)" }}
-                      onBlurCapture={(e) => { e.currentTarget.style.borderColor = "var(--border-default)"; e.currentTarget.style.boxShadow = "none" }}
-                      {...register("ano")}
+                    <Input
+                      type="number"
+                      placeholder="Ex: 2020"
+                      name="ano"
+                      register={register}
+                      error={errors.ano?.message}
                     />
-                    {errors.ano && <p className="text-red-400 text-sm mt-1">{errors.ano.message}</p>}
                   </div>
                   <div>
                     <label className="block text-xs font-semibold text-white mb-1 uppercase tracking-wider" htmlFor="km">Quilometragem</label>
-                    <input
-                      className="w-full rounded-xl text-sm py-2 px-3 outline-none"
-                      style={{ background: "var(--bg-secondary)", border: "1px solid var(--border-default)", color: "var(--text-primary)" }}
-                      id="km" placeholder="Ex: 45000" type="number"
-                      onFocusCapture={(e) => { e.currentTarget.style.borderColor = "var(--accent)"; e.currentTarget.style.boxShadow = "0 0 0 3px rgba(233,0,63,0.12)" }}
-                      onBlurCapture={(e) => { e.currentTarget.style.borderColor = "var(--border-default)"; e.currentTarget.style.boxShadow = "none" }}
-                      {...register("km")}
+                    <Input
+                      type="number"
+                      placeholder="Ex: 45000"
+                      name="km"
+                      register={register}
+                      error={errors.km?.message}
                     />
-                    {errors.km && <p className="text-red-400 text-sm mt-1">{errors.km.message}</p>}
                   </div>
                 </div>
               </div>
               <div>
                 <label className="block text-xs font-semibold text-white mb-1 uppercase tracking-wider" htmlFor="preco">Preço pretendido (R$)</label>
-                <input
-                  className="w-full rounded-xl text-sm py-2 px-3 outline-none"
-                  style={{ background: "var(--bg-secondary)", border: "1px solid var(--border-default)", color: "var(--text-primary)" }}
-                  id="preco" placeholder="R$ 0,00" type="text"
-                  onFocusCapture={(e) => { e.currentTarget.style.borderColor = "var(--accent)"; e.currentTarget.style.boxShadow = "0 0 0 3px rgba(233,0,63,0.12)" }}
-                  onBlurCapture={(e) => { e.currentTarget.style.borderColor = "var(--border-default)"; e.currentTarget.style.boxShadow = "none" }}
-                  {...register("preco")}
+                <Input
+                  type="number"
+                  placeholder="R$ 0,00"
+                  name="preco"
+                  register={register}
+                  error={errors.preco?.message}
                 />
-                {errors.preco && <p className="text-red-400 text-sm mt-1">{errors.preco.message}</p>}
               </div>
               <div>
                 <label className="block text-xs font-semibold text-white mb-1 uppercase tracking-wider" htmlFor="mensagem">Mensagem (Opcional)</label>

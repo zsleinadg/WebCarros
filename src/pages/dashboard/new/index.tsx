@@ -18,6 +18,7 @@ import toast from "react-hot-toast";
 
 import { type FormData, CarSchema, type CarImagesProps, type CarProps } from "../../../types/car";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "../../../components/select";
+import { formatPhone } from "../../../utils/formatPhone";
 
 type CarInsertPayload = Omit<CarProps, 'id' | 'created_at'>;
 
@@ -328,8 +329,9 @@ export default function New() {
                                 <Input
                                     type="text"
                                     name="whatsapp"
-                                    placeholder="01140028922"
+                                    placeholder="(11) 99999-9999"
                                     register={register}
+                                    mask={formatPhone}
                                     error={errors.whatsapp?.message}
                                 />
                             </div>
