@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Link, useLocation } from "react-router"
+import { Link, useLocation, useNavigate } from "react-router"
 import { UserAuth } from "../../contexts/AuthContext"
 import logoImg from "../../assets/logo.svg"
 import { FiUser } from "react-icons/fi"
@@ -16,6 +16,7 @@ export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false)
   const { pathname } = useLocation()
   const { signed, loadingAuth, signOut } = UserAuth()
+  const navigate = useNavigate()
 
   const isEstoque = pathname === "/estoque"
   const isVender = pathname === "/vender"
@@ -100,16 +101,23 @@ export default function Header() {
             </div>
           )}
 
-          <Link
-            to={isVender ? "/vender" : "/estoque"}
-            className="flex items-center gap-1.5 bg-[#E9003F] hover:bg-[#FF174F] transition-colors px-3 sm:px-4 py-1.5 rounded-lg text-sm font-semibold text-white"
+          <button
+            type="button"
+            onClick={() => {
+              if (isVender) {
+                document.getElementById("form")?.scrollIntoView({ behavior: "smooth" })
+              } else {
+                navigate("/estoque")
+              }
+            }}
+            className="flex items-center gap-1.5 bg-[#E9003F] hover:bg-[#FF174F] transition-colors px-3 sm:px-4 py-1.5 rounded-lg text-sm font-semibold text-white cursor-pointer"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
             </svg>
             <span className="hidden sm:inline">{isVender ? "Anunciar Carro" : "Ver Ofertas"}</span>
             <span className="sm:hidden">{isVender ? "Anunciar" : "Ver"}</span>
-          </Link>
+          </button>
 
           <button
             className="md:hidden p-2 text-[#A5ADBD] hover:text-white cursor-pointer"

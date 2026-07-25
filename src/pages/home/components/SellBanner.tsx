@@ -1,7 +1,9 @@
 import { useState, useCallback, useRef, useEffect } from "react"
 import { Link } from "react-router"
 import sellBg from "../../../assets/sellcar-section.png"
+import sellBgWebp from "../../../assets/sellcar-section.webp"
 import carSellBg from "../../../assets/car-sellcar-bg.png"
+import carSellBgWebp from "../../../assets/car-sellcar-bg.webp"
 
 export default function SellBanner() {
   const [isOverCar, setIsOverCar] = useState(false)
@@ -11,7 +13,7 @@ export default function SellBanner() {
 
   useEffect(() => {
     const img = new Image()
-    img.src = carSellBg
+    img.src = carSellBgWebp
     img.onload = () => {
       const canvas = document.createElement("canvas")
       canvas.width = img.width
@@ -64,23 +66,29 @@ export default function SellBanner() {
     >
       <div className="relative rounded-2xl overflow-hidden py-16 sm:pt-20 sm:pb-40 border-[#20283A] border-2">
         <div className="absolute inset-0 overflow-hidden">
-          <img src={sellBg} alt="" className="w-full h-full object-cover" />
+          <picture>
+            <source srcSet={sellBgWebp} type="image/webp" />
+            <img src={sellBg} alt="" className="w-full h-full object-cover" />
+          </picture>
           <div className="absolute inset-0 bg-black/20" />
           <div ref={carLayerRef} className="absolute inset-0 pointer-events-none">
-            <img
-              src={carSellBg}
-              alt=""
-              className="w-full h-full object-cover object-center pointer-events-auto"
-              style={{
-                filter: isOverCar ? "drop-shadow(0 0 40px rgba(0, 150, 255, 0.6))" : "drop-shadow(0 0 0 transparent)",
-                transition: "filter 0.4s ease",
-              }}
-            />
+            <picture>
+              <source srcSet={carSellBgWebp} type="image/webp" />
+              <img
+                src={carSellBg}
+                alt=""
+                className="w-full h-full object-cover object-center pointer-events-auto"
+                style={{
+                  filter: isOverCar ? "drop-shadow(0 0 40px rgba(0, 150, 255, 0.6))" : "drop-shadow(0 0 0 transparent)",
+                  transition: "filter 0.4s ease",
+                }}
+              />
+            </picture>
             <div
               className="absolute inset-0 pointer-events-none"
               style={{
-                maskImage: `url(${carSellBg})`,
-                WebkitMaskImage: `url(${carSellBg})`,
+                maskImage: `url(${carSellBgWebp})`,
+                WebkitMaskImage: `url(${carSellBgWebp})`,
                 maskSize: "cover",
                 maskPosition: "center",
                 maskRepeat: "no-repeat",

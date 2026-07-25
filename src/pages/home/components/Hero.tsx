@@ -1,6 +1,8 @@
 import { useState, useCallback, useRef, useEffect } from "react"
 import heroBg from "../../../assets/hero-bg.png"
+import heroBgWebp from "../../../assets/hero-bg.webp"
 import carBg from "../../../assets/car-bg.png"
+import carBgWebp from "../../../assets/car-bg.webp"
 
 interface HeroProps {
   carCount: number
@@ -31,7 +33,7 @@ export function HeroBackground() {
 
   useEffect(() => {
     const img = new Image()
-    img.src = carBg
+    img.src = carBgWebp
     img.onload = () => {
       const canvas = document.createElement("canvas")
       canvas.width = img.width
@@ -81,11 +83,14 @@ export function HeroBackground() {
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
     >
-      <img
-        src={heroBg}
-        alt="Carro esportivo"
-        className="w-full h-full object-cover object-center"
-      />
+      <picture>
+        <source srcSet={heroBgWebp} type="image/webp" />
+        <img
+          src={heroBg}
+          alt="Carro esportivo"
+          className="w-full h-full object-cover object-center"
+        />
+      </picture>
       <div
         className="absolute inset-0"
         style={{
@@ -100,15 +105,18 @@ export function HeroBackground() {
         }}
       />
       <div ref={carLayerRef} className="absolute inset-0 pointer-events-none">
-        <img
-          src={carBg}
-          alt=""
-          className="w-full h-full object-cover object-center pointer-events-auto"
-          style={{
-            filter: isOverCar ? "drop-shadow(0 0 40px rgba(233,0,63,0.6))" : "drop-shadow(0 0 0 transparent)",
-            transition: "filter 0.4s ease",
-          }}
-        />
+        <picture>
+          <source srcSet={carBgWebp} type="image/webp" />
+          <img
+            src={carBg}
+            alt=""
+            className="w-full h-full object-cover object-center pointer-events-auto"
+            style={{
+              filter: isOverCar ? "drop-shadow(0 0 40px rgba(233,0,63,0.6))" : "drop-shadow(0 0 0 transparent)",
+              transition: "filter 0.4s ease",
+            }}
+          />
+        </picture>
         {/* <div
           className="absolute inset-0 pointer-events-none"
           style={{

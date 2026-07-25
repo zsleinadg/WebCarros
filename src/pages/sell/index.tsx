@@ -95,15 +95,16 @@ export default function Sell() {
             <p className="text-base sm:text-lg mb-8" style={{ color: "var(--text-secondary)" }}>
               Anuncie grátis e receba proposta de compradores verificados em todo o Brasil.
             </p>
-            <a
-              href="#form"
-              className="inline-block px-8 py-4 rounded-xl text-lg font-bold text-white transition-all duration-200 shadow-sm hover:-translate-y-0.5"
+            <button
+              type="button"
+              onClick={() => document.getElementById("form")?.scrollIntoView({ behavior: "smooth" })}
+              className="inline-block px-8 py-4 rounded-xl text-lg font-bold text-white transition-all duration-200 shadow-sm hover:-translate-y-0.5 cursor-pointer"
               style={{ background: "var(--accent)" }}
               onMouseEnter={(e) => { e.currentTarget.style.background = "var(--accent-hover)" }}
               onMouseLeave={(e) => { e.currentTarget.style.background = "var(--accent)" }}
             >
               Quero vender meu carro
-            </a>
+            </button>
           </div>
         </div>
       </header>
