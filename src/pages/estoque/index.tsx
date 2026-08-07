@@ -8,6 +8,7 @@ import { formatPrice } from "../../utils"
 import { useFavorites } from "../../contexts/FavoritesContext"
 import { FaHeart } from "react-icons/fa"
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "../../components/select"
+import { Search, Car, MapPin } from "lucide-react"
 
 export default function Estoque() {
   const [searchParams] = useSearchParams()
@@ -181,7 +182,7 @@ export default function Estoque() {
                     el.style.boxShadow = "none"
                   }}
                 >
-                  <span className="material-symbols-outlined mr-2" style={{ fontSize: 18, color: "var(--text-muted)" }}>search</span>
+                  <Search className="mr-2 h-5 w-5 `text-(--text-muted)" />
                   <input
                     className="w-full bg-transparent border-none p-0 text-sm outline-none"
                     style={{ color: "var(--text-primary)" }}
@@ -311,7 +312,7 @@ export default function Estoque() {
                   }}
                 >
                   <div className="relative aspect-video overflow-hidden flex items-center justify-center" style={{ background: "var(--bg-secondary)" }}>
-                    <span className="material-symbols-outlined" style={{ fontSize: 48, color: "var(--border-default)" }}>directions_car</span>
+                    <Car className="h-12 w-12 text-(--border-default)" />
                   </div>
                   <div className="p-4 flex flex-col flex-1">
                     <div className="h-6 rounded mb-2 w-3/4" style={{ background: "var(--border-default)" }}></div>
@@ -369,7 +370,7 @@ export default function Estoque() {
                         <div className="mt-auto pt-4 border-t flex flex-col" style={{ borderColor: "var(--border-default)" }}>
                           <span className="text-2xl font-black mb-2" style={{ color: "var(--accent)" }}>{formatPrice(car.price)}</span>
                           <div className="flex items-center text-sm" style={{ color: "var(--text-secondary)" }}>
-                            <span className="material-symbols-outlined mr-1" style={{ fontSize: 16 }}>location_on</span>
+                            <MapPin className="mr-1 h-4 w-4" />
                             {car.city}, {car.uf}
                            </div>
                           </div>

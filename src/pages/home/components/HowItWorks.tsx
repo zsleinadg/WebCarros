@@ -1,3 +1,5 @@
+import { Search, MessageCircle, Star } from "lucide-react"
+
 export default function HowItWorks() {
   return (
     <section className="bg-[#080B14] py-16 sm:py-20">
@@ -8,9 +10,9 @@ export default function HowItWorks() {
         </p>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
           {[
-            { icon: "search", title: "1. Encontre", desc: "Explore milhares de veículos com fotos reais e filtros inteligentes. Encontre o carro ideal com poucos cliques." },
-            { icon: "chat", title: "2. Converse", desc: "Fale diretamente com o vendedor pelo WhatsApp. Tire dúvidas, negocie e agende uma visita sem intermediários." },
-            { icon: "celebration", title: "3. Compre", desc: "Realize a compra com segurança. Todo o suporte necessário para você sair com o carro novo e sem preocupações." },
+            { icon: <Search className="text-3xl text-white" />, title: "1. Encontre", desc: "Explore milhares de veículos com fotos reais e filtros inteligentes. Encontre o carro ideal com poucos cliques." },
+            { icon: <MessageCircle className="text-3xl text-white" />, title: "2. Converse", desc: "Fale diretamente com o vendedor pelo WhatsApp. Tire dúvidas, negocie e agende uma visita sem intermediários." },
+            { icon: <Star className="text-3xl text-white" />, title: "3. Compre", desc: "Realize a compra com segurança. Todo o suporte necessário para você sair com o carro novo e sem preocupações." },
           ].map((step) => (
             <div key={step.title} className="step-line relative flex flex-col items-center text-center">
               <div
@@ -20,7 +22,7 @@ export default function HowItWorks() {
                   boxShadow: "0 0 0 8px rgba(233,0,63,0.10)",
                 }}
               >
-                <span className="material-symbols-outlined text-3xl text-white">{step.icon}</span>
+                {step.icon}
               </div>
               <h3 className="text-lg font-bold text-white mb-2">{step.title}</h3>
               <p className="text-sm text-[#A5ADBD] max-w-xs">{step.desc}</p>

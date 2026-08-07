@@ -7,6 +7,7 @@ import { Link, useSearchParams } from "react-router"
 import { supabase } from "../../services/supabaseClient"
 import type { CarProps } from "../../types/car"
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "../../components/select"
+import { Car, ChevronRight, Calendar, FileText, Shield } from "lucide-react"
 
 
 const TestDriveSchema = z.object({
@@ -86,7 +87,7 @@ export default function TestDrive() {
   if (!carId && !loadingCar) {
     return (
       <main className="w-full min-h-screen flex flex-col items-center justify-center gap-6 px-4" style={{ background: "var(--bg-main)" }}>
-        <span className="material-symbols-outlined" style={{ fontSize: 64, color: "var(--text-muted)" }}>directions_car</span>
+        <Car className="h-16 w-16 text-[var(--text-muted)]" />
         <h1 className="text-2xl font-bold text-white text-center">Nenhum carro selecionado</h1>
         <p className="text-base text-center max-w-md" style={{ color: "var(--text-secondary)" }}>Navegue pelo nosso estoque e escolha um carro para agendar um test drive.</p>
         <Link
@@ -114,11 +115,11 @@ export default function TestDrive() {
         <nav aria-label="Breadcrumb" className="w-full">
           <ol className="flex items-center space-x-2 text-sm" style={{ color: "var(--text-secondary)" }}>
             <li><Link to="/" className="hover:text-[var(--accent)] transition-colors">Home</Link></li>
-            <li><span className="material-symbols-outlined text-sm">chevron_right</span></li>
+            <li><ChevronRight className="h-4 w-4" /></li>
             <li><Link to="/estoque" className="hover:text-[var(--accent)] transition-colors">Estoque</Link></li>
-            <li><span className="material-symbols-outlined text-sm">chevron_right</span></li>
+            <li><ChevronRight className="h-4 w-4" /></li>
             <li><Link to={`/car/${carId}`} className="hover:text-[var(--accent)] transition-colors">{testCar?.name || "Carro"}</Link></li>
-            <li><span className="material-symbols-outlined text-sm">chevron_right</span></li>
+            <li><ChevronRight className="h-4 w-4" /></li>
             <li aria-current="page" className="text-white font-semibold">Agendar Test Drive</li>
           </ol>
         </nav>
@@ -236,22 +237,22 @@ export default function TestDrive() {
                   onMouseEnter={(e) => { e.currentTarget.style.background = "var(--accent-hover)" }}
                   onMouseLeave={(e) => { e.currentTarget.style.background = "var(--accent)" }}
                 >
-                  <span className="material-symbols-outlined text-lg">calendar_today</span>
-                  Solicitar Agendamento
+                  <Calendar className="h-5 w-5" />
+                   Solicitar Agendamento
                 </button>
               </div>
             </form>
           </div>
 
           <div className="lg:col-span-5 flex flex-col gap-4">
-            {[
-              { icon: "directions_car", title: "Teste o carro antes de comprar", desc: "Sinta a performance e o conforto na prática." },
-              { icon: "schedule", title: "Test drive de 30 minutos", desc: "Tempo ideal para avaliar todos os detalhes do veículo." },
-              { icon: "description", title: "Sem compromisso, sem taxa", desc: "Agende gratuitamente, sem obrigação de compra." },
-              { icon: "security", title: "Acompanhamento de um consultor", desc: "Tire todas as suas dúvidas com um especialista durante o trajeto." },
-            ].map((card) => (
-              <div
-                key={card.icon}
+             {[
+               { icon: <Car className="h-5 w-5" />, title: "Teste o carro antes de comprar", desc: "Sinta a performance e o conforto na prática." },
+               { icon: <Calendar className="h-5 w-5" />, title: "Test drive de 30 minutos", desc: "Tempo ideal para avaliar todos os detalhes do veículo." },
+               { icon: <FileText className="h-5 w-5" />, title: "Sem compromisso, sem taxa", desc: "Agende gratuitamente, sem obrigação de compra." },
+               { icon: <Shield className="h-5 w-5" />, title: "Acompanhamento de um consultor", desc: "Tire todas as suas dúvidas com um especialista durante o trajeto." },
+             ].map((card) => (
+                <div
+                   key={card.title}
                 className="rounded-xl shadow-sm p-6 flex items-center gap-6 transition-all"
                 style={{
                   background: "var(--bg-card)",
@@ -276,9 +277,9 @@ export default function TestDrive() {
                     background: "rgba(233,0,63,0.08)",
                     border: "1px solid rgba(233,0,63,0.20)",
                   }}
-                >
-                  <span className="material-symbols-outlined" style={{ fontSize: 28, color: "var(--accent)" }}>{card.icon}</span>
-                </div>
+                 >
+                   {card.icon}
+                 </div>
                 <div>
                   <h4 className="text-lg font-bold text-white">{card.title}</h4>
                   <p className="text-sm mt-1" style={{ color: "var(--text-secondary)" }}>{card.desc}</p>

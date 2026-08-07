@@ -5,6 +5,7 @@ import type { CarProps } from "../../types/car"
 import { formatPrice } from "../../utils"
 import { useFavorites } from "../../contexts/FavoritesContext"
 import { FaHeart } from "react-icons/fa"
+import { ArrowRight } from "lucide-react"
 
 export default function Favorites() {
   const [allCars, setAllCars] = useState<CarProps[]>([])
@@ -93,7 +94,7 @@ export default function Favorites() {
                       style={{ color: "var(--accent)" }}
                     >
                       Ver detalhes
-                      <span className="material-symbols-outlined ml-1" style={{ fontSize: 16 }}>arrow_forward</span>
+                      <ArrowRight className="ml-1 h-4 w-4" />
                     </Link>
                   </div>
                 </div>

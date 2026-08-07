@@ -6,6 +6,7 @@ import { supabase } from "../../services/supabaseClient"
 import { WHATSAPP_NUMBER } from "../../constants/whatsapp"
 import Input from "../../components/input"
 import { formatPhone } from "../../utils/formatPhone"
+import { ArrowRight, Camera, ShieldCheck, Timer, Star, MessageCircle, Tag } from "lucide-react"
 
 const SellSchema = z.object({
   nome: z.string().nonempty("Nome é obrigatório"),
@@ -22,10 +23,10 @@ const SellSchema = z.object({
 type SellForm = z.infer<typeof SellSchema>
 
 const benefits = [
-  { icon: "sell", title: "Anúncio Grátis", desc: "Crie seu anúncio sem custos iniciais e alcance milhares de compradores." },
-  { icon: "photo_camera", title: "Fotos Profissionais", desc: "Dicas e ferramentas para destacar seu veículo com imagens de alta qualidade." },
-  { icon: "verified_user", title: "Compradores Verificados", desc: "Negocie com tranquilidade. Validamos a identidade dos interessados." },
-  { icon: "timer", title: "Venda em até 7 dias", desc: "Nossa plataforma otimizada acelera o processo de fechamento do negócio." },
+  { icon: <Tag className="h-6 w-6 text-(--accent)" />, title: "Anúncio Grátis", desc: "Crie seu anúncio sem custos iniciais e alcance milhares de compradores." },
+  { icon: <Camera className="h-6 w-6 text-(--accent)" />, title: "Fotos Profissionais", desc: "Dicas e ferramentas para destacar seu veículo com imagens de alta qualidade." },
+  { icon: <ShieldCheck className="h-6 w-6 text-(--accent)" />, title: "Compradores Verificados", desc: "Negocie com tranquilidade. Validamos a identidade dos interessados." },
+  { icon: <Timer className="h-6 w-6 text-(--accent)" />, title: "Venda em até 7 dias", desc: "Nossa plataforma otimizada acelera o processo de fechamento do negócio." },
 ]
 
 const testimonials = [
@@ -121,8 +122,8 @@ export default function Sell() {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {benefits.map((b) => (
-              <div
-                key={b.icon}
+<div
+                 key={b.title}
                 className="p-6 rounded-xl transition-all duration-300"
                 style={{
                   background: "var(--bg-card)",
@@ -141,16 +142,14 @@ export default function Sell() {
                   el.style.boxShadow = "none";
                 }}
               >
-                <div
+                                <div
                   className="w-12 h-12 rounded-full flex items-center justify-center mb-4"
                   style={{
                     background: "rgba(233,0,63,0.08)",
                     border: "1px solid rgba(233,0,63,0.20)",
                   }}
                 >
-                  <span className="material-symbols-outlined" style={{ color: "var(--accent)" }}>
-                    {b.icon}
-                  </span>
+                  {b.icon}
                 </div>
                 <h3 className="text-lg font-bold text-white mb-2">{b.title}</h3>
                 <p className="text-sm" style={{ color: "var(--text-secondary)" }}>{b.desc}</p>
@@ -308,7 +307,7 @@ export default function Sell() {
                 onMouseEnter={(e) => { e.currentTarget.style.background = "var(--accent-hover)" }}
                 onMouseLeave={(e) => { e.currentTarget.style.background = "var(--accent)" }}
               >
-                Quero vender meu carro <span className="material-symbols-outlined">arrow_forward</span>
+                Quero vender meu carro <ArrowRight className="h-5 w-5" />
               </button>
             </form>
           </div>
@@ -342,22 +341,21 @@ export default function Sell() {
                   el.style.boxShadow = "none";
                 }}
               >
-                <div className="flex mb-4" style={{ color: "var(--accent)" }}>
-                  {Array.from({ length: 5 }).map((_, j) => (
-                    <span
-                      key={j}
-                      className="material-symbols-outlined text-sm"
-                      style={{
-                        fontVariationSettings:
-                          j < Math.floor(t.stars) ? "'FILL' 1" :
-                          t.stars % 1 && j === Math.floor(t.stars) ? "'FILL' 0.5" : "'FILL' 0",
-                      }}
-                    >
-                      star
-                    </span>
-                  ))}
-                </div>
-                <p className="text-base text-white flex-grow mb-5">
+                 <div className="flex mb-4" style={{ color: "var(--accent)" }}>
+                   {Array.from({ length: 5 }).map((_, j) => {
+                     const full = j < Math.floor(t.stars)
+                     const half = t.stars % 1 && j === Math.floor(t.stars)
+                     return (
+                       <Star
+                         key={j}
+                         className="h-4 w-4"
+                         fill={full ? "currentColor" : half ? "currentColor" : "none"}
+                         stroke={full ? "currentColor" : half ? "currentColor" : "#A5ADBD"}
+                       />
+                     )
+                   })}
+                 </div>
+                <p className="text-base text-white grow mb-5">
                   &ldquo;{t.text}&rdquo;
                 </p>
                 <div className="flex items-center gap-3">
@@ -396,7 +394,7 @@ export default function Sell() {
             target="_blank"
             rel="noopener noreferrer"
           >
-            <span className="material-symbols-outlined">chat</span> Chamar no WhatsApp
+            <MessageCircle className="h-6 w-6" /> Chamar no WhatsApp
           </a>
         </div>
       </section>

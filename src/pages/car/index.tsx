@@ -6,6 +6,7 @@ import { WHATSAPP_NUMBER } from "../../constants/whatsapp"
 import { formatPrice } from "../../utils"
 import { useFavorites } from "../../contexts/FavoritesContext"
 import { FaHeart } from "react-icons/fa"
+import { ChevronRight, Images, Calendar, Gauge, Fuel, MapPin, MessageCircle, Car, Store } from "lucide-react"
 
 export default function CarDetail() {
   const [car, setCar] = useState<CarProps | null>(null)
@@ -85,9 +86,9 @@ export default function CarDetail() {
 
         <nav className="flex text-sm items-center gap-2" style={{ color: "var(--text-secondary)" }}>
           <Link to="/" className="hover:text-[var(--accent)] transition-colors">Home</Link>
-          <span className="material-symbols-outlined text-sm">chevron_right</span>
+          <ChevronRight className="h-4 w-4" />
           <Link to="/estoque" className="hover:text-[var(--accent)] transition-colors">Estoque</Link>
-          <span className="material-symbols-outlined text-sm">chevron_right</span>
+          <ChevronRight className="h-4 w-4" />
           <span className="text-white font-semibold">{car.name}</span>
         </nav>
 
@@ -103,7 +104,7 @@ export default function CarDetail() {
               <img className="w-full h-full object-cover" src={thirdImage} alt="" />
               <div className="absolute inset-0 bg-black/50 flex items-center justify-center cursor-pointer hover:bg-black/40 transition-colors">
                 <span className="text-white text-sm flex items-center gap-2">
-                  <span className="material-symbols-outlined">photo_library</span> +{Math.max(0, (car.images?.length || 0) - 2)} Fotos
+                  <Images className="h-4 w-4" /> +{Math.max(0, (car.images?.length || 0) - 2)} Fotos
                 </span>
               </div>
             </div>
@@ -134,10 +135,10 @@ export default function CarDetail() {
               <h2 className="text-lg font-bold text-white mb-4">Características</h2>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {[
-                  { icon: "calendar_today", label: "Ano", value: car.year },
-                  { icon: "speed", label: "Quilometragem", value: `${car.km} km` },
-                  { icon: "local_gas_station", label: "Combustível", value: car.fuel || "Flex" },
-                  { icon: "location_on", label: "Cidade", value: `${car.city}, ${car.uf}` },
+                  { icon: <Calendar className="h-5 w-5 text-[var(--accent)]" />, label: "Ano", value: car.year },
+                  { icon: <Gauge className="h-5 w-5 text-[var(--accent)]" />, label: "Quilometragem", value: `${car.km} km` },
+                  { icon: <Fuel className="h-5 w-5 text-[var(--accent)]" />, label: "Combustível", value: car.fuel || "Flex" },
+                  { icon: <MapPin className="h-5 w-5 text-[var(--accent)]" />, label: "Cidade", value: `${car.city}, ${car.uf}` },
                 ].map((spec) => (
                   <div
                     key={spec.label}
@@ -147,7 +148,7 @@ export default function CarDetail() {
                       border: "1px solid var(--border-default)",
                     }}
                   >
-                    <span className="material-symbols-outlined" style={{ color: "var(--accent)", fontSize: 22 }}>{spec.icon}</span>
+                    {spec.icon}
                     <span className="text-xs font-semibold uppercase" style={{ color: "var(--text-secondary)" }}>{spec.label}</span>
                     <span className="text-sm font-semibold text-white">{spec.value}</span>
                   </div>
@@ -195,7 +196,7 @@ export default function CarDetail() {
                   onMouseEnter={(e) => { e.currentTarget.style.background = "#20bd5a" }}
                   onMouseLeave={(e) => { e.currentTarget.style.background = "#25D366" }}
                 >
-                  <span className="material-symbols-outlined">chat</span>
+                  <MessageCircle className="h-5 w-5" />
                   Enviar WhatsApp
                 </a>
                 <Link
@@ -205,7 +206,7 @@ export default function CarDetail() {
                   onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(233,0,63,0.08)"; e.currentTarget.style.color = "var(--accent)" }}
                   onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "var(--accent)" }}
                 >
-                  <span className="material-symbols-outlined">directions_car</span>
+                  <Car className="h-5 w-5" />
                   Agendar Test Drive
                 </Link>
               </div>
@@ -221,7 +222,7 @@ export default function CarDetail() {
                   <div>
                     <p className="text-sm font-semibold text-white">{car.owner || "Proprietário"}</p>
                     <p className="text-xs flex items-center gap-1" style={{ color: "var(--text-secondary)" }}>
-                      <span className="material-symbols-outlined" style={{ fontSize: 16 }}>store</span> Loja Verificada
+                      <Store className="h-4 w-4" /> Loja Verificada
                     </p>
                   </div>
                 </div>

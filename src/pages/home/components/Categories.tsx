@@ -1,13 +1,15 @@
+import { Truck, CarFront, Car, Bike } from "lucide-react"
+
 interface CategoriesProps {
   onCategoryClick: (name: string) => void
 }
 
 const categories = [
-  { name: "SUV", icon: "airport_shuttle" },
-  { name: "Hatch", icon: "directions_car" },
-  { name: "Sedan", icon: "time_to_leave" },
-  { name: "Picape", icon: "local_shipping" },
-  { name: "Moto", icon: "two_wheeler" },
+  { name: "SUV", icon: <Truck className="h-7 w-7 text-[#E9003F]" /> },
+  { name: "Hatch", icon: <CarFront className="h-7 w-7 text-[#E9003F]" /> },
+  { name: "Sedan", icon: <Car className="h-7 w-7 text-[#E9003F]" /> },
+  { name: "Picape", icon: <Truck className="h-7 w-7 text-[#E9003F]" /> },
+  { name: "Moto", icon: <Bike className="h-7 w-7 text-[#E9003F]" /> },
 ]
 
 export default function Categories({ onCategoryClick }: CategoriesProps) {
@@ -48,16 +50,14 @@ export default function Categories({ onCategoryClick }: CategoriesProps) {
                 el.style.boxShadow = "0 8px 24px rgba(0,0,0,0.18)";
               }}
             >
-              <div
+               <div
                 className="w-14 h-14 rounded-full flex items-center justify-center"
                 style={{
                   background: "rgba(233,0,63,0.08)",
                   border: "1px solid rgba(233,0,63,0.20)",
                 }}
               >
-                <span className="material-symbols-outlined text-[#E9003F]" style={{ fontSize: 28 }}>
-                  {cat.icon}
-                </span>
+                {cat.icon}
               </div>
               <div className="text-center">
                 <div className="font-bold text-white text-sm sm:text-base">

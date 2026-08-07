@@ -8,6 +8,7 @@ import { supabase } from "../../services/supabaseClient"
 import { type CarProps } from "../../types/car"
 import { UserAuth } from "../../contexts/AuthContext"
 import toast from "react-hot-toast"
+import { Car } from "lucide-react"
 
 
 export default function Dashboard() {
@@ -133,7 +134,7 @@ export default function Dashboard() {
                             </div>
                         ) : cars.length === 0 ? (
                             <div className="col-span-full flex flex-col items-center justify-center py-16" style={{ color: "var(--text-secondary)" }}>
-                                <span className="material-symbols-outlined text-6xl mb-4" style={{ fontSize: 64, color: "var(--text-muted)" }}>directions_car</span>
+                                <Car className="text-6xl mb-4 h-16 w-16" style={{ color: "var(--text-muted)" }} />
                                 <p className="text-lg font-medium mb-1" style={{ color: "var(--text-primary)" }}>Nenhum carro cadastrado</p>
                                 <p className="text-sm mb-6" style={{ color: "var(--text-secondary)" }}>Clique em "Cadastrar carro" para começar.</p>
                                 <Link
